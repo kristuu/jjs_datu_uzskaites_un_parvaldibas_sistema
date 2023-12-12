@@ -12,6 +12,12 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
+//        if (! $request->expectsJson()) {
+//            throw new \Illuminate\Auth\AuthenticationException(
+//                'Unauthenticated.', [], null
+//            );
+//        }
+
         return $request->expectsJson() ? null : route('login');
     }
 }
