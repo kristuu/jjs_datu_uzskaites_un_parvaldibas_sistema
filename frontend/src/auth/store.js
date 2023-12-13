@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import router from '../router/router';
+import router from '../router/router.js';
 
 export default createStore({
     state: {
@@ -23,7 +23,7 @@ export default createStore({
             dispatch('routeToLogin');
         },
         routeToLogin() {
-            router.push({ name: 'Login' });
+            router.push({ name: 'LoginPage' });
         }
     }
 });

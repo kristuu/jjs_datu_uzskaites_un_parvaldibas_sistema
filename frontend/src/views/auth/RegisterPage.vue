@@ -23,6 +23,12 @@ export default {
           email: this.email,
           password: this.password
         });
+
+        if (response.status === 200) {
+          // Registration is successful
+          console.log(response.data);
+          this.$router.push({ name: 'LoginPage' }); // Or name of your login route
+        }
       } catch (e) {
         console.error("Radusies kļūda: ", e);
 

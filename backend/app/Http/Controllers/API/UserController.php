@@ -15,6 +15,23 @@ use function MongoDB\BSON\toJSON;
 
 class UserController extends Controller
 {
+    public function paginated()
+    {
+        $users = User::paginate(10);
+        $totalUsers = $users->total();
+
+        if ($totalUsers > 0) {
+
+            return response()->json([
+                'message' => $users,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'No users found'
+            ], 404);
+        }
+    }
+
     public function index()
     {
         $users = User::all();

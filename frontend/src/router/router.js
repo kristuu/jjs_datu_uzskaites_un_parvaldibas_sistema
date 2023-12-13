@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import Login from '../views/auth/login.vue';
-import Register from '../views/auth/register.vue';
+import HomePage from '../views/HomePage.vue';
+import UserList from '../views/user/UserList.vue';
+import CreateUser from '../views/user/CreateUser.vue';
+import EditUser from '../views/user/EditUser.vue';
+import LoginPage from '../views/auth/LoginPage.vue';
+import RegisterPage from '../views/auth/RegisterPage.vue';
 
 const routes = [
     {
         path: '/',
-        name: 'Home',
+        name: 'HomePage',
         component: HomePage,
         meta: { public: true }
     },
@@ -30,16 +34,16 @@ const routes = [
     },
     {
         path: '/login',
-        name: 'Login',
-        component: Login,
+        name: 'LoginPage',
+        component: LoginPage,
         meta: { public: true }
     },
     {
         path: '/register',
-        name: 'Register',
-        component: Register,
+        name: 'RegisterPage',
+        component: RegisterPage,
         meta: { public: true }
-    }
+    },
 ];
 
 const router = createRouter({
@@ -48,10 +52,10 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const isAuthorized = !!localStorage.getItem('token');
+    const authorized = !!localStorage.getItem('token');
 
-    if (!to.meta.public && !isAuthenticated) {
-        next({ name: 'Login' });
+    if (!to.meta.public && !authorized) {
+        next({ name: 'LoginPage' });
     } else {
         next();
     }

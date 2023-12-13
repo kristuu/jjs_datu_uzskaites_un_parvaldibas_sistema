@@ -24,4 +24,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-Route::apiResource('users', UserController::class);
+Route::middleware('auth:sanctum')->group(function(){
+    Route::get('/users', [UserController::class, 'paginated']);
+    Route::get('/user/{id}', [UserController::class, 'findByID']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/user/{id}', [UserController::class, 'update']);
+    Route::delete('/user/{id}', [UserController::class, 'destroy']);
+});

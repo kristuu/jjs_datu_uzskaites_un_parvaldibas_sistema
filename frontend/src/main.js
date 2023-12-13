@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import store from '../src/auth/store.js';
-import router from '../src/router/router.js';
-// import 'bootstrap/dist/css/bootstrap.css';
+import store from './auth/store.js';
+import router from './router/router.js';
+import './assets/main.css'
 
 const app = createApp(App);
 
