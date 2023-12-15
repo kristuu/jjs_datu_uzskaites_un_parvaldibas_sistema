@@ -42,15 +42,16 @@ export default {
 </script>
 
 <template>
-  <div>
-    <form @submit.prevent="register">
+  <h1 class="fw-bold">Lietotāja reģistrācija</h1>
+  <div class="container">
+    <form @submit.prevent="register" class="register-form">
       <input type="text" v-model="name" class="form-control" placeholder="Vārds (-i)" maxlength="60" required />
       <input type="text" v-model="surname" class="form-control" placeholder="Uzvārds (-i)" maxlength="60" required />
       <input type="text" v-model="person_code" class="form-control" placeholder="Personas kods (11 rakstzīmes, bez domuzīmes)" minlength="11" maxlength="11" required />
       <input type="date" v-model="birthdate" class="form-control" placeholder="Dzimšanas datums" required />
       <input type="email" v-model="email" class="form-control" placeholder="E-pasta adrese" required />
       <input type="password" v-model="password" class="form-control" placeholder="Parole" minlength="8" maxlength="255" required />
-      <button type="submit" class="btn-outline-primary">Reģistrēties</button>
+      <button type="submit" class="btn btn-primary">Reģistrēties</button>
     </form>
   </div>
 </template>

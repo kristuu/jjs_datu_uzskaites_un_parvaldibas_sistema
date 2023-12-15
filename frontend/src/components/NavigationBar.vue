@@ -17,7 +17,7 @@ export default {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light" aria-label="Galvenā navigācija">
+  <nav class="navbar navbar-expand-lg fixed-top navbar-dark yrs-bg-primary" aria-label="Galvenā navigācija">
     <div class="container-fluid">
       <a class="navbar-brand" href="/"><img src="../assets/logo.svg" height="45" /></a>
       <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Navigācijas sadaļas atvēršana/aizvēršana">
@@ -26,25 +26,28 @@ export default {
       <div class="navbar-collapse offcanvas-collapse" id="navbar-main">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link active" aria-current="page" to="/">Sākums</router-link>
+            <router-link class="nav-link" aria-current="page" to="/">Sākums</router-link>
           </li>
           <li class="nav-item" v-if="authorized">
             <router-link class="nav-link" to="/users">Lietotāji</router-link>
           </li>
-          <li class="nav-item" v-if="!authorized">
-            <router-link class="nav-link" to="/login">Autorizēties</router-link>
+        </ul>
+        <ul class="navbar-nav mb-2 lb-lg-0">
+          <li class="nav-item">
+            <router-link v-if="!authorized" class="nav-link" to="/login">Autorizēties</router-link>
           </li>
-          <li class="nav-item" v-if="!authorized">
-            <router-link class="nav-link" to="/register">Reģistrēties</router-link>
+          <li class="nav-item">
+            <router-link v-if="!authorized" class="nav-link" to="/register">Reģistrēties</router-link>
           </li>
-          <li class="nav-item" @click="logout" v-if="authorized">Beigt sesiju</li>
+          <span class="nav-item" @click="logout" v-if="authorized">Beigt sesiju</span>
         </ul>
       </div>
     </div>
   </nav>
   <div class="nav-scroller bg-body shadow-sm">
-    <nav class="nav">
+    <nav class="nav d-flex justify-content-between">
       <router-link class="nav-link" to="#">Testa režīms</router-link>
+
     </nav>
   </div>
 </template>

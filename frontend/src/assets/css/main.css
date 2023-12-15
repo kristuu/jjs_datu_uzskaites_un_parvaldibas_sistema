@@ -1,0 +1,28 @@
+@import 'base.css';
+@import 'bootstrap';
+
+:root {
+    --yrs-primary: #9a2e26;
+    --yrs-primary-shaded-10: #8b2922;
+    --yrs-primary-shaded-20: #7b251e;
+}
+
+.yrs-bg-primary {
+    background-color: var(--yrs-primary);
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--yrs-primary);
+    --bs-btn-border-color: var(--yrs-primary);
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-hover-color: var(--bs-white);
+    --bs-btn-hover-bg: var(--yrs-primary-shaded-10);
+    --bs-btn-hover-border-color: var(--yrs-primary-shaded-10);
+    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-bg: var(--yrs-primary-shaded-20);
+    --bs-btn-active-border-color: var(--yrs-primary-shaded-20);
+}
