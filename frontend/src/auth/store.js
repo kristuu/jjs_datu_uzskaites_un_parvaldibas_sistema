@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import router from '../router/router.js';
+import axios from "@/services/axios";
 
 export default createStore({
     state: {
@@ -10,8 +11,15 @@ export default createStore({
         LOGIN(state) {
             state.authorized = true;
         },
-        LOGOUT(state) {
-            state.authorized = false;
+        async LOGOUT(state) {
+            try {
+                await axios.get("/logout");
+
+                localStorage.removeItem('token');
+                state.authorized = false;
+            } catch (e) {
+                console.error("Radusies kļūda: ", e);
+            }
         }
     },
     actions: {

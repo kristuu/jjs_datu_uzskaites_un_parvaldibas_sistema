@@ -19,10 +19,12 @@ export default {
         // if response delivers a token, it gets stored in local storage
         if (response.data.token) {
           localStorage.setItem('token', response.data.token);
+          axios.defaults.headers.authorization = `Bearer ${response.data.token}`;
 
           // commiting a mutation to update 'authorized' state
           this.$store.commit('LOGIN');
 
+          console.log(response.data.user);
           // redirecting to home page
           this.$router.push('/');
         }

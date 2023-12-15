@@ -40,20 +40,22 @@ class AuthController extends Controller
             'password' => ['string', 'required'],
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $user = auth()->user();
+            $token = $user->createToken('authToken')->plainTextToken;
+
+            // return json response with the default 200 HTTP status code
+            return response()->json(['user' => $user, 'token' => $token]);
+        } else {
             return response()->json(['message' => 'Neeksistējoša e-pasta adrese vai nesaderīga e-pasta un paroles kombinācija'], 401);
         }
 
-        $user = $request->user();
-        $token = $user->createToken('authToken')->plainTextToken;
 
-        // return json response with the default 200 HTTP status code
-        return response()->json(['user' => $user, 'token' => $token]);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        $request->user()->tokens()->delete();
+        auth()->user()->tokens()->delete();
 
         // return json response with the default 200 HTTP status code
         return response()->json(['message' => 'Autentifikācijas sesija beigta']);

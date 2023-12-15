@@ -8,7 +8,10 @@ export default {
   },
   methods: {
     // Vuex helper usage to map 'logout' action to a method
-    ...mapActions(['logout'])
+    ...mapActions(['logout']),
+    logConsole() {
+
+    }
   }
 }
 </script>
