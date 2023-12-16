@@ -9,21 +9,18 @@ export default {
   methods: {
     // Vuex helper usage to map 'logout' action to a method
     ...mapActions(['logout']),
-    logConsole() {
-
-    }
   }
 }
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-lg fixed-top navbar-dark yrs-bg-primary" aria-label="Galvenā navigācija">
-    <div class="container-fluid">
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light yrs-bg-primary" aria-label="Galvenā navigācija">
+    <div class="container bg-white rounded-3">
       <a class="navbar-brand" href="/"><img src="../assets/logo.svg" height="45" /></a>
-      <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Navigācijas sadaļas atvēršana/aizvēršana">
+      <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-label="Navigācijas sadaļas atvēršana/aizvēršana">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="navbar-collapse offcanvas-collapse" id="navbar-main">
+      <div class="navbar-collapse collapse" id="navbarMain">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <router-link class="nav-link" aria-current="page" to="/">Sākums</router-link>
@@ -44,12 +41,6 @@ export default {
       </div>
     </div>
   </nav>
-  <div class="nav-scroller bg-body shadow-sm">
-    <nav class="nav d-flex justify-content-between">
-      <router-link class="nav-link" to="#">Testa režīms</router-link>
-
-    </nav>
-  </div>
 </template>
 
 <style scoped>
