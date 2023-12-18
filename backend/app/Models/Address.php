@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Address extends Model
 {
@@ -13,4 +15,14 @@ class Address extends Model
         'region_id',
         'postal_code',
     ];
+
+    public function region() : BelongsTo
+    {
+        return $this->belongsTo(Region::class);
+    }
+
+    public function user() : HasOne
+    {
+        return $this->hasOne(User::class);
+    }
 }

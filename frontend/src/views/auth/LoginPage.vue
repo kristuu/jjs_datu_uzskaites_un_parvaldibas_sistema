@@ -37,15 +37,26 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="main-frame w-100 m-auto text-start">
     <form @submit.prevent="login">
-      <input type="email" v-model="email" placeholder="E-pasta adrese" required />
-      <input type="password" v-model="password" placeholder="Parole" required />
-      <button type="submit" class="btn-outline-primary">Ienākt</button>
+      <img class="mb-4" src="../../assets/logo-red.svg" alt width="72"/>
+      <h1 class="h3 mb-3 fw-normal">Autorizācija</h1>
+      <div class="form-floating">
+        <input type="email" class="form-control" id="email" v-model="email" placeholder="E-pasta adrese" required />
+        <label for="email" class="fw-normal">E-pasta adrese</label>
+      </div>
+      <div class="form-floating">
+        <input type="password" class="form-control" id="password" v-model="password" placeholder="Parole" required />
+        <label for="password" class="fw-normal">Parole</label>
+      </div>
+      <button type="submit" class="btn btn-primary w-100 py-2 mt-5">Ienākt</button>
     </form>
   </div>
 </template>
 
 <style scoped>
-
+  .main-frame {
+    max-width: 330px;
+    padding: 1rem;
+  }
 </style>

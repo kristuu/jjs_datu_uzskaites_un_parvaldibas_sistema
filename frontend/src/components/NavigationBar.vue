@@ -27,10 +27,10 @@ export default {
     if (!this.editModal) {
       this.$nextTick(() => {
         this.offcanvasNavbar = new Offcanvas(document.getElementById('navbarMain'));
-        this.offcanvasNavbar.show();
+        this.offcanvasNavbar.hide();
       })
     } else {
-      this.offcanvasNavbar.show();
+      this.offcanvasNavbar.hide();
     }
   },
 }

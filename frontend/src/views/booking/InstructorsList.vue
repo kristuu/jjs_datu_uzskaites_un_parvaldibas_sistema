@@ -22,7 +22,6 @@ export default {
         const response = await axios.get(`/instructors`);
 
         this.instructors = response.data.message;
-        console.log(this.instructors);
         this.isLoading = false;
       } catch (e) {
         if (e.response) {
@@ -45,6 +44,12 @@ export default {
         this.availabilitiesByDate = this.selectedInstructor.availability.reduce((grouped, availability) => {
           let date = availability.start_time.split('T')[0]; // get only the date portion from datetime string
           (grouped[date] = grouped[date] || []).push(availability); // push into the array under the corresponding date property
+
+          // Sort the availabilities for this date by start_time
+          grouped[date].sort((a, b) => {
+            return new Date(a.start_time) - new Date(b.start_time);
+          });
+
           return grouped;
         }, {});
         this.smallestDate = Object.keys(this.availabilitiesByDate).reduce((a, b) => a < b ? a : b);
@@ -61,9 +66,10 @@ export default {
     async attemptBooking() {
       try {
         var checkedValue = document.querySelector("input[name=availabilityTime]:checked").value;
-        alert(checkedValue);
-        const response = await axios.post('/book', { id: checkedValue });
-        console.log(response);
+        await axios.post('/book', { id: checkedValue });
+        this.resetModal();
+        this.bookModal.hide();
+        this.fetchInstructors();
       } catch (e) {
         if (e.response) {
           if (e.response.status === 422) {
@@ -76,6 +82,12 @@ export default {
           console.log('Unrecognized error: ', e.message);
         }
       }
+    },
+    resetModal() {
+      this.selectedInstructor = {};
+      this.selectedTime = {};
+      this.availabilitiesByDate = {};
+      this.smallestDate = null;
     },
     formatTime(datetime) {
       let date = new Date(datetime);
@@ -139,13 +151,14 @@ export default {
             <div class="col-12">
               <div id="availabilityCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel"
               v-if="this.selectedInstructor?.availability?.length">
+                <h6 class="text-start fw-bold">Pieejamība:</h6>
                 <div class="carousel-inner">
                   <div class="carousel-item" v-for="(availabilities, date) in this.availabilitiesByDate"
                        :class="{ 'active': date === this.smallestDate }" :key="date">
                     <h3 class="mb-3">{{ date }}</h3>
                     <div class="row g-3 mb-5">
-                      <div v-for="(availability, index) in availabilities" :key="index">
-                        <div class="col">
+                      <div class="col" v-for="(availability, index) in availabilities" :key="index">
+                        <div>
                           <input type="radio" class="btn-check"
                                  :value="availability.id"
                                  v-model="this.selectedTime"
@@ -175,6 +188,8 @@ export default {
           </div>
           <form @submit.prevent="attemptBooking" class="row g-3 text-start" v-if="this.selectedInstructor?.availability?.length">
             <button type="submit" class="btn btn-primary col-6 m-auto">Apstiprināt rezervācijas pieteikšanu</button>
+            <p class="mt-5 px-3"><strong>UZMANĪBAI!</strong> Pārliecinieties, ka Jūsu kontaktinformācija ir aktualizēta.
+            Pēc rezervācijas pieteikšanas treneris var Jums zvanīt, lai precizētu informāciju.</p>
           </form>
         </div>
       </div>

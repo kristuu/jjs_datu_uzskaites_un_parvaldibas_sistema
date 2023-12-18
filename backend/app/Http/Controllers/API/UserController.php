@@ -40,7 +40,7 @@ class UserController extends Controller
     {
         $perPage = $request->query('perPage', 10);
 
-        $users = User::paginate($perPage);
+        $users = User::with(['address', 'address.region', 'address.region.country'])->paginate($perPage);
         $totalUsers = $users->total();
 
         if ($totalUsers > 0) {

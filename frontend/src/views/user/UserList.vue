@@ -14,8 +14,11 @@ export default {
       toggleDetails: {},
       user: {},
       createModal: null,
-      selectedUser: {},
+      selectedUser: {
+        address_line1: ''
+      },
       editModal: null,
+      addressModal: null,
     };
   },
   methods: {
@@ -57,6 +60,16 @@ export default {
         this.createModal.show();
       }
     },
+    openAddressModal() {
+      if (!this.addressModal) {
+        this.$nextTick(() => {
+          this.addressModal = new Modal(document.getElementById('editAddressModal'));
+          this.addressModal.show();
+        })
+      } else {
+        this.addressModal.show();
+      }
+    },
     async createUser() {
       try {
         await axios.post('/users', this.user);
@@ -84,6 +97,11 @@ export default {
         console.log(e);
       }
     },
+    async updateAddress() {
+      try {
+
+      }
+    }
     async deleteUser(person_code) {
       try {
         await axios.delete(`/user/${person_code}`);
@@ -156,6 +174,9 @@ export default {
                 <div :id="'userdetails-' + user.person_code" class="collapse text-start">
                   <p><strong>Dzimšanas datums: </strong> {{ user.birthdate }}</p>
                   <p><strong>Bankas konta nr.: </strong> {{ user.iban_code }}</p>
+                  <p><strong>Adrese: </strong>{{ user.address?.address_line1 + ", " + user.address?.address_line2 + ", " +
+                    user.address?.city + ", " + user.address?.region?.name + ", " + user.address?.postal_code +
+                    ", " + user.address?.region?.country?.name}}</p>
                 </div>
               </td>
             </tr>
@@ -288,6 +309,49 @@ export default {
             <div class="col-lg-6">
               <label for="iban" class="form-label">Bankas konta nr.</label>
               <input v-model="selectedUser.iban_code" type="text" class="form-control" id="iban">
+            </div>
+            <button type="submit" class="btn btn-primary col-6">Saglabāt</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  Pop-up modal for editing address -->
+  <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <a class="navbar-brand" href="/"><img src="../../assets/logo-red.svg" height="45" /></a>
+          <h5 class="modal-title mx-auto" id="editAddressModalLabel">Adreses rediģēšana</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" @click="this.addressModal.hide()" aria-label="Close">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form @submit.prevent="updateAddress" class="row g-3 text-start">
+            <div class="col-lg-6">
+              <label for="address_line1" class="form-label">Adreses līnija 1 (iela, ēkas numurs)</label>
+              <input v-model="selectedUser.address.address_line1" type="text" class="form-control" id="address_line1" required>
+            </div>
+            <div class="col-lg-6">
+              <label for="address_line2" class="form-label">Adreses līnija 2 (piem., dzīvokļa nr. [neobligāti])</label>
+              <input v-model="selectedUser.address.address_line2" type="text" class="form-control" id="address_line2">
+            </div>
+            <div class="col-lg-4">
+              <label for="city" class="form-label">Pilsēta</label>
+              <input v-model="selectedUser.address.city" type="text" class="form-control" id="city">
+            </div>
+            <div class="col-lg-4">
+              <label for="region" class="form-label">Novads/reģions</label>
+              <input v-model="selectedUser.address.region.name" type="text" class="form-control" id="region">
+            </div>
+            <div class="col-lg-4">
+              <label for="postal_code" class="form-label">Pasta indekss</label>
+              <input v-model="selectedUser.address.postal_code" type="text" class="form-control" id="postal_code">
+            </div>
+            <div class="col-lg-6">
+              <label for="country" class="form-label">Valsts</label>
+              <input v-model="selectedUser.address.region.country.name" type="text" class="form-control" id="country">
             </div>
             <button type="submit" class="btn btn-primary col-6">Saglabāt</button>
           </form>
