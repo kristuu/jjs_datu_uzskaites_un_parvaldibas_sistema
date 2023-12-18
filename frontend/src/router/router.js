@@ -6,6 +6,7 @@ import CreateUser from '../views/user/CreateUser.vue';
 import EditUser from '../views/user/EditUser.vue';
 import LoginPage from '../views/auth/LoginPage.vue';
 import RegisterPage from '../views/auth/RegisterPage.vue';
+import InstructorsList from "@/views/booking/InstructorsList.vue";
 
 const routes = [
     {
@@ -27,9 +28,15 @@ const routes = [
         meta: { public: false }
     },
     {
-        path: '/edit-user/:id',
+        path: '/edit-user/:person_code',
         name: 'EditUser',
         component: EditUser,
+        meta: { public: false }
+    },
+    {
+        path: '/booking',
+        name: 'InstructorsList',
+        component: InstructorsList,
         meta: { public: false }
     },
     {

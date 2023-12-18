@@ -2,12 +2,37 @@
 
 :root {
     --yrs-primary: #9a2e26;
+    --yrs-primary-rgb: 154, 46, 38;
     --yrs-primary-shaded-10: #8b2922;
     --yrs-primary-shaded-20: #7b251e;
 }
 
+/* Remove buttons from input fields with no-spin class */
+input[type="number"].no-spin::-webkit-inner-spin-button,
+input[type="number"].no-spin::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* For Firefox */
+input[type="number"].no-spin {
+    -moz-appearance: textfield;
+}
+
 .yrs-bg-primary {
     background-color: var(--yrs-primary);
+}
+
+label {
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 0;
+}
+
+.form-control:focus {
+    border-color: var(--yrs-primary-shaded-20);
+    box-shadow: 0 0 0 0.2rem rgba(var(--yrs-primary-rgb), 0.25);
 }
 
 .btn {
@@ -24,4 +49,8 @@
     --bs-btn-active-color: var(--bs-btn-hover-color);
     --bs-btn-active-bg: var(--yrs-primary-shaded-20);
     --bs-btn-active-border-color: var(--yrs-primary-shaded-20);
+}
+
+.btn-close {
+    margin: 0 !important;
 }

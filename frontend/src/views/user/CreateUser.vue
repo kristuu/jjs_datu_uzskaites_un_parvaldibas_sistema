@@ -23,18 +23,6 @@ export default {
       axios.post('/users', this.user)
           .then(response => {
             alert(response.data);
-
-            /*this.user = {
-              name: '',
-              surname: '',
-              person_code: '',
-              birthdate: '',
-              email: '',
-              password: '',
-              phone: '',
-              googleplaces_address_code: '',
-              iban_code: ''
-            };*/
             this.errorList = '';
 
             // this.$router.push({ name: 'UserList' }); // redirect to User List

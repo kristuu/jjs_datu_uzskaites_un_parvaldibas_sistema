@@ -60,4 +60,9 @@ class AuthController extends Controller
         // return json response with the default 200 HTTP status code
         return response()->json(['message' => 'Autentifikācijas sesija beigta']);
     }
+
+    public function getCurrentUser()
+    {
+        return auth()->user();
+    }
 }

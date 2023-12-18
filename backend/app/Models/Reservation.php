@@ -10,16 +10,13 @@ class Reservation extends Model
     protected $table = 'reservations';
 
     protected $fillable = [
-        'start_time',
-        'end_time',
+        'instructor_availability_id',
         'status',
         'user_person_code',
         'instructor_id',
     ];
 
     protected $casts = [
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
     ];
 
     public function user() : BelongsTo
@@ -30,5 +27,10 @@ class Reservation extends Model
     public function instructor() : BelongsTo
     {
         return $this->belongsTo(Instructor::class);
+    }
+
+    public function instructors_availability() : BelongsTo
+    {
+        return $this->belongsTo(instructors_availability::class, 'instructor_availability_id', 'id');
     }
 }

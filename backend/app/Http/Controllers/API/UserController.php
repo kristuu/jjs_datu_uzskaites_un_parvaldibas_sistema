@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Instructor;
+use Illuminate\Support\Facades\Http;
 use Session;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
@@ -15,9 +17,30 @@ use function MongoDB\BSON\toJSON;
 
 class UserController extends Controller
 {
-    public function paginated()
+    public function getAllInstructorData()
     {
-        $users = User::paginate(10);
+        $users = Instructor::with(['user', 'reservation', 'certificate', 'certificate.category',
+            'availability' => function ($query) {
+                $query->whereDoesntHave('reservation');
+            }
+        ])->get();
+
+        if ($users) {
+            return response()->json([
+                'message' => $users,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'No instructors found',
+            ], 404);
+        }
+    }
+
+    public function paginated(Request $request)
+    {
+        $perPage = $request->query('perPage', 10);
+
+        $users = User::paginate($perPage);
         $totalUsers = $users->total();
 
         if ($totalUsers > 0) {
@@ -56,8 +79,6 @@ class UserController extends Controller
     {
         // Retrieve the validated input data...
         $validated = $request->validated();
-
-        $password = time().rand();
 
         $user = User::create($validated);
 

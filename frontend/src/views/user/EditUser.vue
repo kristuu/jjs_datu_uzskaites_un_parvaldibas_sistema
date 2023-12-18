@@ -1,4 +1,5 @@
 <script>
+import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import axios from '@/services/axios';
 
 export default {
@@ -18,11 +19,15 @@ export default {
       },
     };
   },
+  components: {
+    VueGoogleAutocomplete,
+  },
   methods: {
     async fetchUser() {
       try {
         const response = await axios.get(`/user/${this.$route.params.person_code}`);
-        this.user = response.data;
+        this.user = response.data.message;
+        console.log(this.user);
       } catch (e) {
         console.log(e);
       }
@@ -35,13 +40,19 @@ export default {
         this.errorList = e.response.data.errors;
       }
     },
+    getAddressData(addressData, placeResultData) {
+      this.user.googleplaces_address_code = placeResultData.place_id;
+    },
   },
+  mounted() {
+    this.fetchUser().catch(error => console.error(error));
+  }
 };
 </script>
 
 <template>
-  <div>
-    <form @submit.prevent="updateUser">
+  <div class="container-fluid">
+    <form @submit.prevent="updateUser" class="card">
       <div class="mb-3">
         <label for="name" class="form-label">Vārds (-i)</label>
         <input v-model="user.name" type="text" class="form-control" id="name">
@@ -63,8 +74,14 @@ export default {
         <input v-model="user.email" type="email" class="form-control" id="email">
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input v-model="user.password" type="password" class="form-control" id="password">
+        <label for="googleplaces_address_code" class="form-label">Address</label>
+        <vue-google-autocomplete
+            id="googleplaces_address_code"
+            classname="form-control"
+            placeholder="Sāciet rakstīt adresi..."
+            v-on:placechanged="getAddressData"
+            autocomplete="off">
+        </vue-google-autocomplete>
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>

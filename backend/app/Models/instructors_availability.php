@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class instructors_availability extends Model
 {
@@ -23,5 +24,10 @@ class instructors_availability extends Model
     public function instructor() : BelongsTo
     {
         return $this->belongsTo(Instructor::class);
+    }
+
+    public function reservation() : HasOne
+    {
+        return $this->hasOne(Reservation::class, 'instructor_availability_id', 'id');
     }
 }

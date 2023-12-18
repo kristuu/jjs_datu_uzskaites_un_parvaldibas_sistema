@@ -23,7 +23,7 @@ class UserRequest extends FormRequest
             'name' => ['required', 'string', 'max:60'],
             'surname' => ['required', 'string', 'max:60'],
             'birthdate' => ['required', 'date'],
-            'phone' => ['integer', 'min_digits:8', 'max_digits:8', 'nullable'],
+            'phone' => ['string', 'nullable'],
             'iban_code' => ['string', 'max:64', 'nullable']
         ];
 
