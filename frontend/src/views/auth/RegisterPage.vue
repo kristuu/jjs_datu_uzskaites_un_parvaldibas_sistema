@@ -9,7 +9,8 @@ export default {
       person_code: "",
       birthdate: "",
       email: "",
-      password: ""
+      password: "",
+      password_confirmation: ""
     };
   },
   methods: {
@@ -21,7 +22,8 @@ export default {
           person_code: this.person_code,
           birthdate: this.birthdate,
           email: this.email,
-          password: this.password
+          password: this.password,
+          password_confirmation: this.password_confirmation
         });
 
         if (response.status === 200) {

@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Instructor;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Session;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Traits\PaginationTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -17,6 +19,8 @@ use function MongoDB\BSON\toJSON;
 
 class UserController extends Controller
 {
+    use PaginationTrait;
+
     public function getAllInstructorData()
     {
         $users = Instructor::with(['user', 'reservation', 'certificate', 'certificate.category',
@@ -36,23 +40,9 @@ class UserController extends Controller
         }
     }
 
-    public function paginated(Request $request)
+    public function getUsersPaginated(Request $request)
     {
-        $perPage = $request->query('perPage', 10);
-
-        $users = User::with(['address', 'address.region', 'address.region.country'])->paginate($perPage);
-        $totalUsers = $users->total();
-
-        if ($totalUsers > 0) {
-
-            return response()->json([
-                'message' => $users,
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'No users found'
-            ], 404);
-        }
+        return $this->paginated($request, User::class, ['address', 'address.region', 'address.region.country'], $request->pages);
     }
 
     public function index()
@@ -77,20 +67,30 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        // Retrieve the validated input data...
-        $validated = $request->validated();
+        try {
+            // Retrieve the validated input data...
+            $validated = $request->validated();
 
-        $user = User::create($validated);
+            $user = User::create($validated);
 
-        if ($user) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'User created successfully'
-            ], 200);
-        } else {
+            if ($user) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'User created successfully'
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'User creation failed'
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            // Log the error message
+            Log::error($e->getMessage());
+
             return response()->json([
                 'status' => 500,
-                'message' => 'User creation failed'
+                'message' => 'Error occurred while creating the user'
             ], 500);
         }
     }
@@ -152,6 +152,14 @@ class UserController extends Controller
                 'message' => 'No such user found'
             ], 404);
         }
+    }
+
+    public function setAddress(Request $request)
+    {
+        $user = auth()->user();
+
+        $country = Country::firstOrCreate(['name' => $request->country]);
+        $region = Region::firstOrCreate(['name' => $request->region]);
     }
 
     public function destroy(string $person_code)

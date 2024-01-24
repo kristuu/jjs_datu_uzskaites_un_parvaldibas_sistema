@@ -1,4 +1,5 @@
 <script>
+import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import axios from '@/services/axios';
 import { Modal } from 'bootstrap';
 
@@ -12,20 +13,38 @@ export default {
       perPage: 10,
       isLoading: false,
       toggleDetails: {},
-      user: {},
+      selectedUser: {},
       createModal: null,
-      selectedUser: {
-        address_line1: ''
+      user: {
+        address: {
+          address_line1: '',
+          address_line2: '',
+          city: '',
+          region: {
+            name: '',
+            country: {
+              name: '',
+            }
+          },
+          postal_code: '',
+        }
       },
       editModal: null,
       addressModal: null,
     };
   },
+  components: {
+    VueGoogleAutocomplete,
+  },
   methods: {
-    async fetchUsers() {
+    async fetchUsers(userCountPerPage) {
       this.isLoading = true;
       try {
-        const response = await axios.get(`/users?page=${this.currentPage}&perPage=${this.perPage}`);
+        const response = await axios.get(`/users?page=${this.currentPage}&perPage=${this.perPage}`, {
+          params: {
+            pages: userCountPerPage,
+          }
+        });
         console.log(response);
 
         // Fetch users and total pages as per the response
@@ -60,7 +79,9 @@ export default {
         this.createModal.show();
       }
     },
-    openAddressModal() {
+    openAddressModal(user) {
+      this.user = {};
+      this.user = user;
       if (!this.addressModal) {
         this.$nextTick(() => {
           this.addressModal = new Modal(document.getElementById('editAddressModal'));
@@ -69,6 +90,52 @@ export default {
       } else {
         this.addressModal.show();
       }
+    },
+    getAddressData(addressData, placeResultData) {
+      // this.user.address.country = placeResultData.country;
+      const addressComponents = placeResultData.address_components;
+      console.log(addressComponents);
+
+      let route = '';
+      let street_number = '';
+
+      // Map the fields
+      addressComponents.forEach(component => {
+        const types = component.types;
+
+        if (types.includes('country')) {
+          this.user.address.region.country.name = component.long_name;
+        }
+
+        if (types.includes('administrative_area_level_1')) {
+          this.user.address.region.name = component.long_name;
+        }
+
+        if (types.includes('locality')) {
+          this.user.address.city = component.long_name;
+        }
+
+        if (types.includes('postal_code')) {
+          this.user.address.postal_code = component.long_name;
+        }
+
+        if (types.includes('route')) {
+          route = component.long_name;
+        }
+
+        if (types.includes('street_number')) {
+          street_number = component.long_name;
+        }
+
+        if (types.includes('subpremise')) {
+          this.user.address.address_line2 = component.long_name;
+        } else {
+          this.user.address.address_line2 = '';
+        }
+      });
+
+      // Combine route and street_number
+      this.user.address.address_line1 = route + ' ' + street_number;
     },
     async createUser() {
       try {
@@ -97,11 +164,16 @@ export default {
         console.log(e);
       }
     },
-    async updateAddress() {
+    async updateAddress(id) {
       try {
-
+        await axios.put(`/address/${id}`, this.selectedUser);
+        this.addressModal.hide();
+        await this.fetchUsers();
+      } catch (e) {
+        this.errorList = e.response.data.errors;
+        console.log(e);
       }
-    }
+    },
     async deleteUser(person_code) {
       try {
         await axios.delete(`/user/${person_code}`);
@@ -113,11 +185,11 @@ export default {
     }
   },
   created() {
-    this.fetchUsers();
+    this.fetchUsers(this.perPage);
   },
   watch: {
     currentPage() {
-      this.fetchUsers();
+      this.fetchUsers(this.perPage);
     },
   },
 }
@@ -174,9 +246,11 @@ export default {
                 <div :id="'userdetails-' + user.person_code" class="collapse text-start">
                   <p><strong>Dzimšanas datums: </strong> {{ user.birthdate }}</p>
                   <p><strong>Bankas konta nr.: </strong> {{ user.iban_code }}</p>
-                  <p><strong>Adrese: </strong>{{ user.address?.address_line1 + ", " + user.address?.address_line2 + ", " +
+                  <p v-if="user.address"><strong>Adrese: </strong>{{ user.address?.address_line1 + ", " + user.address?.address_line2 + ", " +
                     user.address?.city + ", " + user.address?.region?.name + ", " + user.address?.postal_code +
-                    ", " + user.address?.region?.country?.name}}</p>
+                    ", " + user.address?.region?.country?.name}}</p><button v-if="user.address"
+                                                                            @click="openAddressModal(user)"
+                                                                            class="btn btn-warning btn-sm">Adreses rediģēšana</button>
                 </div>
               </td>
             </tr>
@@ -329,29 +403,38 @@ export default {
         </div>
         <div class="modal-body">
           <form @submit.prevent="updateAddress" class="row g-3 text-start">
+            <div class="col-12">
+              <label for="googleplaces_address_code" class="form-label">Address</label>
+              <vue-google-autocomplete
+                  id="googleplaces_address_code"
+                  classname="form-control"
+                  placeholder="Sāciet rakstīt adresi..."
+                  v-on:placechanged="getAddressData">
+              </vue-google-autocomplete>
+            </div>
             <div class="col-lg-6">
               <label for="address_line1" class="form-label">Adreses līnija 1 (iela, ēkas numurs)</label>
-              <input v-model="selectedUser.address.address_line1" type="text" class="form-control" id="address_line1" required>
+              <input v-model="this.user.address.address_line1" type="text" class="form-control" id="address_line1" required>
             </div>
             <div class="col-lg-6">
               <label for="address_line2" class="form-label">Adreses līnija 2 (piem., dzīvokļa nr. [neobligāti])</label>
-              <input v-model="selectedUser.address.address_line2" type="text" class="form-control" id="address_line2">
+              <input v-model="this.user.address.address_line2" type="text" class="form-control" id="address_line2">
             </div>
             <div class="col-lg-4">
               <label for="city" class="form-label">Pilsēta</label>
-              <input v-model="selectedUser.address.city" type="text" class="form-control" id="city">
+              <input v-model="this.user.address.city" type="text" class="form-control" id="city">
             </div>
             <div class="col-lg-4">
               <label for="region" class="form-label">Novads/reģions</label>
-              <input v-model="selectedUser.address.region.name" type="text" class="form-control" id="region">
+              <input v-model="this.user.address.region.name" type="text" class="form-control" id="region">
             </div>
             <div class="col-lg-4">
               <label for="postal_code" class="form-label">Pasta indekss</label>
-              <input v-model="selectedUser.address.postal_code" type="text" class="form-control" id="postal_code">
+              <input v-model="this.user.address.postal_code" type="text" class="form-control" id="postal_code">
             </div>
             <div class="col-lg-6">
               <label for="country" class="form-label">Valsts</label>
-              <input v-model="selectedUser.address.region.country.name" type="text" class="form-control" id="country">
+              <input v-model="this.user.address.region.country.name" type="text" class="form-control" id="country">
             </div>
             <button type="submit" class="btn btn-primary col-6">Saglabāt</button>
           </form>

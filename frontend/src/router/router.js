@@ -8,6 +8,8 @@ import LoginPage from '../views/auth/LoginPage.vue';
 import RegisterPage from '../views/auth/RegisterPage.vue';
 import InstructorsList from "@/views/booking/InstructorsList.vue";
 
+import MaugloCompute from '@/views/calculateReportDiapazone.vue'
+
 const routes = [
     {
         path: '/',
@@ -51,6 +53,12 @@ const routes = [
         component: RegisterPage,
         meta: { public: true }
     },
+    {
+        path: '/mauglo',
+        name: 'MaugloCompute',
+        component: MaugloCompute,
+        meta: { public: false }
+    }
 ];
 
 const router = createRouter({

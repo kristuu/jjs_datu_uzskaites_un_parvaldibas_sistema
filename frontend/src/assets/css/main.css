@@ -7,6 +7,10 @@
     --yrs-primary-shaded-20: #7b251e;
 }
 
+.pac-container {
+    z-index: 10000 !important;
+}
+
 /* Remove buttons from input fields with no-spin class */
 input[type="number"].no-spin::-webkit-inner-spin-button,
 input[type="number"].no-spin::-webkit-outer-spin-button {
@@ -40,6 +44,18 @@ label {
 }
 
 .btn-primary {
+    --bs-btn-bg: var(--yrs-primary);
+    --bs-btn-border-color: var(--yrs-primary);
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-hover-color: var(--bs-white);
+    --bs-btn-hover-bg: var(--yrs-primary-shaded-10);
+    --bs-btn-hover-border-color: var(--yrs-primary-shaded-10);
+    --bs-btn-active-color: var(--bs-btn-hover-color);
+    --bs-btn-active-bg: var(--yrs-primary-shaded-20);
+    --bs-btn-active-border-color: var(--yrs-primary-shaded-20);
+}
+
+.btn-disabled {
     --bs-btn-bg: var(--yrs-primary);
     --bs-btn-border-color: var(--yrs-primary);
     --bs-btn-color: var(--bs-white);

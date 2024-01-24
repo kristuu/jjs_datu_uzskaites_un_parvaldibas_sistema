@@ -26,7 +26,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/users', [UserController::class, 'paginated']);
+    Route::get('/users', [UserController::class, 'getUsersPaginated']);
     Route::get('/user/{id}', [UserController::class, 'findByID']);
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/user/{id}', [UserController::class, 'update']);
@@ -34,4 +34,6 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('/instructors', [UserController::class, 'getAllInstructorData']);
     Route::post('/book', [ReservationController::class, 'store']);
+
+    Route::put('/address/{id}', [UserController::class, 'setAddress']);
 });
