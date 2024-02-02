@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Country;
 use App\Models\Instructor;
+use App\Models\Region;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Session;
@@ -158,8 +160,20 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        $country = Country::firstOrCreate(['name' => $request->country]);
-        $region = Region::firstOrCreate(['name' => $request->region]);
+        $country = Country::firstOrCreate(['name' => $request->country->name]);
+        $region = Region::firstOrCreate(['name' => $request->region->name]);
+        $user->update([
+            'address_line1' => $request->address_line1,
+            'address_line2' => $request->address_line2,
+            'postal_code' => $request->postal_code,
+            'city' => $request->city,
+            'region' => $region->id,
+            'country' => $country->id
+        ]);
+
+        return response()->json([
+            'message' => 'Address updated succesfully'
+        ], 200);
     }
 
     public function destroy(string $person_code)
