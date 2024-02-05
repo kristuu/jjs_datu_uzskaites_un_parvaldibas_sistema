@@ -4,6 +4,7 @@ import store from './auth/store.js';
 import router from './router/router.js';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import './assets/css/main.css';
 
 const app = createApp(App);

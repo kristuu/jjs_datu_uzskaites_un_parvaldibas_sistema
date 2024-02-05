@@ -1,7 +1,9 @@
 <script>
-import VueGoogleAutocomplete from 'vue-google-autocomplete';
 import axios from '@/services/axios';
 import { Modal } from 'bootstrap';
+
+import AddressModal from '@/components/users/AddressModal.vue';
+import UserEditModal from '@/components/users/UserEditModal.vue';
 
 export default {
   data() {
@@ -16,6 +18,7 @@ export default {
       selectedUser: {},
       createModal: null,
       user: {
+        person_code: '',
         address: {
           address_line1: '',
           address_line2: '',
@@ -30,14 +33,14 @@ export default {
         }
       },
       editModal: null,
-      addressModal: null,
     };
   },
   components: {
-    VueGoogleAutocomplete,
+    AddressModal,
+    UserEditModal,
   },
   methods: {
-    async fetchUsers(userCountPerPage) {
+    async fetchUsers(userCountPerPage = 10) {
       this.isLoading = true;
       try {
         const response = await axios.get(`/users?page=${this.currentPage}&perPage=${this.perPage}`, {
@@ -52,22 +55,11 @@ export default {
 
         this.totalPages = response.data.message.last_page;
         this.totalUsers = response.data.message.total;
-        this.isLoading = false;
       } catch (e) {
         console.error('Error fetching user list: ', e);
-        this.isLoading = false;
       }
-    },
-    openEditModal(user) {
-      this.selectedUser = { ...user };
-      if (!this.editModal) {
-        this.$nextTick(() => {
-          this.editModal = new Modal(document.getElementById('editUserModal'));
-          this.editModal.show();
-        })
-      } else {
-        this.editModal.show();
-      }
+      this.isLoading = false;
+      console.log('finsihed fetching');
     },
     openCreateModal() {
       if (!this.createModal) {
@@ -79,69 +71,27 @@ export default {
         this.createModal.show();
       }
     },
-    openAddressModal(user) {
-      this.user = {};
-      this.user = user;
-      if (!this.addressModal) {
-        this.$nextTick(() => {
-          this.addressModal = new Modal(document.getElementById('editAddressModal'));
-          this.addressModal.show();
-        })
+    openEditModal(selectedUser) {
+      if(this.$refs.editUserModalRef) {
+        this.$refs.editUserModalRef.openEditModal(selectedUser);
       } else {
-        this.addressModal.show();
+        console.error("EditUserModal component has not been mounted yet");
       }
     },
-    getAddressData(addressData, placeResultData) {
-      // this.user.address.country = placeResultData.country;
-      const addressComponents = placeResultData.address_components;
-      console.log(addressComponents);
-
-      let route = '';
-      let street_number = '';
-
-      // Map the fields
-      addressComponents.forEach(component => {
-        const types = component.types;
-
-        if (types.includes('country')) {
-          this.user.address.region.country.name = component.long_name;
-        }
-
-        if (types.includes('administrative_area_level_1')) {
-          this.user.address.region.name = component.long_name;
-        }
-
-        if (types.includes('locality')) {
-          this.user.address.city = component.long_name;
-        }
-
-        if (types.includes('postal_code')) {
-          this.user.address.postal_code = component.long_name;
-        }
-
-        if (types.includes('route')) {
-          route = component.long_name;
-        }
-
-        if (types.includes('street_number')) {
-          street_number = component.long_name;
-        }
-
-        if (types.includes('subpremise')) {
-          this.user.address.address_line2 = component.long_name;
-        } else {
-          this.user.address.address_line2 = '';
-        }
-      });
-
-      // Combine route and street_number
-      this.user.address.address_line1 = route + ' ' + street_number;
+    openAddressModal(user) {
+      if(this.$refs.addressModalRef) {
+        this.$refs.addressModalRef.openAddressModal(user);
+      } else {
+        // handle case when $refs.addressModal is not defined
+        console.error("AddressModal component has not been mounted yet");
+      }
     },
     async createUser() {
       try {
         await axios.post('/users', this.user);
         this.createModal.hide();
         await this.fetchUsers();
+        this.user = {};
       } catch (e) {
         if (e.response) {
           if (e.response.status === 422) {
@@ -152,26 +102,6 @@ export default {
         } else {
           console.log('Unrecognized error: ', e.message);
         }
-      }
-    },
-    async updateUser() {
-      try {
-        await axios.put(`/user/${this.selectedUser.person_code}`, this.selectedUser);
-        this.editModal.hide();
-        await this.fetchUsers();
-      } catch (e) {
-        this.errorList = e.response.data.errors;
-        console.log(e);
-      }
-    },
-    async updateAddress(id) {
-      try {
-        await axios.put(`/address/${id}`, this.selectedUser);
-        this.addressModal.hide();
-        await this.fetchUsers();
-      } catch (e) {
-        this.errorList = e.response.data.errors;
-        console.log(e);
       }
     },
     async deleteUser(person_code) {
@@ -203,13 +133,62 @@ export default {
     </div>
     <div class="table-responsive">
       <table class="table small table-striped table-hover">
-        <caption>Lapa {{ this.currentPage }} no {{ this.totalPages }}</caption>
+        <caption>
+          <div class="d-flex justify-content-between">
+            <span>Lapa {{ this.currentPage }} no {{ this.totalPages }}</span>
+            <!--      Pagination-->
+            <nav aria-label="Tabulas navigācija" v-if="this.totalUsers > 1">
+              <div class="d-flex align-items-center">
+                <div class="input-group input-group-sm">
+                  <label class="input-group-text" for="entriesPerPage">Ieraksti lapā:</label>
+                  <select v-model="perPage" id="entriesPerPage" class="form-select" @change="fetchUsers">
+                    <option selected value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                  </select>
+                </div>
+                <ul class="pagination ms-2">
+                  <li class="page-item ms-auto">
+                    <button class="btn btn-sm btn-primary"
+                            @click="currentPage = 1"
+                            :disabled="currentPage <= 1">
+                      <i class="bi bi-chevron-bar-left"></i>
+                    </button>
+                  </li>
+                  <li class="page-item">
+                    <button class="btn btn-sm btn-primary"
+                            @click="currentPage > 1 ? currentPage-- : null"
+                            :disabled="currentPage === 1">
+                      <i class="bi bi-chevron-left"></i>
+                    </button>
+                  </li>
+                  <li class="page-item">
+                    <button class="btn btn-sm btn-primary"
+                            @click="currentPage < totalPages ? currentPage++ : null"
+                            :disabled="currentPage === totalPages">
+                      <i class="bi bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <li class="page-item me-auto">
+                    <button class="btn btn-sm btn-primary"
+                            @click="currentPage = totalPages"
+                            :disabled="currentPage >= totalPages">
+                      <i class="bi bi-chevron-bar-right"></i>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </caption>
         <thead>
-          <th scope="col">Personas kods</th>
-          <th scope="col">Vārds (-i)</th>
-          <th scope="col">Uzvārds (-i)</th>
-          <th scope="col">E-pasts</th>
-          <th scope="col">Tel. nr.</th>
+          <th scope="col">PERSONAS KODS</th>
+          <th scope="col">VĀRDS (-I)</th>
+          <th scope="col">UZVĀRDS (-I)</th>
+          <th scope="col">E-PASTS</th>
+          <th scope="col">TEL. NR.</th>
+          <th scope="col" style="text-align: right;">DARBĪBAS</th>
         </thead>
         <tbody class="table-group-divider">
           <template v-if="isLoading">
@@ -224,20 +203,20 @@ export default {
               <td>{{ user.surname }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.phone }}</td>
-              <td>
+              <td style="text-align: right;">
                 <button class="btn btn-sm btn-primary me-2" type="button"
                         @click="toggleDetails[index] = !toggleDetails[index]" data-bs-toggle="collapse"
                         :data-bs-target="'#userdetails-' + user.person_code" aria-expanded="false"
                         :aria-controls="'userdetails-' + user.person_code">
-                  Detaļas
+                  <i class="bi bi-three-dots"></i>
                 </button>
                 <button class="btn btn-sm btn-warning me-2" @click="openEditModal(user)"
                         data-toggle="modal" data-target="#editUserModal">
-                  Rediģēt
+                  <i class="bi bi-pencil-square"></i>
                 </button>
                 <button class="btn btn-sm btn-danger"
                    @click="deleteUser(user.person_code)">
-                  Dzēst
+                  <i class="bi bi-trash3-fill"></i>
                 </button>
               </td>
             </tr>
@@ -248,7 +227,7 @@ export default {
                   <p><strong>Bankas konta nr.: </strong> {{ user.iban_code }}</p>
                   <p v-if="user.address"><strong>Adrese: </strong>{{ user.address?.address_line1 + ", " + user.address?.address_line2 + ", " +
                     user.address?.city + ", " + user.address?.region?.name + ", " + user.address?.postal_code +
-                    ", " + user.address?.region?.country?.name}}</p><button v-if="user.address"
+                    ", " + user.address?.region?.country?.name}}</p><button
                                                                             @click="openAddressModal(user)"
                                                                             class="btn btn-warning btn-sm">Adreses rediģēšana</button>
                 </div>
@@ -257,35 +236,6 @@ export default {
           </template>
         </tbody>
       </table>
-
-<!--      Pagination-->
-      <nav aria-label="Tabulas navigācija" v-if="this.totalUsers > 1">
-        <ul class="pagination">
-          <li class="page-item">
-            <button class="btn btn-primary"
-                    @click="currentPage > 1 ? currentPage-- : null"
-                    :disabled="currentPage === 1">
-              Iepriekšējā
-            </button>
-          </li>
-          <li class="page-item">
-            <button class="btn btn-primary"
-                    @click="currentPage < totalPages ? currentPage++ : null"
-                    :disabled="currentPage === totalPages">
-              Nākamā
-            </button>
-          </li>
-        </ul>
-        <div>
-          <label class="me-1">Ieraksti lapā:</label>
-          <select v-model="perPage" @change="fetchUsers">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-          </select>
-        </div>
-      </nav>
     </div>
   </div>
 
@@ -344,104 +294,14 @@ export default {
     </div>
   </div>
 
-  <!--  Pop-up modal for editing users -->
-  <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <a class="navbar-brand" href="/"><img src="../../assets/logo-red.svg" height="45" /></a>
-          <h5 class="modal-title mx-auto" id="exampleModalLabel">Lietotāja rediģēšana</h5>
-          <button type="button" class="btn-close" data-dismiss="modal" @click="this.editModal.hide()" aria-label="Close">
-          </button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="updateUser" class="row g-3 text-start">
-            <div class="col-lg-4">
-              <label for="name" class="form-label">Vārds (-i)</label>
-              <input v-model="selectedUser.name" type="text" class="form-control" id="name">
-            </div>
-            <div class="col-lg-4">
-              <label for="surname" class="form-label">Uzvārds (-i)</label>
-              <input v-model="selectedUser.surname" type="text" class="form-control" id="surname">
-            </div>
-            <div class="col-lg-4">
-              <label for="person_code" class="form-label">Personas kods</label>
-              <input v-model="selectedUser.person_code" type="text" class="form-control" id="person_code">
-            </div>
-            <div class="col-lg-4">
-              <label for="birthdate" class="form-label">Dzimšanas datums</label>
-              <input v-model="selectedUser.birthdate" type="date" class="form-control" id="birthdate">
-            </div>
-            <div class="col-lg-4">
-              <label for="email" class="form-label">E-pasta adrese</label>
-              <input v-model="selectedUser.email" type="email" class="form-control" id="email">
-            </div>
-            <div class="col-lg-4">
-              <label for="phone" class="form-label">Telefona nr.</label>
-              <input v-model="selectedUser.phone" type="text" class="form-control" id="phone">
-            </div>
-            <div class="col-lg-6">
-              <label for="iban" class="form-label">Bankas konta nr.</label>
-              <input v-model="selectedUser.iban_code" type="text" class="form-control" id="iban">
-            </div>
-            <button type="submit" class="btn btn-primary col-6">Saglabāt</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  <UserEditModal :userData="selectedUser"
+                 ref="editUserModalRef"
+                 @fetchUsers="fetchUsers"
+  />
 
-  <!--  Pop-up modal for editing address -->
-  <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="editAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <a class="navbar-brand" href="/"><img src="../../assets/logo-red.svg" height="45" /></a>
-          <h5 class="modal-title mx-auto" id="editAddressModalLabel">Adreses rediģēšana</h5>
-          <button type="button" class="btn-close" data-dismiss="modal" @click="this.addressModal.hide()" aria-label="Close">
-          </button>
-        </div>
-        <div class="modal-body">
-          <form @submit.prevent="updateAddress" class="row g-3 text-start">
-            <div class="col-12">
-              <label for="googleplaces_address_code" class="form-label">Address</label>
-              <vue-google-autocomplete
-                  id="googleplaces_address_code"
-                  classname="form-control"
-                  placeholder="Sāciet rakstīt adresi..."
-                  v-on:placechanged="getAddressData">
-              </vue-google-autocomplete>
-            </div>
-            <div class="col-lg-6">
-              <label for="address_line1" class="form-label">Adreses līnija 1 (iela, ēkas numurs)</label>
-              <input v-model="this.user.address.address_line1" type="text" class="form-control" id="address_line1" required>
-            </div>
-            <div class="col-lg-6">
-              <label for="address_line2" class="form-label">Adreses līnija 2 (piem., dzīvokļa nr. [neobligāti])</label>
-              <input v-model="this.user.address.address_line2" type="text" class="form-control" id="address_line2">
-            </div>
-            <div class="col-lg-4">
-              <label for="city" class="form-label">Pilsēta</label>
-              <input v-model="this.user.address.city" type="text" class="form-control" id="city">
-            </div>
-            <div class="col-lg-4">
-              <label for="region" class="form-label">Novads/reģions</label>
-              <input v-model="this.user.address.region.name" type="text" class="form-control" id="region">
-            </div>
-            <div class="col-lg-4">
-              <label for="postal_code" class="form-label">Pasta indekss</label>
-              <input v-model="this.user.address.postal_code" type="text" class="form-control" id="postal_code">
-            </div>
-            <div class="col-lg-6">
-              <label for="country" class="form-label">Valsts</label>
-              <input v-model="this.user.address.region.country.name" type="text" class="form-control" id="country">
-            </div>
-            <button type="submit" class="btn btn-primary col-6">Saglabāt</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+  <AddressModal :userData="selectedUser"
+                ref="addressModalRef"
+  />
 
 </template>
 
@@ -452,6 +312,10 @@ export default {
 
   th, h5 {
     font-weight: bold;
+  }
+
+  nav ul {
+    margin-bottom: 0 !important;
   }
 </style>
 
