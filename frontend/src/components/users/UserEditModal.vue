@@ -10,12 +10,15 @@ export default {
   data() {
     return {
       localUser: {...this.selectedUser}, // a copy of the prop into local data
+      oldPersonCode: '',  // used to edit a user in case if person code has been changed too (should happen rarely)
+      unmaskedData: { 'person_code': '', },
       errorList: {},
     };
   },
   methods: {
     openEditModal(user) {
       this.localUser = {...user};
+      this.oldPersonCode = user.person_code;
       const form = document.getElementById("editUserForm");
       form.classList.remove('was-validated');
 
@@ -28,9 +31,14 @@ export default {
         this.editModal.show();
       }
     },
+    onMaska(caller, field) {
+      this.unmaskedData[field] = caller.detail.unmasked;
+      console.log(this.unmaskedData);
+    },
     async updateUser() {
       try {
-        await axios.put(`/user/${this.localUser.person_code}`, this.localUser);
+        this.localUser.person_code = this.unmaskedData.person_code;
+        await axios.put(`/user/${this.oldPersonCode}`, this.localUser);
         this.editModal.hide();
         this.$emit('fetchUsers', this.perPage);
       } catch (e) {
@@ -78,6 +86,7 @@ export default {
             <div class="col-lg-4">
               <div class="form-floating">
                 <input v-model="localUser.name"
+                       type="text"
                        v-maska data-maska="A A" data-maska-tokens="A:[A-ž]:multiple"
                        class="form-control"
                        :class="{ 'is-invalid' : errorList.name?.length > 0 }"
@@ -96,8 +105,8 @@ export default {
             <div class="col-lg-4">
               <div class="form-floating">
                 <input v-model="localUser.surname"
+                       type="text"
                        v-maska data-maska="A A" data-maska-tokens="A:[A-ž]:multiple"
-                       @maska="onMaska"
                        class="form-control"
                        :class="{ 'is-invalid' : errorList.surname?.length > 0 }"
                        id="surname"
@@ -115,7 +124,9 @@ export default {
             <div class="col-lg-4">
               <div class="form-floating">
                 <input v-model="localUser.person_code"
+                       inputmode="numeric" type="text"
                        v-maska data-maska-eager data-maska="######-#####"
+                       @maska="caller => onMaska(caller, 'person_code')"
                        class="form-control"
                        :class="{ 'is-invalid' : errorList.person_code?.length > 0 }"
                        id="person_code"
@@ -132,14 +143,21 @@ export default {
             </div>
             <div class="col-lg-4">
               <div class="form-floating">
-                <input v-model="localUser.birthdate" type="date" class="form-control" id="birthdate"
+                <input v-model="localUser.birthdate"
+                       type="date"
+                       class="form-control"
+                       id="birthdate"
                        placeholder="Dzimšanas datums">
                 <label for="birthdate">Dzimšanas datums</label>
               </div>
             </div>
             <div class="col-lg-4">
             <div class="form-floating">
-                <input v-model="localUser.email" type="email" class="form-control" id="email" placeholder="E-pasta adrese">
+                <input v-model="localUser.email"
+                       type="email"
+                       class="form-control"
+                       id="email"
+                       placeholder="E-pasta adrese">
                 <label for="email">E-pasta adrese</label>
               </div>
             </div>
