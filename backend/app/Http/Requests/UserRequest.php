@@ -18,31 +18,34 @@ class UserRequest extends FormRequest
 
     public function rules()
     {
+        $userPersonCode = $this->route('id');
+
         $rules = [
-            'person_code' => ['required', 'string', 'min:11', 'max:11'],
-            'name' => ['required', 'string', 'max:60'],
-            'surname' => ['required', 'string', 'max:60'],
+            'person_code' => ['required', 'string', 'size:11'],
+            'name' => ['required', 'string', 'max:60', 'regex:/^[\pL\s\-]+$/u'],
+            'surname' => ['required', 'string', 'max:60', 'regex:/^[\pL\s\-]+$/u'],
             'birthdate' => ['required', 'date'],
-            'phone' => ['string', 'nullable'],
-            'iban_code' => ['string', 'max:64', 'nullable']
+            'email' => ['required', 'max:60', 'email', "unique:users,email,{$userPersonCode},person_code"],   // check for existing emails excluding the modifiable user
+            'phone' => ['string', 'max:32', 'nullable'],
+            'iban_code' => ['string', 'max:255', 'nullable']
         ];
 
         $rules['birthdate'][] = 'before:' . date('d-m-Y');
-
-        if ($this->method() == 'PUT') {
-            $rules['email'] = [
-                'required',
-                'email'
-            ];
-        } else {
-            $rules['email'] = ['required', 'email', 'unique:users'];
-        }
 
         if ($this->has('password')) {
             $rules['password'] = ['required', 'confirmed', 'min:8'];
         }
 
         return $rules;
+    }
+
+    public function messages() {
+        $messages = [
+            'name.regex' => 'Lauks ":attribute" var saturēt tikai burtus, atstarpes un domuzīmes',
+            'person_code.size' => 'Lauka ":attribute" garumam jābūt 11 ciparu, neieskaitot domuzīmi',
+        ];
+
+        return $messages;
     }
 
     protected function failedValidation(Validator $validator)

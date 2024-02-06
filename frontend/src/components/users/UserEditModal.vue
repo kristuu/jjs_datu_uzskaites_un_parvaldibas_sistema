@@ -91,7 +91,8 @@ export default {
               <div class="form-floating">
                 <input v-model="localUser.name"
                        type="text"
-                       v-maska data-maska="A A" data-maska-tokens="A:[A-ž]:multiple"
+                       maxlength="60"
+                       v-maska data-maska="A A" data-maska-tokens="A:[A-ž\s\-]:multiple"
                        class="form-control"
                        :class="{ 'is-invalid' : errorList.name?.length > 0 }"
                        id="name"
@@ -110,6 +111,7 @@ export default {
               <div class="form-floating">
                 <input v-model="localUser.surname"
                        type="text"
+                       maxlength="60"
                        v-maska data-maska="A A" data-maska-tokens="A:[A-ž]:multiple"
                        class="form-control"
                        :class="{ 'is-invalid' : errorList.surname?.length > 0 }"
@@ -148,17 +150,22 @@ export default {
             <div class="col-lg-4">
               <VueDatePicker v-model="localUser.birthdate"
                              locale="lv"
+                             position="left"
+                             cancelText="Atcelt"
+                             selectText="Saglabāt"
                              :enable-time-picker="false"
-                             :format="'dd/MM/yyyy'"
-                             @internal-model-change="closeMenu"
-                             placeholder="Dzimšanas datums">
+                             :format="'dd.MM.yyyy'"
+                             auto-apply
+                             @internal-model-change="closeMenu">
                 <template #dp-input="{ value }">
                   <div class="form-floating">
                     <input id="birthdate"
                            type="text"
                            :value="value"
                            class="form-control"
-                           :class="{ 'is-invalid' : errorList.birthdate?.length > 0 }" />
+                           :class="{ 'is-invalid' : errorList.birthdate?.length > 0 }"
+                           placeholder="Dzimšanas datums"
+                           autocomplete="off" readonly />
                     <label for="birthdate">Dzimšanas datums</label>
                     <template v-for="(error, index) in errorList.birthdate">
                       <div v-if="errorList.birthdate && errorList.birthdate.length > 0"
@@ -172,20 +179,46 @@ export default {
               </VueDatePicker>
             </div>
             <div class="col-lg-4">
-            <div class="form-floating">
+              <div class="form-floating">
                 <input v-model="localUser.email"
-                       type="email"
+                       inputmode="email" type="email"
                        class="form-control"
+                       :class="{ 'is-invalid' : errorList.email?.length > 0 }"
                        id="email"
                        placeholder="E-pasta adrese">
                 <label for="email">E-pasta adrese</label>
+                <template v-for="(error, index) in errorList.email">
+                  <div v-if="errorList.email && errorList.email.length > 0"
+                       class="invalid-feedback"
+                       :key="index">
+                    {{ error }}
+                  </div>
+                </template>
               </div>
             </div>
             <div class="col-lg-4">
-              <div class="form-floating">
-                <input v-model="localUser.phone" type="text" class="form-control" id="phone" placeholder="Telefona nr.">
-                <label for="phone">Telefona nr.</label>
-              </div>
+              <vue-tel-input v-model="localUser.phone"
+                             >
+                <template>
+                  <div class="form-floating">
+                    <input id="birthdate"
+                           type="text"
+                           :value="value"
+                           class="form-control"
+                           :class="{ 'is-invalid' : errorList.birthdate?.length > 0 }"
+                           placeholder="Dzimšanas datums"
+                           autocomplete="off" readonly />
+                    <label for="birthdate">Dzimšanas datums</label>
+                    <template v-for="(error, index) in errorList.birthdate">
+                      <div v-if="errorList.birthdate && errorList.birthdate.length > 0"
+                           class="invalid-feedback"
+                           :key="index">
+                        {{ error }}
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </vue-tel-input>
             </div>
             <div class="col-lg-6">
               <div class="form-floating">
@@ -205,6 +238,5 @@ export default {
 <style scoped>
 .is-invalid {
   border-color: #dc3545 !important;
-  /* ... your other styles, with !important */
 }
 </style>

@@ -24,10 +24,18 @@ input[type="number"].no-spin {
 
 /* VUE DATEPICKER STYLING */
 
+.dp__main, .dp__menu, .dp__overlay {
+    font-family: "Open Sans", sans-serif !important;
+}
+
 .dp__theme_light, .dp__theme_dark {
     --dp-primary-color: var(--yrs-primary) !important;
     --dp-primary-disabled-color: var(--yrs-primary-shaded-20) !important;
     --dp-border-color: var(--yrs-primary) !important;
+}
+
+.dp__menu, .dp__cell_inner, .dp__action_button {
+    border-radius: 0 !important;
 }
 
 .yrs-bg-primary {
