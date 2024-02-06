@@ -27,6 +27,8 @@ class UserRequest extends FormRequest
             'iban_code' => ['string', 'max:64', 'nullable']
         ];
 
+        $rules['birthdate'][] = 'before:' . date('d-m-Y');
+
         if ($this->method() == 'PUT') {
             $rules['email'] = [
                 'required',

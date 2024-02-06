@@ -1,6 +1,8 @@
 <script>
 import {Modal} from "bootstrap";
 import axios from "@/services/axios";
+
+import { format } from 'date-fns';
 import { vMaska } from 'maska';
 
 export default {
@@ -20,6 +22,7 @@ export default {
       this.localUser = {...user};
       this.oldPersonCode = user.person_code;
       const form = document.getElementById("editUserForm");
+      this.errorList = {};
       form.classList.remove('was-validated');
 
       if (!this.editModal) {
@@ -38,12 +41,13 @@ export default {
     async updateUser() {
       try {
         this.localUser.person_code = this.unmaskedData.person_code;
+        this.localUser.birthdate = format(new Date(this.localUser.birthdate), 'yyyy-MM-dd HH:mm:ss'); // format date from VueDatePicker format to MySQL database format
         await axios.put(`/user/${this.oldPersonCode}`, this.localUser);
         this.editModal.hide();
         this.$emit('fetchUsers', this.perPage);
       } catch (e) {
         this.errorList = e.response.data;
-        console.log(this.errorList.name);
+        console.log(this.errorList);
       }
     },
   },
@@ -142,14 +146,30 @@ export default {
               </div>
             </div>
             <div class="col-lg-4">
-              <div class="form-floating">
-                <input v-model="localUser.birthdate"
-                       type="date"
-                       class="form-control"
-                       id="birthdate"
-                       placeholder="Dzimšanas datums">
-                <label for="birthdate">Dzimšanas datums</label>
-              </div>
+              <VueDatePicker v-model="localUser.birthdate"
+                             locale="lv"
+                             :enable-time-picker="false"
+                             :format="'dd/MM/yyyy'"
+                             @internal-model-change="closeMenu"
+                             placeholder="Dzimšanas datums">
+                <template #dp-input="{ value }">
+                  <div class="form-floating">
+                    <input id="birthdate"
+                           type="text"
+                           :value="value"
+                           class="form-control"
+                           :class="{ 'is-invalid' : errorList.birthdate?.length > 0 }" />
+                    <label for="birthdate">Dzimšanas datums</label>
+                    <template v-for="(error, index) in errorList.birthdate">
+                      <div v-if="errorList.birthdate && errorList.birthdate.length > 0"
+                           class="invalid-feedback"
+                           :key="index">
+                        {{ error }}
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </VueDatePicker>
             </div>
             <div class="col-lg-4">
             <div class="form-floating">

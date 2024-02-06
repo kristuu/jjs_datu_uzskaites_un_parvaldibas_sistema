@@ -22,6 +22,14 @@ input[type="number"].no-spin {
     -moz-appearance: textfield;
 }
 
+/* VUE DATEPICKER STYLING */
+
+.dp__theme_light, .dp__theme_dark {
+    --dp-primary-color: var(--yrs-primary) !important;
+    --dp-primary-disabled-color: var(--yrs-primary-shaded-20) !important;
+    --dp-border-color: var(--yrs-primary) !important;
+}
+
 .yrs-bg-primary {
     background-color: var(--yrs-primary);
 }
