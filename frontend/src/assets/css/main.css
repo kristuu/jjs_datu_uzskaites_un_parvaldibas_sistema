@@ -38,6 +38,16 @@ input[type="number"].no-spin {
     border-radius: 0 !important;
 }
 
+/* VUE TELEPHONE INPUT STYLING */
+.vue-tel-input {
+    border-radius: 0 !important;
+    border: var(--bs-border-width) solid var(--bs-border-color) !important;
+}
+
+.vti__dropdown-list {
+    z-index: 10 !important;
+}
+
 .yrs-bg-primary {
     background-color: var(--yrs-primary);
 }
@@ -50,9 +60,9 @@ label {
     border-radius: 0;
 }
 
-.form-control:focus {
-    border-color: var(--yrs-primary-shaded-20);
-    box-shadow: 0 0 0 0.2rem rgba(var(--yrs-primary-rgb), 0.25);
+.form-control:focus, .vue-tel-input:focus-within {
+    border-color: var(--yrs-primary-shaded-20) !important;
+    box-shadow: 0 0 0 0.2rem rgba(var(--yrs-primary-rgb), 0.25) !important;
 }
 
 .input-group, .input-group-sm, .input-group-text, .form-select {

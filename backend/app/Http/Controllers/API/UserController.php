@@ -19,6 +19,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use function MongoDB\BSON\toJSON;
 
+/* Dependencies for Phone number formatting (removing spaces) */
+use Propaganistas\LaravelPhone\PhoneNumber;
+use Propaganistas\LaravelPhone\Exceptions\NumberParseException as libNumberParseException;
+use App\Exceptions\PhoneNumberException;
+
 class UserController extends Controller
 {
     use PaginationTrait;
@@ -137,6 +142,20 @@ class UserController extends Controller
     {
         // Retrieve the validated input data...
         $validated = $request->validated();
+
+        try {
+            $tempPhone = new PhoneNumber($validated['phone']);
+            $validated['phone'] = $tempPhone->formatE164();
+        } catch (libNumberParseException $e) {
+            if ($e->getErrorType() === libNumberParseException::INVALID_COUNTRY_CODE) {
+                return response()->json([
+                    'phone' => [
+                        trans('validation.exceptions.country_required',
+                                   ['attribute' => 'Telefona numurs'])
+                    ],
+                ], 422);
+            }
+        }
 
         $user = User::find($person_code);
 

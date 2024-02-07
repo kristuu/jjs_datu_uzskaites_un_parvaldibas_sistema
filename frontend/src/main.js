@@ -16,7 +16,20 @@ import VueTelInput from 'vue-tel-input';
 import 'vue-tel-input/vue-tel-input.css';
 
 const globalOptions = {
-    mode: 'auto',
+    mode: 'international',
+    validCharactersOnly: true,
+    preferredCountries: [
+        'LV', 'LT', 'EE',
+    ],
+    defaultCountry: 'LV',
+    disabledFetchingCountry: true,
+    dropdownOptions: {
+        showSearchBox: true,
+    },
+    inputOptions: {
+        showDialCode: true,
+        placeholder: null,
+    }
 };
 
 const app = createApp(App);

@@ -20,6 +20,7 @@ export default {
   methods: {
     openEditModal(user) {
       this.localUser = {...user};
+      this.localUser.phone = this.localUser.phone ?? '';
       this.oldPersonCode = user.person_code;
       const form = document.getElementById("editUserForm");
       this.errorList = {};
@@ -36,7 +37,6 @@ export default {
     },
     onMaska(caller, field) {
       this.unmaskedData[field] = caller.detail.unmasked;
-      console.log(this.unmaskedData);
     },
     async updateUser() {
       try {
@@ -47,7 +47,8 @@ export default {
         this.$emit('fetchUsers', this.perPage);
       } catch (e) {
         this.errorList = e.response.data;
-        console.log(this.errorList);
+
+        console.log(e);
       }
     },
   },
@@ -197,33 +198,45 @@ export default {
               </div>
             </div>
             <div class="col-lg-4">
-              <vue-tel-input v-model="localUser.phone"
-                             >
-                <template>
-                  <div class="form-floating">
-                    <input id="birthdate"
-                           type="text"
-                           :value="value"
-                           class="form-control"
-                           :class="{ 'is-invalid' : errorList.birthdate?.length > 0 }"
-                           placeholder="Dzimšanas datums"
-                           autocomplete="off" readonly />
-                    <label for="birthdate">Dzimšanas datums</label>
-                    <template v-for="(error, index) in errorList.birthdate">
-                      <div v-if="errorList.birthdate && errorList.birthdate.length > 0"
-                           class="invalid-feedback"
-                           :key="index">
-                        {{ error }}
-                      </div>
-                    </template>
-                  </div>
-                </template>
-              </vue-tel-input>
+              <div class="form-group form-floating">
+                <vue-tel-input v-model="localUser.phone"
+                               class="form-control"
+                               :class="{ 'is-invalid' : errorList.phone?.length > 0 }"
+                               :auto-format="true"
+                               autocomplete="off"
+                               mode="international">
+                  <template #input="{ props, actions, value, update }">
+                    <input ref="phone" v-on="{ ...actions }" v-bind="props"
+                           :value="value" @input="update($event.target.value)"
+                           class="form-control" placeholder=" "/>
+                  </template>
+                </vue-tel-input>
+                <label for="phone">Telefona nr.</label>
+              </div>
+              <template v-for="(error, index) in errorList.phone">
+                <div v-if="errorList.phone && errorList.phone.length > 0"
+                     class="invalid-feedback"
+                     :key="index">
+                  {{ error }}
+                </div>
+              </template>
             </div>
             <div class="col-lg-6">
               <div class="form-floating">
-                <input v-model="localUser.iban_code" type="text" class="form-control" id="iban" placeholder="Bankas konta nr.">
-                <label for="iban">Bankas konta nr.</label>
+                <input v-model="localUser.iban_code"
+                       type="text"
+                       class="form-control"
+                       :class="{ 'is-invalid' : errorList.iban_code?.length > 0 }"
+                       id="iban_code"
+                       placeholder="IBAN (starptautiskais bankas konta numurs)">
+                <label for="iban_code">IBAN (starptautiskais bankas konta numurs)</label>
+                <template v-for="(error, index) in errorList.iban_code">
+                  <div v-if="errorList.iban_code && errorList.iban_code.length > 0"
+                       class="invalid-feedback"
+                       :key="index">
+                    {{ error }}
+                  </div>
+                </template>
               </div>
             </div>
             <button type="submit" class="btn btn-primary col-6">Saglabāt</button>
@@ -238,5 +251,9 @@ export default {
 <style scoped>
 .is-invalid {
   border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+  display: block;
 }
 </style>

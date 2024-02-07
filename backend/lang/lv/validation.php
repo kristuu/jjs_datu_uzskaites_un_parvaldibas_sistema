@@ -157,6 +157,8 @@ return [
     'url' => 'Laukam ":attribute" jāsatur derīga saite (URL)',
     'ulid' => 'Laukam ":attribute" jāsaturs derīgs ULID',
     'uuid' => 'Laukam ":attribute" jāsatur derīgs UUID',
+    'phone' => 'Laukam ":attribute" jābūt derīgam telefona numuram',
+    'iban' => 'Lauka :attribute vērtība nav derīgs IBAN starptautiskais bankas konta numurs',
 
     /*
     |--------------------------------------------------------------------------
@@ -192,11 +194,15 @@ return [
         'person_code' => 'Personas kods',
         'birthdate' => 'Dzimšanas datums',
         'email' => 'E-pasta adrese',
-        'iban_code' => 'Bankas konta nr.',
+        'iban_code' => 'IBAN',
         'password' => 'Parole',
-        'phone' => 'Telefona nr.',
+        'phone' => 'Telefona numurs',
 
         'today' => 'šodienu',
+    ],
+
+    'exceptions' => [
+      'country_required' => 'Laukā ":attribute" valsts koda norādīšana ir obligāta',
     ],
 
 ];

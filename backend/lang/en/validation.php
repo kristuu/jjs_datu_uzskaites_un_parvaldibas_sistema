@@ -157,6 +157,8 @@ return [
     'url' => 'The :attribute field must be a valid URL.',
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
+    'phone' => 'The :attribute field must be a valid phone number.',
+    'iban' => 'The :attribute field contains an invalid IBAN code.',
 
     /*
     |--------------------------------------------------------------------------
@@ -187,5 +189,9 @@ return [
     */
 
     'attributes' => [],
+
+    'exceptions' => [
+        'country_required' => 'The :attribute field requires a country call code to be present',
+    ],
 
 ];
