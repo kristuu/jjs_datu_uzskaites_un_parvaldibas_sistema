@@ -26,9 +26,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/users', [UserController::class, 'getUsersPaginated']);
-    Route::get('/user/{id}', [UserController::class, 'findByID']);
-    Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users', [UserController::class, 'getPaginatedUsers']);
+    Route::get('/user/{id}', [UserController::class, 'findUserById']);
+    Route::post('/users', [UserController::class, 'storeUser']);
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
 

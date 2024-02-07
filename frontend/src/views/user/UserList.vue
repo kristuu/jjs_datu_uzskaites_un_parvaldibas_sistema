@@ -51,10 +51,10 @@ export default {
         console.log(response);
 
         // Fetch users and total pages as per the response
-        this.users = response.data.message.data;
+        this.users = response.data.data.data;
 
-        this.totalPages = response.data.message.last_page;
-        this.totalUsers = response.data.message.total;
+        this.totalPages = response.data.data.last_page;
+        this.totalUsers = response.data.data.total;
       } catch (e) {
         console.error('Error fetching user list: ', e);
       }
@@ -93,6 +93,7 @@ export default {
         await this.fetchUsers();
         this.user = {};
       } catch (e) {
+        console.log(e);
         if (e.response) {
           if (e.response.status === 422) {
             this.errorList = e.response.data.errors;

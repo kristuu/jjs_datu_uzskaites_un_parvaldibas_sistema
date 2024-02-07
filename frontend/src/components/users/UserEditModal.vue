@@ -8,7 +8,7 @@ import { vMaska } from 'maska';
 export default {
   name: "UserEditModal",
   props: ['selectedUser'],
-  directives: { maska: vMaska },
+  directives: {maska: vMaska},
   data() {
     return {
       localUser: {...this.selectedUser}, // a copy of the prop into local data
@@ -19,23 +19,17 @@ export default {
   },
   methods: {
     openEditModal(user) {
-      this.localUser = {...user};
-      this.localUser.phone = this.localUser.phone ?? '';
+      this.localUser = {...user, phone: user.phone ?? ''};
       this.oldPersonCode = user.person_code;
       const form = document.getElementById("editUserForm");
       this.errorList = {};
       form.classList.remove('was-validated');
-
-      if (!this.editModal) {
-        this.$nextTick(() => {
-          this.editModal = new Modal(document.getElementById('editUserModal'));
-          this.editModal.show();
-        })
-      } else {
+      this.$nextTick(() => {
+        this.editModal = new Modal(document.getElementById('editUserModal'));
         this.editModal.show();
-      }
+      });
     },
-    onMaska(caller, field) {
+    handleMaskInputChange(caller, field) {
       this.unmaskedData[field] = caller.detail.unmasked;
     },
     async updateUser() {
@@ -51,23 +45,21 @@ export default {
         console.log(e);
       }
     },
+    attachFormValidation() {
+      const forms = document.querySelectorAll('.needs-validation')
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      });
+    }
   },
   mounted() {
-    // Your validation script goes here
-    'use strict'
-
-    const forms = document.querySelectorAll('.needs-validation')
-
-    Array.from(forms).forEach(form => {
-      form.addEventListener('submit', event => {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-
-        form.classList.add('was-validated')
-      }, false)
-    })
+    this.attachFormValidation();
   },
 }
 </script>
@@ -133,7 +125,7 @@ export default {
                 <input v-model="localUser.person_code"
                        inputmode="numeric" type="text"
                        v-maska data-maska-eager data-maska="######-#####"
-                       @maska="caller => onMaska(caller, 'person_code')"
+                       @maska="caller => handleMaskInputChange(caller, 'person_code')"
                        class="form-control"
                        :class="{ 'is-invalid' : errorList.person_code?.length > 0 }"
                        id="person_code"
@@ -156,8 +148,7 @@ export default {
                              selectText="Saglabāt"
                              :enable-time-picker="false"
                              :format="'dd.MM.yyyy'"
-                             auto-apply
-                             @internal-model-change="closeMenu">
+                             auto-apply>
                 <template #dp-input="{ value }">
                   <div class="form-floating">
                     <input id="birthdate"
