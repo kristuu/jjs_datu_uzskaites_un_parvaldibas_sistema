@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class Controller extends BaseController
 {
@@ -48,30 +49,28 @@ class Controller extends BaseController
         return response()->json($response, $status, $headers);
     }
 
-    /**
-     * Retrieve all instances of a given model class.
-     *
-     * @param string $className The fully qualified name of the model class.
-     * @return \Illuminate\Http\JsonResponse Returns a JSON response containing the message and data.
-     *
-     * @throws \InvalidArgumentException If the provided class name is not a valid model class.
-     */
-    protected function getAll(string $className)
+    protected function checkClassExistence(string $className)
     {
         if (!is_subclass_of($className, Model::class)) {
             throw new \InvalidArgumentException("$className is not a valid model class");
         }
-
-        $instances = $className::all();
-
-        return $this->sendResponse($instances);
     }
 
-    public function getPaginated(Request $request, string $className, array $relationships = [], ?int $pages = 10)
+    protected function getAll(string $className)
     {
-        if (!is_subclass_of($className, Model::class)) {
-            throw new \InvalidArgumentException("$className is not a valid model class");
+        $this->checkClassExistence($className);
+
+        $instances = $className::all();
+        if ($instances) {
+            return $this->sendResponse($instances);
+        } else {
+            return $this->sendResponse(null, 404, ['message' => 'No instances of ' . class_basename($className) . ' found']);
         }
+    }
+
+    protected function getPaginated(Request $request, string $className, array $relationships = [], ?int $pages = 10)
+    {
+        $this->checkClassExistence($className);
 
         $pages = $pages ?? $request->pages;
 
@@ -80,19 +79,12 @@ class Controller extends BaseController
         return $this->sendResponse($instances);
     }
 
-    public function store(string $formRequestClass, string $className)
+    protected function store(FormRequest $formRequest, string $className)
     {
         try {
-            // Check on existence of the provided classes
-            if (!is_subclass_of($formRequestClass, FormRequest::class)) {
-                throw new \InvalidArgumentException("$formRequestClass is not a valid FormRequest class");
-            }
-            if (!is_subclass_of($className, Model::class)) {
-                throw new \InvalidArgumentException("$className is not a valid model class");
-            }
+            $this->checkClassExistence($className);
 
-            $formRequest = app($formRequestClass);
-            $validated = $formRequest->validate();
+            $validated = $formRequest->validated();
 
             $instance = $className::create($validated);
 
@@ -110,4 +102,18 @@ class Controller extends BaseController
             ]);
         }
     }
+
+    protected function findById(string $className, $instanceId)
+    {
+        $this->checkClassExistence($className);
+
+        $instance = $className::find($instanceId);
+        if ($instance) {
+            return $this->sendResponse($instance);
+        } else {
+            return $this->sendResponse(null, 404, ['message' => 'No ' . class_basename($className) . ' with id ' . $instanceId . ' found']);
+        }
+    }
+
+
 }

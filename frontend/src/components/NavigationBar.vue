@@ -38,7 +38,7 @@ export default {
 
 <template>
   <nav class="navbar navbar-expand-lg fixed-top navbar-dark yrs-bg-primary" aria-label="Galvenā navigācija">
-    <div class="container-fluid">
+    <div class="container-xxl">
       <a class="navbar-brand" href="/"><img src="../assets/logo-white.svg" height="45" /></a>
       <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-label="Navigācijas sadaļas atvēršana/aizvēršana">
         <span class="navbar-toggler-icon"></span>

@@ -88,10 +88,11 @@ export default {
     },
     async createUser() {
       try {
-        await axios.post('/users', this.user);
-        this.createModal.hide();
+        const response = await axios.post('/users', this.user)
+        console.log(response);
+        // this.createModal.hide();
         await this.fetchUsers();
-        this.user = {};
+        // this.user = {};
       } catch (e) {
         console.log(e);
         if (e.response) {

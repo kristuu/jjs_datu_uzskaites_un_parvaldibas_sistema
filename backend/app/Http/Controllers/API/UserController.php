@@ -56,20 +56,12 @@ class UserController extends Controller
 
     public function storeUser(UserRequest $request)
     {
-        return parent::store(UserRequest::class, User::class);
+        return $this->store($request, User::class);
     }
 
     private function findUserById(string $person_code)
     {
-        $user = User::find($person_code);
-
-        if (!$user) {
-            return $this->getResponseWithMessage('No such user found', 404);
-        }
-
-        return response()->json([
-            'message' => $user
-        ], 200);
+        return $this->findById($person_code, User::class);
     }
 
     public function update(UserRequest $request, string $person_code)
