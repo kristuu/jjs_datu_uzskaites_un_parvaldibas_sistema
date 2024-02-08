@@ -64,41 +64,9 @@ class UserController extends Controller
         return $this->findById($person_code, User::class);
     }
 
-    public function update(UserRequest $request, string $person_code)
+    public function updateUser(UserRequest $request, string $person_code)
     {
-        // Retrieve the validated input data...
-        $validated = $request->validated();
-
-        try {
-            $tempPhone = new PhoneNumber($validated['phone']);
-            $validated['phone'] = $tempPhone->formatE164();
-        } catch (libNumberParseException $e) {
-            if ($e->getErrorType() === libNumberParseException::INVALID_COUNTRY_CODE) {
-                return response()->json([
-                    'phone' => [
-                        trans('validation.exceptions.country_required',
-                                   ['attribute' => 'Telefona numurs'])
-                    ],
-                ], 422);
-            }
-        }
-
-        $user = User::find($person_code);
-
-        if ($user) {
-            $user->update($validated);
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'User updated succesfully'
-            ], 200);
-        } else {
-
-            return response()->json([
-                'status' => 404,
-                'message' => 'No such user found'
-            ], 404);
-        }
+        return $this->update($request, $person_code, User::class);
     }
 
     public function setAddress(Request $request)
@@ -121,17 +89,9 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function destroy(string $person_code)
+    public function destroyUser(string $person_code)
     {
-        $response = $this->findUserById($person_code);
-
-        if ($response->getData()->status === 404) {
-            return $response;
-        }
-
-        User::find($person_code)->delete();
-
-        return $this->getResponseWithMessage('User with person code ' . $person_code . ' deleted successfully', 200);
+        $this->destroy($person_code, User::class);
     }
 
     private function getResponseWithMessage(string $message, int $status)

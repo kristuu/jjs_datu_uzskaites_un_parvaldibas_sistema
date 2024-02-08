@@ -23,6 +23,7 @@ export default {
 
         this.instructors = response.data.message;
         this.isLoading = false;
+        console.log(response);
       } catch (e) {
         if (e.response) {
           if (e.response.status === 422) {

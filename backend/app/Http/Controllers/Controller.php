@@ -15,7 +15,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function sendResponse($data = null, int $status = 200, array $headers = [])
+    protected function sendResponse($data = null, int $status = 200, array $headers = [])
     {
         switch(true) {
             case $status >= 100 && $status <= 199:
@@ -49,6 +49,11 @@ class Controller extends BaseController
         return response()->json($response, $status, $headers);
     }
 
+    protected function sendError($list = null, $status = 422)
+    {
+        return response()->json($list, $status);
+    }
+
     protected function checkClassExistence(string $className)
     {
         if (!is_subclass_of($className, Model::class)) {
@@ -64,7 +69,7 @@ class Controller extends BaseController
         if ($instances) {
             return $this->sendResponse($instances);
         } else {
-            return $this->sendResponse(null, 404, ['message' => 'No instances of ' . class_basename($className) . ' found']);
+            return $this->sendResponse(['message' => 'No instances of ' . class_basename($className) . ' found'], 404);
         }
     }
 
@@ -89,17 +94,17 @@ class Controller extends BaseController
             $instance = $className::create($validated);
 
             if ($instance) {
-                return $this->sendResponse(null, 200, ['message' => class_basename($className) . ' created successfully']);
+                return $this->sendResponse(['message' => class_basename($className) . ' created successfully']);
             } else {
-                return $this->sendResponse(null, 500, ['message' => class_basename($className) . ' creation failed']);
+                return $this->sendResponse(['message' => class_basename($className) . ' creation failed'], 500);
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
 
-            return $this->sendResponse(null, 500, [
+            return $this->sendResponse([
                 'message' => 'Error occurred while creating the ' . class_basename($className),
                 'error' => $exception->getMessage(),
-            ]);
+            ], 500);
         }
     }
 
@@ -111,9 +116,37 @@ class Controller extends BaseController
         if ($instance) {
             return $this->sendResponse($instance);
         } else {
-            return $this->sendResponse(null, 404, ['message' => 'No ' . class_basename($className) . ' with id ' . $instanceId . ' found']);
+            return $this->sendResponse(['message' => 'No ' . class_basename($className) . ' with id ' . $instanceId . ' found'], 404);
         }
     }
 
+    protected function update(FormRequest $formRequest, $instanceId, string $className)
+    {
+        $this->checkClassExistence($className);
 
+        $instance = $className::find($instanceId);
+
+        $validated = $formRequest->validated();
+
+        if ($instance) {
+            $instance->update($validated);
+
+            return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' updated successfully']);
+        } else {
+            return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' was not found'], 404);
+        }
+    }
+
+    protected function destroy($instanceId, string $className)
+    {
+        $this->checkClassExistence($className);
+
+        $instance = $className::find($instanceId);
+        if (!$instance) {
+            return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' not found'], 404);
+        }
+
+        $instance->delete();
+        return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' deleted successfully']);
+    }
 }

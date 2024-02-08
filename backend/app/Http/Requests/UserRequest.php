@@ -6,8 +6,9 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-/* Dependencies for IBAN bank account number validation */
+/* Dependencies for IBAN bank account number and phone number validation */
 use Nembie\IbanRule\ValidIban;
+use libphonenumber\PhoneNumberFormat;
 
 class UserRequest extends FormRequest
 {
@@ -29,7 +30,7 @@ class UserRequest extends FormRequest
             'surname' => ['required', 'string', 'max:60', 'regex:/^[\pL\s\-]+$/u'],
             'birthdate' => ['required', 'date'],
             'email' => ['required', 'max:60', 'email', "unique:users,email,{$userPersonCode},person_code"],   // check for existing emails excluding the modifiable user
-            'phone' => ['phone', 'max:32', 'nullable'],
+            'phone' => ['phone', 'required', 'max:36'],
             'iban_code' => ['max:255', 'nullable', new ValidIban()],
         ];
 

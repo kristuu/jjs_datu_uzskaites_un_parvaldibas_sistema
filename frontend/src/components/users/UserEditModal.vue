@@ -36,8 +36,9 @@ export default {
       try {
         this.localUser.person_code = this.unmaskedData.person_code;
         this.localUser.birthdate = format(new Date(this.localUser.birthdate), 'yyyy-MM-dd HH:mm:ss'); // format date from VueDatePicker format to MySQL database format
-        await axios.put(`/user/${this.oldPersonCode}`, this.localUser);
-        this.editModal.hide();
+        const response = await axios.put(`/user/${this.oldPersonCode}`, this.localUser);
+        // this.editModal.hide();
+        console.log(response);
         this.$emit('fetchUsers', this.perPage);
       } catch (e) {
         this.errorList = e.response.data;

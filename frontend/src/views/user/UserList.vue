@@ -48,7 +48,6 @@ export default {
             pages: userCountPerPage,
           }
         });
-        console.log(response);
 
         // Fetch users and total pages as per the response
         this.users = response.data.data.data;
@@ -59,7 +58,6 @@ export default {
         console.error('Error fetching user list: ', e);
       }
       this.isLoading = false;
-      console.log('finsihed fetching');
     },
     openCreateModal() {
       if (!this.createModal) {
