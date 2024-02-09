@@ -126,11 +126,14 @@ export default {
 </script>
 
 <template>
-  <div class="container-xl">
-    <h2 class="fw-bold mb-5">Lietotāju pārvaldība</h2>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary mb-3" @click="openCreateModal">Jauns lietotājs</button>
-    </div>
+  <div class="d-flex align-items-baseline text-white mb-2">
+    <h2 class="fw-bold">Lietotāju pārvaldība</h2>
+    <span class="ms-2">Pavisam kopā <strong>{{ totalUsers }}</strong> lietotāju</span>
+  </div>
+  <div class="mb-2">
+    <button class="btn btn-primary me-2" @click="openCreateModal">Jauns lietotājs</button>
+  </div>
+  <div class="container-fluid bg-white rounded-1 p-3 shadow-lg">
     <div class="table-responsive">
       <table class="table small table-striped table-hover">
         <caption>
@@ -183,57 +186,57 @@ export default {
           </div>
         </caption>
         <thead>
-          <th scope="col">PERSONAS KODS</th>
-          <th scope="col">VĀRDS (-I)</th>
-          <th scope="col">UZVĀRDS (-I)</th>
-          <th scope="col">E-PASTS</th>
-          <th scope="col">TEL. NR.</th>
-          <th scope="col" style="text-align: right;">DARBĪBAS</th>
+        <th scope="col">PERSONAS KODS</th>
+        <th scope="col">VĀRDS (-I)</th>
+        <th scope="col">UZVĀRDS (-I)</th>
+        <th scope="col">E-PASTS</th>
+        <th scope="col">TEL. NR.</th>
+        <th scope="col" style="text-align: right;">DARBĪBAS</th>
         </thead>
         <tbody class="table-group-divider">
-          <template v-if="isLoading">
-            <tr>
-              <td colspan="8">Atgūst informāciju...</td>
-            </tr>
-          </template>
-          <template v-else v-for="(user, index) in users" :key="user.person_code">
-            <tr>
-              <td>{{ user.person_code }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.surname }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.phone }}</td>
-              <td style="text-align: right;">
-                <button class="btn btn-sm btn-primary me-2" type="button"
-                        @click="toggleDetails[index] = !toggleDetails[index]" data-bs-toggle="collapse"
-                        :data-bs-target="'#userdetails-' + user.person_code" aria-expanded="false"
-                        :aria-controls="'userdetails-' + user.person_code">
-                  <i class="bi bi-three-dots"></i>
-                </button>
-                <button class="btn btn-sm btn-warning me-2" @click="openEditModal(user)"
-                        data-toggle="modal" data-target="#editUserModal">
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-                <button class="btn btn-sm btn-danger"
-                   @click="deleteUser(user.person_code)">
-                  <i class="bi bi-trash3-fill"></i>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td :class="{ 'p-0': !toggleDetails[index] }" colspan="8">
-                <div :id="'userdetails-' + user.person_code" class="collapse text-start">
-                  <p><strong>Dzimšanas datums: </strong> {{ user.birthdate }}</p>
-                  <p><strong>Bankas konta nr.: </strong> {{ user.iban_code }}</p>
-                  <p v-if="user.address"><strong>Adrese: </strong>{{ user.address?.address_line1 + ", " + user.address?.address_line2 + ", " +
-                    user.address?.city + ", " + user.address?.region?.name + ", " + user.address?.postal_code +
-                    ", " + user.address?.region?.country?.name}}</p><button
-                                                                            @click="openAddressModal(user)"
-                                                                            class="btn btn-warning btn-sm">Adreses rediģēšana</button>
-                </div>
-              </td>
-            </tr>
-          </template>
+        <template v-if="isLoading">
+          <tr>
+            <td colspan="8">Atgūst informāciju...</td>
+          </tr>
+        </template>
+        <template v-else v-for="(user, index) in users" :key="user.person_code">
+          <tr>
+            <td>{{ user.person_code }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.surname }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+            <td style="text-align: right;">
+              <button class="btn btn-sm btn-primary me-2" type="button"
+                      @click="toggleDetails[index] = !toggleDetails[index]" data-bs-toggle="collapse"
+                      :data-bs-target="'#userdetails-' + user.person_code" aria-expanded="false"
+                      :aria-controls="'userdetails-' + user.person_code">
+                <i class="bi bi-three-dots"></i>
+              </button>
+              <button class="btn btn-sm btn-warning me-2" @click="openEditModal(user)"
+                      data-toggle="modal" data-target="#editUserModal">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button class="btn btn-sm btn-danger"
+                      @click="deleteUser(user.person_code)">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td :class="{ 'p-0': !toggleDetails[index] }" colspan="8">
+              <div :id="'userdetails-' + user.person_code" class="collapse text-start">
+                <p><strong>Dzimšanas datums: </strong> {{ user.birthdate }}</p>
+                <p><strong>Bankas konta nr.: </strong> {{ user.iban_code }}</p>
+                <p v-if="user.address"><strong>Adrese: </strong>{{ user.address?.address_line1 + ", " + user.address?.address_line2 + ", " +
+                user.address?.city + ", " + user.address?.region?.name + ", " + user.address?.postal_code +
+                ", " + user.address?.region?.country?.name}}</p><button
+                  @click="openAddressModal(user)"
+                  class="btn btn-warning btn-sm">Adreses rediģēšana</button>
+              </div>
+            </td>
+          </tr>
+        </template>
         </tbody>
       </table>
     </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
@@ -32,7 +33,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/user/{id}', [UserController::class, 'updateUser']);
     Route::delete('/user/{id}', [UserController::class, 'destroyUser']);
 
-    Route::get('/instructors', [UserController::class, 'getAllInstructorData']);
+    Route::get('/instructors', [InstructorController::class, 'getAllInstructorData']);
     Route::post('/book', [ReservationController::class, 'store']);
 
     Route::put('/address/{id}', [UserController::class, 'setAddress']);

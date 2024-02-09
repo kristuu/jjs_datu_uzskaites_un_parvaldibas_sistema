@@ -19,28 +19,6 @@ class UserController extends Controller
 {
     use PaginationTrait;
 
-    const STATUS_MESSAGE = [
-        "no_records_found" => 'No records found',
-        "no_such_user_found" => 'No such user found',
-        "no_intrustors_found" => 'No instructors found'
-        // add your more messages here
-    ];
-
-    public function getAllInstructorData()
-    {
-        $users = Instructor::with(['user', 'reservation', 'certificate', 'certificate.category',
-            'availability' => function ($query) {
-                $query->whereDoesntHave('reservation');
-            }
-        ])->get();
-
-        if ($users) {
-            return response()->json(['message' => $users]);
-        }
-
-        return $this->getResponseWithMessage(self::STATUS_MESSAGE['no_instructors_found'], 404);
-    }
-
     public function getAllUsers()
     {
         return $this->getAll(User::class);

@@ -15,6 +15,13 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    const STATUS_MESSAGE = [
+        "no_records_found" => 'No records found',
+        "no_such_user_found" => 'No such user found',
+        "no_intrustors_found" => 'No instructors found'
+        // add your more messages here
+    ];
+
     protected function sendResponse($data = null, int $status = 200, array $headers = [])
     {
         switch(true) {

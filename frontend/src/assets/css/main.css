@@ -7,8 +7,24 @@
     --yrs-primary-shaded-20: #7b251e;
 }
 
+body {
+    background-color: var(--bs-secondary-bg);
+}
+
 .pac-container {
     z-index: 10000 !important;
+}
+
+.navbar {
+    flex-grow: 1;
+}
+
+aside li.nav-item a.nav-link i,
+aside div.dropdown-menu a.dropdown-item i,
+header.top div ul.navbar-nav li.nav-item a.nav-link i,
+header.top div.dropdown-menu a.dropdown-item i {
+    margin-right: 7px;
+    font-size: 16px;
 }
 
 /* Remove buttons from input fields with no-spin class */
@@ -79,12 +95,12 @@ label {
 }
 
 .btn-primary {
-    --bs-btn-bg: var(--yrs-primary);
-    --bs-btn-border-color: var(--yrs-primary);
+    --bs-btn-bg: var(--yrs-primary-shaded-10);
+    --bs-btn-border-color: var(--yrs-primary-shaded-10);
     --bs-btn-color: var(--bs-white);
     --bs-btn-hover-color: var(--bs-white);
-    --bs-btn-hover-bg: var(--yrs-primary-shaded-10);
-    --bs-btn-hover-border-color: var(--yrs-primary-shaded-10);
+    --bs-btn-hover-bg: var(--yrs-primary-shaded-20);
+    --bs-btn-hover-border-color: var(--yrs-primary-shaded-20);
     --bs-btn-active-color: var(--bs-btn-hover-color);
     --bs-btn-active-bg: var(--yrs-primary-shaded-20);
     --bs-btn-active-border-color: var(--yrs-primary-shaded-20);

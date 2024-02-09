@@ -140,6 +140,7 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/giggsey/locale" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nembie/iban-rule" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/propaganistas/laravel-phone" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-permission" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
