@@ -1,4 +1,6 @@
 <script>
+import { provide, ref, nextTick } from 'vue';
+import { Toast } from 'bootstrap';
 import NavigationBar from './components/NavigationBar.vue';
 import { lv } from '@/assets/translations/routes/translations';
 
@@ -14,6 +16,18 @@ export default {
     NavigationBar,
   },
   methods: {
+    toastTypeClass(statusCode) {
+      switch (true) {
+        case statusCode >= 200 && statusCode <= 299:
+          return 'success';
+        case statusCode >= 300 && statusCode <= 399:
+          return 'warning';
+        case statusCode >= 400 && statusCode <= 599:
+          return 'danger';
+        default:
+          return 'info';
+      }
+    },
     resolveBreadcrumb(name) {
       let breadcrumb = this.translations[name];
       if (breadcrumb === undefined) {
@@ -42,12 +56,39 @@ export default {
       return crumbs;
     },
   },
-  mounted() {
+  setup() {
+    const notifications = ref([]);
+    const addToastNotification = (notification) => {
+      const id = Date.now().toString();
 
+      // add the id to the notification data
+      notification.id = id;
+
+      notification.type = notification.type || 'info';
+
+      // if autohide is not set, default it to true
+      notification.autohide = notification.autohide !== undefined ? notification.autohide : true;
+
+      // if delay is not set, default it to 5000 ms
+      notification.delay = notification.delay || 5000;
+
+      notifications.value.push(notification);
+
+      nextTick(() => {
+        const toastEl = document.getElementById(`toast-${id}`);
+
+        // "destroy" the previous instance if any and create a new toast instance
+        new Toast(toastEl, {
+          autohide: notification.autohide,
+          delay: notification.delay
+        }).show();
+      });
+    };
+
+    provide('addToastNotification', addToastNotification);
+
+    return { notifications };
   },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.adjustContentPadding);
-  }
 }
 </script>
 
@@ -71,6 +112,30 @@ export default {
       </nav>
       <router-view />
     </main>
+  </div>
+  <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container top-0 end-0 p-3 position-fixed">
+      <div v-for="notification in notifications"
+           :key="notification.id"
+           :id="`toast-${ notification.id }`"
+           class="toast" role="alert" aria-live="assertive"
+           :class="'bg-' + toastTypeClass(notification.status) + '-subtle'"
+           aria-atomic="true">
+        <div class="toast-header"
+             :class="'text-' + toastTypeClass(notification.status)">
+          <strong class="me-auto">{{ notification.title }}</strong>
+          <button class="bi bi-x-lg fs-5"
+                  :class="'text-' + toastTypeClass(notification.status)"
+                  style="border: none; background: none;"
+                  data-bs-dismiss="toast"
+                  aria-label="Close"></button>
+        </div>
+        <div class="toast-body"
+             :class="'text-' + toastTypeClass(notification.status)">
+          {{ notification.message }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

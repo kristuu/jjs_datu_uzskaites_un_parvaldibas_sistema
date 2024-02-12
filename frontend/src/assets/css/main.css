@@ -82,6 +82,22 @@ li > a {
     }
 }
 
+.toast {
+    border-radius: var(--bs-border-radius) 0;
+    border: 0px;
+}
+
+.toast-header {
+    border: none;
+    border-radius: var(--bs-border-radius) 0 0 0;
+    background: none;
+}
+
+.toast-body {
+    background-color: var(--bs-white);
+    border-radius: 0 0 var(--bs-border-radius) 0;
+}
+
 .breadcrumb-item a, .breadcrumb-item.active,
 .breadcrumb-item::before,
 .breadcrumb-item.active::before {
@@ -91,6 +107,10 @@ li > a {
 
 .breadcrumb-item.active {
     font-weight: bold;
+}
+
+th {
+    padding: 0.75rem 0.5rem;
 }
 
 .form-control {

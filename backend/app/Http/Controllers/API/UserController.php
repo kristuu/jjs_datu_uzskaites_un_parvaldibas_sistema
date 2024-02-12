@@ -69,7 +69,7 @@ class UserController extends Controller
 
     public function destroyUser(string $person_code)
     {
-        $this->destroy($person_code, User::class);
+        return $this->destroy($person_code, User::class);
     }
 
     private function getResponseWithMessage(string $message, int $status)

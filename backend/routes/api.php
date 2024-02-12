@@ -28,10 +28,10 @@ Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logou
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/users', [UserController::class, 'getPaginatedUsers']);
-    Route::get('/user/{id}', [UserController::class, 'findUserById']);
+    Route::get('/users/{id}', [UserController::class, 'findUserById']);
     Route::post('/users', [UserController::class, 'storeUser']);
-    Route::put('/user/{id}', [UserController::class, 'updateUser']);
-    Route::delete('/user/{id}', [UserController::class, 'destroyUser']);
+    Route::put('/users/{id}', [UserController::class, 'updateUser']);
+    Route::delete('/users/{id}', [UserController::class, 'destroyUser']);
 
     Route::get('/instructors', [InstructorController::class, 'getAllInstructorData']);
     Route::post('/book', [ReservationController::class, 'store']);
