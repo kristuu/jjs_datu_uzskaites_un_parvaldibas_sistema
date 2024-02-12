@@ -54,13 +54,18 @@ export default {
 <template>
   <NavigationBar />
   <div id="app">
-    <main class="container-xl">
+    <main class="container-xxl">
       <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb"
            class="d-flex justify-content-end">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><router-link to="/" class="text-capitalize">Sākums</router-link></li>
-          <li v-for="(crumb, i) in crumbs" :key="i" class="breadcrumb-item">
-              <router-link :to="crumb.to" class="text-capitalize">{{ crumb.text }}</router-link>
+          <li v-for="(crumb, i) in crumbs" :key="i"
+              class="breadcrumb-item" :class='i + 1 === crumbs.length ? "active" : ""'
+              :aria-current='i + 1 === crumbs.length ? "page" : ""'>
+              <router-link :to="crumb.to"
+                           class="text-capitalize"
+                           v-if="i + 1 !== crumbs.length">{{ crumb.text }}</router-link>
+              {{ i + 1 === crumbs.length ? crumb.text : "" }}
           </li>
         </ol>
       </nav>

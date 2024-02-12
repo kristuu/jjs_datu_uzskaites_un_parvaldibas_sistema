@@ -131,11 +131,13 @@ export default {
     <span class="ms-2">Pavisam kopā <strong>{{ totalUsers }}</strong> lietotāju</span>
   </div>
   <div class="mb-2">
-    <button class="btn btn-primary me-2" @click="openCreateModal">Jauns lietotājs</button>
+    <button class="btn btn-primary me-2" @click="openCreateModal">
+      <i class="bi bi-person-add" style="font-size: 24px;"></i>
+    </button>
   </div>
-  <div class="container-fluid bg-white rounded-1 p-3 shadow-lg">
+  <div class="container-fluid content-card bg-white shadow-lg">
     <div class="table-responsive">
-      <table class="table small table-striped table-hover">
+      <table class="table small table-hover">
         <caption>
           <div class="d-flex justify-content-between">
             <span>Lapa {{ this.currentPage }} no {{ this.totalPages }}</span>
@@ -185,13 +187,13 @@ export default {
             </nav>
           </div>
         </caption>
-        <thead>
-        <th scope="col">PERSONAS KODS</th>
-        <th scope="col">VĀRDS (-I)</th>
-        <th scope="col">UZVĀRDS (-I)</th>
-        <th scope="col">E-PASTS</th>
-        <th scope="col">TEL. NR.</th>
-        <th scope="col" style="text-align: right;">DARBĪBAS</th>
+        <thead class="table-light">
+          <th scope="col">PERSONAS KODS</th>
+          <th scope="col">VĀRDS (-I)</th>
+          <th scope="col">UZVĀRDS (-I)</th>
+          <th scope="col">E-PASTS</th>
+          <th scope="col">TEL. NR.</th>
+          <th scope="col" style="text-align: right;">DARBĪBAS</th>
         </thead>
         <tbody class="table-group-divider">
         <template v-if="isLoading">

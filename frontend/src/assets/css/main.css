@@ -72,6 +72,27 @@ label {
     font-weight: bold;
 }
 
+li > a {
+    padding: 0 5px;
+    box-shadow: inset 0 0 0 0 white;
+    transition: all 0.5s ease-in-out 0s;
+    &:hover {
+        box-shadow: inset 0 -100px 0 0 white;
+        color: var(--yrs-primary) !important;
+    }
+}
+
+.breadcrumb-item a, .breadcrumb-item.active,
+.breadcrumb-item::before,
+.breadcrumb-item.active::before {
+    color: var(--bs-white) !important;
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    font-weight: bold;
+}
+
 .form-control {
     border-radius: 0;
 }
@@ -90,8 +111,24 @@ label {
     box-shadow: 0 0 0 0.2rem rgba(var(--yrs-primary-rgb), 0.25);
 }
 
+.content-card {
+    border-radius: var(--bs-border-radius-sm);
+}
+
 .btn {
-    border-radius: 0;
+    border-radius: 0 var(--bs-border-radius);
+}
+
+.page-item > .btn {
+    border-radius: 0 !important;
+}
+
+.page-item:first-child > .btn {
+    border-radius: 0 0 0 var(--bs-border-radius) !important;
+}
+
+.page-item:last-child > .btn {
+    border-radius: 0 var(--bs-border-radius) 0 0 !important;
 }
 
 .btn-primary {
