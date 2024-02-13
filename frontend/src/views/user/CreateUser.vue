@@ -1,76 +1,240 @@
-<script>
-import axios from '@/services/axios';
+<script setup>
+// import axios from "@/services/axios";
+import { useStore } from 'vuex';
 
-export default {
-  data() {
-    return {
-      errorList: '',
-      user: {
-        name: '',
-        surname: '',
-        person_code: '',
-        birthdate: '',
-        email: '',
-        password: '',
-        phone: '',
-        googleplaces_address_code: '',
-        iban_code: ''
-      },
-    };
-  },
-  methods: {
-    createUser() {
-      axios.post('/users', this.user)
-          .then(response => {
-            alert(response.data);
-            this.errorList = '';
+// import { format } from 'date-fns';
+import { vMaska } from 'maska';
+import {ref, computed, watch} from "vue";
+import AdminForm from "@/components/AdminForm.vue";
+import {format} from "date-fns";
 
-            // this.$router.push({ name: 'UserList' }); // redirect to User List
-          })
-          .catch(error => {
-            if (error.response) {
-              if (error.response.status === 422) {
-                this.errorList = error.response.data.errors;
-              }
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log('Kļūda: ', error.message);
-            }
-          });
-    },
-  },
+const store = useStore();
+let formInstance = computed(() => store.state.formInstance);
+let errorList = ref({});
+
+let unmaskedData = ref({
+  'person_code': ''
+});
+
+// const adminFormMethods = inject('adminFormMethods');
+
+const handleMaskInputChange = (caller, field) => {
+  unmaskedData.value[field] = caller.detail.unmasked;
 };
+
+const handleErrorListUpdate = (updatedErrorList) => {
+  errorList.value = updatedErrorList;
+}
+
+watch(formInstance, (newValue) => {
+  // format the date from VueDatePicker format to MySQL database format
+  newValue.birthdate = format(new Date(newValue.birthdate), 'yyyy-MM-dd HH:mm:ss');
+}, { deep: true });
 </script>
 
 <template>
-  <div>
-    <form @submit.prevent="createUser">
-      <div class="mb-3">
-        <label for="name" class="form-label">Vārds (-i)</label>
-        <input v-model="user.name" type="text" class="form-control" id="name">
+<AdminForm :page-name="`Lietotāji`"
+           :short-desc="`Lietotāja pievienošana`"
+           :model-name="`User`"
+           :database-table="`users`"
+           @update-error-list="handleErrorListUpdate">
+  <form id="createUserForm" class="row gap-3 py-3 text-start">
+    <div class="col-12">
+      <div class="form-group form-floating required">
+        <input v-model="formInstance.name"
+               type="text"
+               maxlength="60"
+               v-maska data-maska="A A" data-maska-tokens="A:[A-ž\s\-]:multiple"
+               class="form-control"
+               :class="{ 'is-invalid' : errorList.name }"
+               id="name"
+               placeholder="Vārds (-i)">
+        <label for="name">Vārds (-i)</label>
+        <template v-for="(error, index) in errorList.name">
+          <div v-if="errorList.name && errorList.name.length > 0"
+               class="invalid-feedback"
+               :key="index">
+            {{ error }}
+          </div>
+        </template>
       </div>
-      <div class="mb-3">
-        <label for="surname" class="form-label">Uzvārds (-i)</label>
-        <input v-model="user.surname" type="text" class="form-control" id="surname">
+    </div>
+    <div class="col-12">
+      <div class="form-group form-floating required">
+        <input v-model="formInstance.surname"
+               type="text"
+               maxlength="60"
+               v-maska data-maska="A A" data-maska-tokens="A:[A-ž]:multiple"
+               class="form-control"
+               :class="{ 'is-invalid' : errorList.surname?.length > 0 }"
+               id="surname"
+               placeholder="Uzvārds (-i)">
+        <label for="surname">Uzvārds (-i)</label>
+        <template v-for="(error, index) in errorList.surname">
+          <div v-if="errorList.surname && errorList.surname.length > 0"
+               class="invalid-feedback"
+               :key="index">
+            {{ error }}
+          </div>
+        </template>
       </div>
-      <div class="mb-3">
-        <label for="person_code" class="form-label">Personas kods</label>
-        <input v-model="user.person_code" type="text" class="form-control" id="person_code">
+    </div>
+    <div class="col-12">
+      <div class="form-group form-floating required">
+        <input v-model="formInstance.person_code"
+               inputmode="numeric" type="text"
+               v-maska data-maska-eager data-maska="######-#####"
+               @maska="caller => handleMaskInputChange(caller, 'person_code')"
+               class="form-control"
+               :class="{ 'is-invalid' : errorList.person_code?.length > 0 }"
+               id="person_code"
+               placeholder="Personas kods">
+        <label for="person_code">Personas kods</label>
+        <template v-for="(error, index) in errorList.person_code">
+          <div v-if="errorList.person_code && errorList.person_code.length > 0"
+               class="invalid-feedback"
+               :key="index">
+            {{ error }}
+          </div>
+        </template>
       </div>
-      <div class="mb-3">
-        <label for="birthdate" class="form-label">Dzimšanas datums</label>
-        <input v-model="user.birthdate" type="date" class="form-control" id="birthdate">
+    </div>
+    <div class="col-12">
+      <VueDatePicker v-model="formInstance.birthdate"
+                     locale="lv"
+                     position="left"
+                     cancelText="Atcelt"
+                     selectText="Saglabāt"
+                     :enable-time-picker="false"
+                     :format="'dd.MM.yyyy'"
+                     auto-apply>
+        <template #dp-input="{ value }">
+          <div class="form-group form-floating required">
+            <input id="birthdate"
+                   type="text"
+                   :value="value"
+                   class="form-control"
+                   :class="{ 'is-invalid' : errorList.birthdate?.length > 0 }"
+                   placeholder="Dzimšanas datums"
+                   autocomplete="off" readonly />
+            <label for="birthdate">Dzimšanas datums</label>
+            <template v-for="(error, index) in errorList.birthdate">
+              <div v-if="errorList.birthdate && errorList.birthdate.length > 0"
+                   class="invalid-feedback"
+                   :key="index">
+                {{ error }}
+              </div>
+            </template>
+          </div>
+        </template>
+      </VueDatePicker>
+    </div>
+    <div class="col-12">
+      <div class="form-group form-floating required">
+        <input v-model="formInstance.email"
+               inputmode="email" type="email"
+               class="form-control"
+               :class="{ 'is-invalid' : errorList.email?.length > 0 }"
+               id="email"
+               placeholder="E-pasta adrese">
+        <label for="email">E-pasta adrese</label>
+        <template v-for="(error, index) in errorList.email">
+          <div v-if="errorList.email && errorList.email.length > 0"
+               class="invalid-feedback"
+               :key="index">
+            {{ error }}
+          </div>
+        </template>
       </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">E-pasta adrese</label>
-        <input v-model="user.email" type="email" class="form-control" id="email">
+    </div>
+    <div class="col-12">
+      <div class="form-group form-floating required">
+        <vue-tel-input v-model="formInstance.phone"
+                       class="form-control"
+                       :class="{ 'is-invalid' : errorList.phone?.length > 0 }"
+                       :auto-format="true"
+                       autocomplete="off"
+                       mode="international">
+          <template #input="{ props, actions, value, update }">
+            <input ref="phone" v-on="{ ...actions }" v-bind="props"
+                   :value="value" @input="update($event.target.value)"
+                   class="form-control" placeholder=" "/>
+          </template>
+        </vue-tel-input>
+        <label for="phone">Telefona nr.</label>
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input v-model="user.password" type="password" class="form-control" id="password">
+      <template v-for="(error, index) in errorList.phone">
+        <div v-if="errorList.phone && errorList.phone.length > 0"
+             class="invalid-feedback"
+             :key="index">
+          {{ error }}
+        </div>
+      </template>
+    </div>
+    <div class="col-12">
+      <div class="form-group form-floating">
+        <input v-model="formInstance.iban_code"
+               type="text"
+               class="form-control"
+               :class="{ 'is-invalid' : errorList.iban_code?.length > 0 }"
+               id="iban_code"
+               placeholder="IBAN (starptautiskais bankas konta numurs)">
+        <label for="iban_code">IBAN (starptautiskais bankas konta numurs)</label>
+        <template v-for="(error, index) in errorList.iban_code">
+          <div v-if="errorList.iban_code && errorList.iban_code.length > 0"
+               class="invalid-feedback"
+               :key="index">
+            {{ error }}
+          </div>
+        </template>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group form-floating required">
+        <input v-model="formInstance.password"
+               type="password"
+               class="form-control"
+               :class="{ 'is-invalid' : errorList.password?.length > 0 }"
+               id="password"
+               placeholder="Parole">
+        <label for="password">Parole</label>
+        <template v-for="(error, index) in errorList.password">
+          <div v-if="errorList.password && errorList.password.length > 0"
+               class="invalid-feedback"
+               :key="index">
+            {{ error }}
+          </div>
+        </template>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group form-floating required">
+        <input v-model="formInstance.password_confirmation"
+               type="password"
+               class="form-control"
+               :class="{ 'is-invalid' : errorList.password_confirmation?.length > 0 }"
+               id="password_confirmation"
+               placeholder="Parole (atkārtoti)">
+        <label for="password_confirmation">Parole (atkārtoti)</label>
+        <template v-for="(error, index) in errorList.password_confirmation">
+          <div v-if="errorList.password_confirmation && errorList.password_confirmation.length > 0"
+               class="invalid-feedback"
+               :key="index">
+            {{ error }}
+          </div>
+        </template>
+      </div>
+    </div>
+  </form>
+</AdminForm>
 </template>
+
+<style scoped>
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+  display: block;
+}
+</style>

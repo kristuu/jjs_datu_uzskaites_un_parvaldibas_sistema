@@ -113,6 +113,11 @@ th {
     padding: 0.75rem 0.5rem;
 }
 
+.form-group.required label::after {
+    content: " *";
+    color: red;
+}
+
 .form-control {
     border-radius: 0;
 }

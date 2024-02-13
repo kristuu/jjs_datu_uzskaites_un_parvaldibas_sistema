@@ -36,7 +36,7 @@ class UserRequest extends FormRequest
 
         $rules['birthdate'][] = 'before:' . date('d-m-Y');
 
-        if ($this->has('password')) {
+        if ($this->method('POST')) {
             $rules['password'] = ['required', 'confirmed', 'min:8'];
         }
 
@@ -44,12 +44,10 @@ class UserRequest extends FormRequest
     }
 
     public function messages() {
-        $messages = [
+        return [
             'name.regex' => 'Lauks ":attribute" var saturēt tikai burtus, atstarpes un domuzīmes',
             'person_code.size' => 'Lauka ":attribute" garumam jābūt 11 ciparu, neieskaitot domuzīmi',
         ];
-
-        return $messages;
     }
 
     protected function failedValidation(Validator $validator)

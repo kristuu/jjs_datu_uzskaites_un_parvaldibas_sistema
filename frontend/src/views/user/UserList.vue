@@ -1,7 +1,6 @@
 <script setup>
 import {ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
-// Your other imports...
 
 const headers = ref([
   {key: 'person_code', label: 'Personas kods'},
@@ -12,7 +11,6 @@ const headers = ref([
 ]);
 const items = ref([]);
 
-// Your other methods...
 </script>
 
 <template>
@@ -25,8 +23,6 @@ const items = ref([]);
         :headers="headers"
         @updateItems="newItems => items.value = newItems"
     />
-
-    <!-- Rest of your code -->
   </div>
 </template>
 
