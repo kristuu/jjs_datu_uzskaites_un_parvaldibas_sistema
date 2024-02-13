@@ -35,7 +35,8 @@ let createInstance = async() => {
       title: response.status + ' statuss',
       message: response.data.data.message,
     });
-    await this.$router.push({name: `/${props.databaseTable}`})
+    await store.dispatch("resetFormInstance");
+    await router.push({name: `/${props.databaseTable}`})
   } catch (e) {
     console.error(`Error creating ${props.modelName}: `, e);
     errorList.value = e.response.data;
@@ -53,6 +54,7 @@ let updateInstance = async (instanceId) => {
       title: response.status + ' statuss',
       message: response.data.data.message,
     });
+    formInstance.value = {};
     await router.push({name: `/${props.databaseTable}`})
   } catch (e) {
     console.error(`Error updating ${props.modelName}: `, e);

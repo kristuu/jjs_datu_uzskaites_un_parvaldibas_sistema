@@ -83,7 +83,8 @@ watch(formInstance, (newValue) => {
     </div>
     <div class="col-12">
       <div class="form-group form-floating required">
-        <input v-model="formInstance.person_code"
+        <input v-model="formInstance.masked_person_code"
+               @input="formInstance.person_code = $event.detail.unmasked"
                inputmode="numeric" type="text"
                v-maska data-maska-eager data-maska="######-#####"
                @maska="caller => handleMaskInputChange(caller, 'person_code')"

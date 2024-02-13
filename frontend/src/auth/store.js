@@ -18,6 +18,9 @@ export default createStore({
         },
         SET_FORM_DATA(state, payload) {
             state.formInstance = {...state.formInstance, ...payload};
+        },
+        resetFormInstance(state) {
+            state.formInstance = {};
         }
     },
     actions: {

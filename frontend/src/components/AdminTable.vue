@@ -25,18 +25,21 @@ let isLoading = ref(false);
 
 const fetchDatabaseData = async () => {
   isLoading.value = true;
-  try {
-    const response = await axios.get(`/${props.databaseTable}?page=${currentPage.value}&perPage=${perPage.value}`);
-    // Assuming that you want to set response to items
-    console.log(response);
-    instances.value = response.data.data.data;
-    totalInstances.value = response.data.data.total;
-    currentPage.value = response.data.data.current_page;
-    totalPages.value = response.data.data.last_page;
-  } catch (e) {
-    console.error(`Error fetching ${props.databaseTable}: `, e);
-  }
-  isLoading.value = false;
+  axios.get(`/${props.databaseTable}?page=${currentPage.value}&perPage=${perPage.value}`)
+      .then(response => {
+        // Assuming that you want to set response to items
+        console.log(response);
+        instances.value = response.data.data.data;
+        totalInstances.value = response.data.data.total;
+        currentPage.value = response.data.data.current_page;
+        totalPages.value = response.data.data.last_page;
+      })
+      .catch (e => {
+        console.error(`Error fetching ${props.databaseTable}: `, e);
+      })
+      .finally(() => {
+        isLoading.value = false;
+      });
 }
 
 const deleteInstance = async (instanceId) => {
@@ -56,7 +59,9 @@ const deleteInstance = async (instanceId) => {
 
 watch(currentPage, fetchDatabaseData);
 
-onMounted(fetchDatabaseData);
+onMounted(() => {
+  fetchDatabaseData();
+});
 </script>
 
 <template>
