@@ -28,7 +28,9 @@ const handleErrorListUpdate = (updatedErrorList) => {
 
 watch(formInstance, (newValue) => {
   // format the date from VueDatePicker format to MySQL database format
-  newValue.birthdate = format(new Date(newValue.birthdate), 'yyyy-MM-dd HH:mm:ss');
+  if (newValue.birthdate) {
+    newValue.birthdate = format(new Date(newValue.birthdate), 'yyyy-MM-dd HH:mm:ss');
+  }
 }, { deep: true });
 </script>
 
