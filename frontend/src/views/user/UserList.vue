@@ -1,6 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
+import { useTotalInstances } from "@/hooks/useTotalInstances.js";
 
 const headers = ref([
   {key: 'person_code', label: 'Personas kods'},
@@ -11,6 +12,8 @@ const headers = ref([
 ]);
 const items = ref([]);
 
+const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
+
 </script>
 
 <template>
@@ -20,8 +23,10 @@ const items = ref([]);
         :database-table="'users'"
         :model-name="'User'"
         :instance-id-column="'person_code'"
+        :short-desc="`Kopā ${totalInstances} lietotāju`"
         :headers="headers"
         @updateItems="newItems => items.value = newItems"
+        @update:totalInstances="handleTotalInstancesUpdate"
     />
   </div>
 </template>

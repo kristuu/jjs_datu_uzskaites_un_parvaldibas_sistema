@@ -1,6 +1,7 @@
-import {createStore} from 'vuex';
+import { createStore } from 'vuex';
 import router from '../router/router.js';
 import axios from "@/services/axios";
+// import response from "core-js/internals/is-forced";
 
 export default createStore({
     state: {
@@ -40,21 +41,23 @@ export default createStore({
                 router.push({ name: 'LoginPage' });
             }
         },
-        async createInstance (_, { url, data }) {
-            try {
-                const response = await axios.post(url, data);
-                return {
-                    status: response.status,
-                    title: response.status + ' statuss',
-                    message: response.data.data.message,
-                };
-            } catch (e) {
-                console.error(`Error creating resource: `, e);
-            }
-        },
         setFormData({ commit }, payload) {
             commit('SET_FORM_DATA', payload);
         },
+        async fetchInstance({commit}, {tableName, id}) {
+            console.log(`Fetching data from /${tableName}/${id}`); // step 2
+            try {
+                const response = await axios.get(`/${tableName}/${id}`);
+                console.log('Server response', response); // step 3
+                commit('resetFormInstance');
+                commit('SET_FORM_DATA', response.data.data);
+                return id;
+            }
+            catch (error) {
+                console.log("Error in fetchInstance action: ", error); // step 4
+                throw error;
+            }
+        }
     },
     getters: {
         formInstance: state => state.formInstance,

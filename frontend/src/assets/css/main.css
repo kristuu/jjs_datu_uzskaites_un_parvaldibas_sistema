@@ -127,6 +127,13 @@ th {
     box-shadow: 0 0 0 0.2rem rgba(var(--yrs-primary-rgb), 0.25) !important;
 }
 
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+.invalid-feedback {
+    display: block;
+}
+
 .input-group, .input-group-sm, .input-group-text, .form-select {
     border-radius: 0 !important;
 }

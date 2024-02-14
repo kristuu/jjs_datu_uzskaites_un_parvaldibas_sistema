@@ -31,7 +31,7 @@ export default {
     VueGoogleAutocomplete,
   },
   methods: {
-    // Transferred from UserListOld.vue
+    // Transferred from UserList.vue
     openAddressModal() {
       this.selectedUser = { ...this.userData };
 
@@ -44,7 +44,7 @@ export default {
         this.addressModal.show();
       }
     },
-    // Transferred from UserListOld.vue
+    // Transferred from UserList.vue
     getAddressData(addressData, placeResultData) {
       // this.user.address.country = placeResultData.country;
       const addressComponents = placeResultData.address_components;

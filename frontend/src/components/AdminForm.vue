@@ -1,9 +1,11 @@
 <script setup>
-import {computed, inject, onMounted, ref} from 'vue';
+import {inject, computed, onMounted, ref} from 'vue';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 import axios from '@/services/axios';
 import router from "@/router/router";
 
+const route = useRoute();
 const store = useStore();
 const emit = defineEmits(['update-error-list'])
 
@@ -17,14 +19,14 @@ const props = defineProps({
   shortDesc: String,
   databaseTable: String,
   modelName: String,
+  personCode: String,
   instance: Array,
   headers: Array,
 });
 
-// let isLoading = ref(false);
-const isUpdateMode = computed(() =>
-  formInstance.value && formInstance.value.length > 0
-);
+let isLoading = ref(true);
+const isUpdateMode = !!route.params.id;
+console.log(isUpdateMode);
 
 let createInstance = async() => {
   try {
@@ -35,29 +37,30 @@ let createInstance = async() => {
       title: response.status + ' statuss',
       message: response.data.data.message,
     });
-    await store.dispatch("resetFormInstance");
-    await router.push({name: `/${props.databaseTable}`})
+    store.commit("resetFormInstance");
+    await router.push(`/${props.databaseTable}`);
   } catch (e) {
     console.error(`Error creating ${props.modelName}: `, e);
     errorList.value = e.response.data;
     emit('update-error-list', errorList.value);
-    console.log(errorList.value);
   }
 };
 
 let updateInstance = async (instanceId) => {
   try {
-    const response = await axios.put(`/${props.databaseTable}/${instanceId}`);
+    const response = await axios.put(`/${props.databaseTable}/${instanceId}`, formInstance.value);
     console.log(response);
     addToastNotification({
       status: response.status,
       title: response.status + ' statuss',
       message: response.data.data.message,
     });
-    formInstance.value = {};
-    await router.push({name: `/${props.databaseTable}`})
+    store.commit("resetFormInstance");
+    await router.push(`/${props.databaseTable}`);
   } catch (e) {
     console.error(`Error updating ${props.modelName}: `, e);
+    errorList.value = e.response.data;
+    emit('update-error-list', errorList.value);
   }
 };
 
@@ -74,22 +77,47 @@ const attachFormValidation = () => {
   });
 };
 
+const fetchInstance = async () => {
+  const id = route.params.id;
+  if (isUpdateMode) {
+    try {
+      await store.dispatch('fetchInstance', {
+        tableName: 'users', id
+      });
+      formInstance.value.masked_person_code = formInstance.value.person_code;
+      isLoading.value = false;
+    } catch (error) {
+      generalErrorText.value = error.response.data.data.message;
+      generalErrorStatus.value = error.response.status;
+    }
+  }
+}
+
 onMounted(() => {
+  fetchInstance();
   attachFormValidation();
 });
+
+let generalErrorText = ref('');
+let generalErrorStatus = ref('');
+
 </script>
 
 <template>
-  <div class="d-flex align-items-baseline text-white mb-4">
-    <h2 class="fw-bold">{{ props.pageName }}</h2>
-    <span class="ms-2">>> {{ props.shortDesc }}</span>
-  </div>
-  <div class="container-fluid content-card bg-white shadow-lg mb-2">
-    <slot></slot>
-  </div>
-  <button class="btn btn-primary btn" @click="isUpdateMode ? updateInstance() : createInstance()">
-    Saglabāt
-  </button>
+      <div class="d-flex align-items-baseline text-white mb-4">
+        <h2 class="fw-bold">{{ props.pageName }}</h2>
+        <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
+      </div>
+      <div class="container-fluid content-card bg-white shadow-lg mb-2">
+        <div v-if="generalErrorText" class="text-center p-3">
+          <h1 class="text-danger-emphasis fw-bold" style="font-size: 96px;">{{ generalErrorStatus }}</h1>
+          <h1 class="text-danger-emphasis fw-bold">{{ generalErrorText }}</h1>
+        </div>
+        <slot></slot>
+      </div>
+      <button class="btn btn-primary btn" @click="isUpdateMode ? updateInstance(route.params.id) : createInstance()">
+        Saglabāt
+      </button>
 </template>
 
 <style scoped>

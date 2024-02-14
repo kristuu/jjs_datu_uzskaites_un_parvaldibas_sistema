@@ -1,37 +1,20 @@
 <script setup>
-// import axios from "@/services/axios";
+import {ref, computed} from "vue";
 import { useStore } from 'vuex';
 
-// import { format } from 'date-fns';
+import { format } from 'date-fns';
 import { vMaska } from 'maska';
-import {ref, computed, watch} from "vue";
+
 import AdminForm from "@/components/AdminForm.vue";
-import {format} from "date-fns";
+import InputError from "@/components/error/inputError.vue";
 
 const store = useStore();
 let formInstance = computed(() => store.state.formInstance);
 let errorList = ref({});
 
-let unmaskedData = ref({
-  'person_code': ''
-});
-
-// const adminFormMethods = inject('adminFormMethods');
-
-const handleMaskInputChange = (caller, field) => {
-  unmaskedData.value[field] = caller.detail.unmasked;
-};
-
 const handleErrorListUpdate = (updatedErrorList) => {
   errorList.value = updatedErrorList;
 }
-
-watch(formInstance, (newValue) => {
-  // format the date from VueDatePicker format to MySQL database format
-  if (newValue.birthdate) {
-    newValue.birthdate = format(new Date(newValue.birthdate), 'yyyy-MM-dd HH:mm:ss');
-  }
-}, { deep: true });
 </script>
 
 <template>
@@ -40,7 +23,7 @@ watch(formInstance, (newValue) => {
            :model-name="`User`"
            :database-table="`users`"
            @update-error-list="handleErrorListUpdate">
-  <form id="createUserForm" class="row gap-3 py-3 text-start">
+  <form id="createUserForm" class="row gap-3 py-3 text-start needs-validation">
     <div class="col-12">
       <div class="form-group form-floating required">
         <input v-model="formInstance.name"
@@ -52,13 +35,7 @@ watch(formInstance, (newValue) => {
                id="name"
                placeholder="Vārds (-i)">
         <label for="name">Vārds (-i)</label>
-        <template v-for="(error, index) in errorList.name">
-          <div v-if="errorList.name && errorList.name.length > 0"
-               class="invalid-feedback"
-               :key="index">
-            {{ error }}
-          </div>
-        </template>
+        <InputError :errors="errorList.name" />
       </div>
     </div>
     <div class="col-12">
@@ -72,34 +49,21 @@ watch(formInstance, (newValue) => {
                id="surname"
                placeholder="Uzvārds (-i)">
         <label for="surname">Uzvārds (-i)</label>
-        <template v-for="(error, index) in errorList.surname">
-          <div v-if="errorList.surname && errorList.surname.length > 0"
-               class="invalid-feedback"
-               :key="index">
-            {{ error }}
-          </div>
-        </template>
+        <InputError :errors="errorList.surname" />
       </div>
     </div>
     <div class="col-12">
       <div class="form-group form-floating required">
         <input v-model="formInstance.masked_person_code"
-               @input="formInstance.person_code = $event.detail.unmasked"
                inputmode="numeric" type="text"
                v-maska data-maska-eager data-maska="######-#####"
-               @maska="caller => handleMaskInputChange(caller, 'person_code')"
+               @maska="caller => formInstance.person_code = caller.detail.unmasked"
                class="form-control"
                :class="{ 'is-invalid' : errorList.person_code?.length > 0 }"
                id="person_code"
                placeholder="Personas kods">
         <label for="person_code">Personas kods</label>
-        <template v-for="(error, index) in errorList.person_code">
-          <div v-if="errorList.person_code && errorList.person_code.length > 0"
-               class="invalid-feedback"
-               :key="index">
-            {{ error }}
-          </div>
-        </template>
+        <InputError :errors="errorList.person_code" />
       </div>
     </div>
     <div class="col-12">
@@ -110,7 +74,8 @@ watch(formInstance, (newValue) => {
                      selectText="Saglabāt"
                      :enable-time-picker="false"
                      :format="'dd.MM.yyyy'"
-                     auto-apply>
+                     auto-apply
+                     @update:modelValue="val => formInstance.birthdate = format(new Date(val), 'yyyy-MM-dd HH:mm:ss')">
         <template #dp-input="{ value }">
           <div class="form-group form-floating required">
             <input id="birthdate"
@@ -121,13 +86,7 @@ watch(formInstance, (newValue) => {
                    placeholder="Dzimšanas datums"
                    autocomplete="off" readonly />
             <label for="birthdate">Dzimšanas datums</label>
-            <template v-for="(error, index) in errorList.birthdate">
-              <div v-if="errorList.birthdate && errorList.birthdate.length > 0"
-                   class="invalid-feedback"
-                   :key="index">
-                {{ error }}
-              </div>
-            </template>
+            <InputError :errors="errorList.birthdate" />
           </div>
         </template>
       </VueDatePicker>
@@ -141,13 +100,7 @@ watch(formInstance, (newValue) => {
                id="email"
                placeholder="E-pasta adrese">
         <label for="email">E-pasta adrese</label>
-        <template v-for="(error, index) in errorList.email">
-          <div v-if="errorList.email && errorList.email.length > 0"
-               class="invalid-feedback"
-               :key="index">
-            {{ error }}
-          </div>
-        </template>
+        <InputError :errors="errorList.email" />
       </div>
     </div>
     <div class="col-12">
@@ -165,14 +118,8 @@ watch(formInstance, (newValue) => {
           </template>
         </vue-tel-input>
         <label for="phone">Telefona nr.</label>
+        <InputError :errors="errorList.phone" />
       </div>
-      <template v-for="(error, index) in errorList.phone">
-        <div v-if="errorList.phone && errorList.phone.length > 0"
-             class="invalid-feedback"
-             :key="index">
-          {{ error }}
-        </div>
-      </template>
     </div>
     <div class="col-12">
       <div class="form-group form-floating">
@@ -183,13 +130,7 @@ watch(formInstance, (newValue) => {
                id="iban_code"
                placeholder="IBAN (starptautiskais bankas konta numurs)">
         <label for="iban_code">IBAN (starptautiskais bankas konta numurs)</label>
-        <template v-for="(error, index) in errorList.iban_code">
-          <div v-if="errorList.iban_code && errorList.iban_code.length > 0"
-               class="invalid-feedback"
-               :key="index">
-            {{ error }}
-          </div>
-        </template>
+        <InputError :errors="errorList.iban_code" />
       </div>
     </div>
     <div class="col-12">
@@ -201,13 +142,7 @@ watch(formInstance, (newValue) => {
                id="password"
                placeholder="Parole">
         <label for="password">Parole</label>
-        <template v-for="(error, index) in errorList.password">
-          <div v-if="errorList.password && errorList.password.length > 0"
-               class="invalid-feedback"
-               :key="index">
-            {{ error }}
-          </div>
-        </template>
+        <InputError :errors="errorList.password" />
       </div>
     </div>
     <div class="col-12">
@@ -219,13 +154,7 @@ watch(formInstance, (newValue) => {
                id="password_confirmation"
                placeholder="Parole (atkārtoti)">
         <label for="password_confirmation">Parole (atkārtoti)</label>
-        <template v-for="(error, index) in errorList.password_confirmation">
-          <div v-if="errorList.password_confirmation && errorList.password_confirmation.length > 0"
-               class="invalid-feedback"
-               :key="index">
-            {{ error }}
-          </div>
-        </template>
+        <InputError :errors="errorList.password_confirmation" />
       </div>
     </div>
   </form>
@@ -233,11 +162,5 @@ watch(formInstance, (newValue) => {
 </template>
 
 <style scoped>
-.is-invalid {
-  border-color: #dc3545 !important;
-}
 
-.invalid-feedback {
-  display: block;
-}
 </style>

@@ -9,6 +9,7 @@ import RegisterPage from '../views/auth/RegisterPage.vue';
 import InstructorsList from "@/views/booking/InstructorsList.vue";
 
 import MaugloCompute from '@/views/calculateReportDiapazone.vue'
+import store from "@/auth/store";
 
 const routes = [
     {
@@ -30,10 +31,10 @@ const routes = [
         meta: { public: false }
     },
     {
-        path: '/edit-user/:person_code',
+        path: '/edit-user/:id',
         name: 'EditUser',
         component: EditUser,
-        meta: { public: false }
+        meta: { public: false },
     },
     {
         path: '/booking',
@@ -72,6 +73,7 @@ router.beforeEach((to, from, next) => {
     if (!to.meta.public && !authorized) {
         next({ name: 'LoginPage' });
     } else {
+        store.commit('resetFormInstance');
         next();
     }
 });

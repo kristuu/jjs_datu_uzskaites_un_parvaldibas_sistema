@@ -1,17 +1,25 @@
 <script setup>
-import {onMounted, ref, watch, inject} from 'vue';
+import {onMounted, ref, watch, inject, onUnmounted, watchEffect} from 'vue';
 import axios from '@/services/axios';
+import { useRoute } from 'vue-router';
 import router from "@/router/router";
+
+const route = useRoute();
 
 const addToastNotification = inject('addToastNotification');
 
 const props = defineProps({
   pageName: String,
+  shortDesc: String,
   databaseTable: String,
   modelName: String,
   headers: Array,
   instanceIdColumn: String,
   createIconClass: String,
+});
+
+const emit = defineEmits({
+  'update:totalInstances': null,
 });
 
 let instances = ref([]);
@@ -29,10 +37,12 @@ const fetchDatabaseData = async () => {
       .then(response => {
         // Assuming that you want to set response to items
         console.log(response);
-        instances.value = response.data.data.data;
-        totalInstances.value = response.data.data.total;
-        currentPage.value = response.data.data.current_page;
-        totalPages.value = response.data.data.last_page;
+        instances.value = response.data[0].data;
+        totalInstances.value = response.data[0].total;
+        currentPage.value = response.data[0].current_page;
+        totalPages.value = response.data[0].last_page;
+
+        emit('update:totalInstances', totalInstances.value);
       })
       .catch (e => {
         console.error(`Error fetching ${props.databaseTable}: `, e);
@@ -58,8 +68,19 @@ const deleteInstance = async (instanceId) => {
 }
 
 watch(currentPage, fetchDatabaseData);
+watchEffect(() => {
+  const { params } = route;
+
+  if (params?.databaseTable != null) {
+    fetchDatabaseData();
+  }
+});
 
 onMounted(() => {
+  fetchDatabaseData();
+});
+
+onUnmounted(() => {
   fetchDatabaseData();
 });
 </script>
@@ -67,7 +88,7 @@ onMounted(() => {
 <template>
   <div class="d-flex align-items-baseline text-white mb-2">
     <h2 class="fw-bold">{{ props.pageName }}</h2>
-    <span class="ms-2">Pavisam kopā <strong>{{ totalInstances }}</strong> lietotāju</span>
+    <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
   </div>
   <div class="mb-2">
     <button class="btn btn-primary me-2" @click="router.push({ name: 'Create' + modelName})">
@@ -154,7 +175,7 @@ onMounted(() => {
               <button class="btn btn-sm btn-primary me-2" type="button">
                 <i class="bi bi-three-dots"></i>
               </button>
-              <button class="btn btn-sm btn-warning me-2" @click="router.push({ name: 'Edit' + modelName, params: { [instanceIdColumn]: instance[instanceIdColumn] } })">
+              <button class="btn btn-sm btn-warning me-2" @click="router.push({ name: 'Edit' + modelName, params: { id: instance[instanceIdColumn] } })">
                 <i class="bi bi-pencil-square"></i>
               </button>
               <button class="btn btn-sm btn-danger"
