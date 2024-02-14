@@ -172,8 +172,11 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'instance' => [
+            'not-found' => ':model ar identifikatoru :id netika atrasts',
+        ],
+        'model' => [
+          'user' => 'lietotājs',
         ],
     ],
 
@@ -199,6 +202,8 @@ return [
         'phone' => 'Telefona numurs',
 
         'today' => 'šodienu',
+
+        'user' => 'lietotājs',
     ],
 
     'exceptions' => [

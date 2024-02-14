@@ -37,9 +37,9 @@ class UserController extends Controller
         return $this->store($request, User::class);
     }
 
-    private function findUserById(string $person_code)
+    public function findUserById(string $person_code)
     {
-        return $this->findById($person_code, User::class);
+        return $this->findById(User::class, $person_code);
     }
 
     public function updateUser(UserRequest $request, string $person_code)

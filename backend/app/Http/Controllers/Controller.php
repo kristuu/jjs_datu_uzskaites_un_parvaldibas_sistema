@@ -74,7 +74,7 @@ class Controller extends BaseController
 
         $instances = $className::all();
         if ($instances) {
-            return $this->sendResponse($instances);
+            return response()->json([$instances]);
         } else {
             return $this->sendResponse(['message' => 'No instances of ' . class_basename($className) . ' found'], 404);
         }
@@ -88,7 +88,7 @@ class Controller extends BaseController
 
         $instances = $className::with($relationships)->paginate($pages);
 
-        return $this->sendResponse($instances);
+        return response()->json([$instances]);
     }
 
     protected function store(FormRequest $formRequest, string $className)
@@ -123,7 +123,7 @@ class Controller extends BaseController
         if ($instance) {
             return $this->sendResponse($instance);
         } else {
-            return $this->sendResponse(['message' => 'No ' . class_basename($className) . ' with id ' . $instanceId . ' found'], 404);
+            return $this->sendResponse(['message' => __('instance.not-found', ['model' => __('models.' . class_basename($className)), 'id' => $instanceId])], 404);
         }
     }
 
