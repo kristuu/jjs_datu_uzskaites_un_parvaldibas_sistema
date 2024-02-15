@@ -27,8 +27,14 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->group(function(){
+    Route::get('/get-permissions', function () {
+        return auth()->check()?auth()->user()->jsPermissions():0;
+    });
+
     Route::get('/users', [UserController::class, 'getPaginatedUsers']);
-    Route::get('/users/{id}', [UserController::class, 'findUserById']);
+    Route::group(['middleware' => ['can:edit instances']], function () {
+        Route::get('/users/{id}', [UserController::class, 'findUserById']);
+    });
     Route::post('/users', [UserController::class, 'storeUser']);
     Route::put('/users/{id}', [UserController::class, 'updateUser']);
     Route::delete('/users/{id}', [UserController::class, 'destroyUser']);
