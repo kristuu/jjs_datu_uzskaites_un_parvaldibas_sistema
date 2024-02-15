@@ -148,6 +148,7 @@
       <path value="$PROJECT_DIR$/backend/vendor/propaganistas/laravel-phone" />
       <path value="$PROJECT_DIR$/backend/vendor/nembie/iban-rule" />
       <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-permission" />
+      <path value="$PROJECT_DIR$/backend/vendor/ahmedsaoud31/laravel-permission-to-vuejs" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
