@@ -79,10 +79,11 @@ const attachFormValidation = () => {
 const fetchInstance = async () => {
   store.commit('setLoading', true);
   const id = route.params.id;
+  console.log(id);
   if (isUpdateMode) {
     try {
       await store.dispatch('fetchInstance', {
-        tableName: 'users', id
+        tableName: props.databaseTable, id
       });
       formInstance.value.masked_person_code = formInstance.value.person_code;
     } catch (error) {

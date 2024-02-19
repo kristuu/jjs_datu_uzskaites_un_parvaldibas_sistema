@@ -162,8 +162,15 @@ return [
     ],
     'phone' => 'The field :attribute must be a valid phone number.',
     'iban' => 'The :attribute field must be a valid international bank account number.',
-    'deleted' => ':model with id :id succesfully deleted.',
     'models' => [
         'User' => 'User',
+    ],
+    'instance' => [
+        'deleted' => ':model with ID :id succesfully deleted.',
+        'not_found' => ':model with ID :id was not found.',
+        'updated' => ':model with id :id succesfully updated.',
+        'creation_failed' => ':model creation failed.',
+        'creation' => ':model succesfully created.',
+        'none_found' => 'No instances of model :model found.',
     ],
 ];

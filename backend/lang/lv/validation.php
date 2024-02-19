@@ -162,8 +162,15 @@ return [
     ],
     'phone' => 'Laukam ":attribute" ir jābūt derīgam tālruņa numuram.',
     'iban' => 'Laukam ":attribute" ir jābūt derīgam starptautiskam bankas konta numuram.',
-    'deleted' => ':model ar ID :id veiksmīgi dzēsts.',
     'models' => [
         'User' => 'Lietotājs',
+    ],
+    'instance' => [
+        'deleted' => ':model ar ID :id veiksmīgi dzēsts.',
+        'not_found' => ':model ar ID :id netika atrasts.',
+        'updated' => ':model ar ID :id veiksmīgi atjaunināts.',
+        'creation_failed' => ':model izveide neizdevās.',
+        'creation' => ':model veiksmīgi izveidots (-i / -a).',
+        'none_found' => 'Nav atrasts neviens :model objekts.',
     ],
 ];

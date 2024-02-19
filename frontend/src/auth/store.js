@@ -66,7 +66,7 @@ export default createStore({
                 const response = await axios.get(`/${tableName}/${id}`);
                 console.log('Server response', response); // step 3
                 commit('resetFormInstance');
-                commit('SET_FORM_DATA', response.data.data);
+                commit('SET_FORM_DATA', response.data);
                 return id;
             }
             catch (error) {

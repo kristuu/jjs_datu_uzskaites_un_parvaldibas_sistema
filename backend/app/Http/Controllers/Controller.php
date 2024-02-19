@@ -51,7 +51,9 @@ class Controller extends BaseController
         if ($instances) {
             return response()->json([$instances]);
         } else {
-            return $this->sendResponse(['message' => 'No instances of ' . class_basename($className) . ' found'], 404);
+            return $this->sendResponse(['message' => __('validation.instance.none_found', [
+                'model' => __('validation.models.' . class_basename($className))
+            ])], 404);
         }
     }
 
@@ -76,9 +78,13 @@ class Controller extends BaseController
             $instance = $className::create($validated);
 
             if ($instance) {
-                return $this->sendResponse(['message' => class_basename($className) . ' created successfully']);
+                return $this->sendResponse(['message' => __('validation.instance.creation', [
+                    'model' => __('validation.models.' . class_basename($className))
+                ])]);
             } else {
-                return $this->sendResponse(['message' => class_basename($className) . ' creation failed'], 500);
+                return $this->sendResponse(['message' => __('validation.instance.creation_failed', [
+                    'model' => __('validation.models.' . class_basename($className))
+                ])], 500);
             }
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
@@ -98,7 +104,9 @@ class Controller extends BaseController
         if ($instance) {
             return $this->sendResponse($instance);
         } else {
-            return $this->sendResponse(['message' => __('instance.not-found', ['model' => __('models.' . class_basename($className)), 'id' => $instanceId])], 404);
+            return $this->sendResponse(['message' => __('validation.instance.not_found', [
+                'model' => __('validation.models.' . class_basename($className)),
+                'id' => $instanceId])], 404);
         }
     }
 
@@ -113,9 +121,13 @@ class Controller extends BaseController
         if ($instance) {
             $instance->update($validated);
 
-            return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' updated successfully']);
+            return $this->sendResponse(['message' => __('validation.instance.update', [
+                'model' => __('validation.models.' . class_basename($className)),
+                'id' => $instanceId])]);
         } else {
-            return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' was not found'], 404);
+            return $this->sendResponse(['message' => __('validation.instance.not_found', [
+                'model' => __('validation.models.' . class_basename($className)),
+                'id' => $instanceId])], 404);
         }
     }
 
@@ -125,11 +137,13 @@ class Controller extends BaseController
 
         $instance = $className::find($instanceId);
         if (!$instance) {
-            return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' not found'], 404);
+            return $this->sendResponse(['message' => __('validation.instance.not_found', [
+                'model' => __('validation.models.' . class_basename($className)),
+                'id' => $instanceId])], 404);
         }
 
         $instance->delete();
-        return $this->sendResponse(['message' => __('validation.deleted', [
+        return $this->sendResponse(['message' => __('validation.instance.deleted', [
             'model' => __('validation.models.' . class_basename($className)),
             'id' => $instanceId])]);
     }
