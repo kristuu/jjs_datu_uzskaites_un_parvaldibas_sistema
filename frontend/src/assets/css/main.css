@@ -19,6 +19,14 @@ body {
     flex-grow: 1;
 }
 
+a:visited {
+    color: var(--bs-nav-link-color) !important;
+}
+
+.nav-scroller .nav {
+    --bs-nav-link-color: rgba(255, 255, 255, 0.55) !important;
+}
+
 aside li.nav-item a.nav-link i,
 aside div.dropdown-menu a.dropdown-item i,
 header.top div ul.navbar-nav li.nav-item a.nav-link i,
@@ -84,7 +92,7 @@ li > a {
 
 .toast {
     border-radius: var(--bs-border-radius) 0;
-    border: 0px;
+    border: 0;
 }
 
 .toast-header {

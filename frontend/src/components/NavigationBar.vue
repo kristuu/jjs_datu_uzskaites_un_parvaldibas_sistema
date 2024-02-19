@@ -1,36 +1,34 @@
-<script>
-import axios from "@/services/axios";
-import { mapState, mapActions } from "vuex";
+<script setup>
+import axios from '@/services/axios';
+import { computed, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 
-export default {
-  data() {
-    return {
-      user: null,
-    }
-  },
-  computed: {
-    // using Vuex helpers to map 'authorized' state to a computed property
-    ...mapState(['authorized'])
-  },
-  methods: {
-    // Vuex helper usage to map 'logout' action to a method
-    ...mapActions(['logout']),
-  },
-  async created() {
-    if(this.authorized) {
-      try {
-        const response = await axios.get('/user');
-        this.user = response.data;
-      } catch(error) {
-        if (error.response.status === 401) {
-          this.user = null;
-        } else {
-          console.error(error.response.status);
-        }
+const store = useStore();
+const route = useRoute();
+
+const path = computed(() => route.path);
+const authorized = computed(() => store.state.authorized);
+const logout = store.dispatch.bind('logout');
+
+let user = ref(null);
+
+onMounted(async () => {
+  store.commit('setLoading', true);
+  if(authorized.value) {
+    try {
+      const response = await axios.get('/user')
+      user.value = response.data
+    } catch (error) {
+      if (error.response.status === 401) {
+        user.value = null
+      } else {
+        console.error(error.response.status)
       }
     }
   }
-}
+  store.commit('setLoading', false);
+})
 </script>
 
 <template>
@@ -43,14 +41,20 @@ export default {
               <a class="navbar-brand" href="/"><img src="../assets/logo-white.svg" style="width: 50px; height: auto;"/></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/users">
-                <i class="bi bi-person"></i>
-                <span>Lietotāji</span>
-              </a>
+              <router-link class="nav-link" :to="{ name: 'HomePage' }">
+                <i class="bi bi-house-fill"></i>
+                <span>Sākums</span>
+              </router-link>
             </li>
           </ul>
           <ul class="nav navbar-nav d-md-down-none"></ul>
           <ul class="nav navbar-nav d-flex flex-row flex-shrink-0">
+            <li class="nav-item" v-if="can('Access Admin Dashboard')">
+              <router-link class="nav-link" :to="{ name: 'AdminDashboard' }">
+                <i class="bi bi-speedometer"></i>
+                <span>ADMIN</span>
+              </router-link>
+            </li>
             <li class="nav-item me-2 dropdown">
               <a class="nav-link dropdown-toggle text-decoration-none"
                  data-bs-toggle="dropdown"
@@ -74,7 +78,7 @@ export default {
                  data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="d-none d-xl-block pe-2">
                   <div class="fw-bold">{{ user ? user.name : '' }}</div>
-                  <div class="mt-1 small">Admin</div>
+                  <div class="mt-1 small">Izstrādātājs</div>
                 </div>
                 <span class="bg-white avatar fw-bold text-black-50">
                   {{ user ? user.name[0].toUpperCase() + user.surname[0].toUpperCase() : "" }}
@@ -141,6 +145,22 @@ export default {
       </ul>
     </div>
   </aside>
+  <div v-if="can('Access Admin Dashboard') && path.startsWith('/admin')">
+    <div class="nav-scroller container-xl mt-2 mb-2">
+      <nav class="nav rounded-1" aria-label="Admin navigation">
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{ name: 'AdminDashboard'}">
+            <span>Panelis</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" :to="{ name: 'UserList'}">
+            <span>Lietotāji</span>
+          </router-link>
+        </li>
+      </nav>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -163,6 +183,23 @@ export default {
   background: inherit;
   z-index: -1;
   box-shadow: inherit;
+}
+
+.nav-scroller {
+  position: relative;
+  z-index: 2;
+  height: 2.75rem;
+  overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .avatar {

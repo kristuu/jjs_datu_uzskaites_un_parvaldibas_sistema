@@ -1,15 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import HomePage from '../views/HomePage.vue';
-import UserList from '../views/user/UserList.vue';
+import UserList from '@/views/user/UserList.vue';
 import CreateUser from '../views/user/CreateUser.vue';
 import EditUser from '../views/user/EditUser.vue';
 import LoginPage from '../views/auth/LoginPage.vue';
 import RegisterPage from '../views/auth/RegisterPage.vue';
 import InstructorsList from "@/views/booking/InstructorsList.vue";
 
+import AdminDashboard from "@/views/admin/AdminDashboard.vue";
+
 import MaugloCompute from '@/views/calculateReportDiapazone.vue'
 import store from "@/auth/store";
+import ErrorView from "@/views/error/ErrorView.vue";
 
 const routes = [
     {
@@ -17,12 +20,6 @@ const routes = [
         name: 'HomePage',
         component: HomePage,
         meta: { public: true }
-    },
-    {
-        path: '/users',
-        name: 'UserList',
-        component: UserList,
-        meta: { public: false }
     },
     {
         path: '/create-user',
@@ -59,7 +56,25 @@ const routes = [
         name: 'MaugloCompute',
         component: MaugloCompute,
         meta: { public: false }
-    }
+    },
+    {
+        path: '/error',
+        name: 'ErrorView',
+        component: ErrorView,
+        meta: { public: true }
+    },
+    {
+      path: '/admin',
+      component: AdminDashboard,
+      children: [
+          {
+            path: '', name: 'AdminDashboard', component: AdminDashboard, meta: { public: false },
+          },
+          {
+            path: 'users', name: 'UserList', component: UserList, meta: { public: false },
+          },
+      ],
+    },
 ];
 
 const router = createRouter({

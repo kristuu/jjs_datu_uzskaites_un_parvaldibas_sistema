@@ -7,6 +7,9 @@ export default createStore({
     state: {
         authorized: !!localStorage.getItem('token'),
         formInstance: {},
+        isLoading: false,
+        errorStatus: null,
+        errorMessage: '',
     },
     // functions that directly mutate the state
     mutations: {
@@ -22,6 +25,19 @@ export default createStore({
         },
         resetFormInstance(state) {
             state.formInstance = {};
+        },
+        setLoading(state, payload) {
+            state.isLoading = payload;
+        },
+        setErrorStatus(state, payload) {
+            state.errorStatus = payload;
+        },
+        setErrorMessage(state, payload) {
+            state.errorMessage = payload;
+        },
+        clearError(state) {
+            state.errorStatus = null;
+            state.errorMessage = '';
         }
     },
     actions: {
@@ -38,7 +54,7 @@ export default createStore({
             } catch (e) {
                 console.error("Radusies kļūda: ", e);
             } finally {
-                router.push({ name: 'LoginPage' });
+                await router.push({name: 'LoginPage'});
             }
         },
         setFormData({ commit }, payload) {
@@ -54,8 +70,10 @@ export default createStore({
                 return id;
             }
             catch (error) {
-                console.log("Error in fetchInstance action: ", error); // step 4
-                throw error;
+                console.log(error);
+                commit('setErrorStatus', error.response.status);
+                commit('setErrorMessage', error.response.data.message);
+                await router.push({name: 'ErrorView'});
             }
         }
     },

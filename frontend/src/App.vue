@@ -1,98 +1,104 @@
-<script>
-import { provide, ref, nextTick } from 'vue';
+<script setup>
+import { provide, ref, nextTick, computed } from 'vue';
+import { useRoute, useRouter } from "vue-router";
 import { Toast } from 'bootstrap';
+import { useStore } from 'vuex';
+
 import NavigationBar from './components/NavigationBar.vue';
 import { lv } from '@/assets/translations/routes/translations';
+import Loading from "vue-loading-overlay";
+import 'vue-loading-overlay/dist/css/index.css';
 
-export default {
-  name: 'App',
-  data() {
-    return {
-      user: null,
-      translations: lv,
-    };
-  },
-  components: {
-    NavigationBar,
-  },
-  methods: {
-    toastTypeClass(statusCode) {
-      switch (true) {
-        case statusCode >= 200 && statusCode <= 299:
-          return 'success';
-        case statusCode >= 300 && statusCode <= 399:
-          return 'warning';
-        case statusCode >= 400 && statusCode <= 599:
-          return 'danger';
-        default:
-          return 'info';
-      }
-    },
-    resolveBreadcrumb(name) {
-      let breadcrumb = this.translations[name];
-      if (breadcrumb === undefined) {
-        return [{ name: name }];
-      } else if (!Array.isArray(breadcrumb)) {
-        breadcrumb = [breadcrumb];
-      }
-      return breadcrumb;
-    }
-  },
-  computed: {
-    crumbs() {
-      const pathArray = this.$route.fullPath.split('/').filter(el => el);
-      let crumbs = [];
+const translations = lv;
+const router = useRouter();
+const route = useRoute();
+const store = useStore();
+const isLoading = computed(() => store.state.isLoading);
 
-      pathArray.forEach((path, index) => {
-        let route = this.$router.resolve({ path: '/' + pathArray.slice(0, index + 1).join('/') });
-        let breadcrumbs = route ? this.resolveBreadcrumb(route.name) : [{name: path}];
-        crumbs = crumbs.concat(breadcrumbs.map((breadcrumb, i, arr) => ({
-          text: breadcrumb.name,
-          to: breadcrumb.path || '/' + pathArray.slice(0, index + 1).join('/'),
-          isActive: i === arr.length-1 && index === pathArray.length-1 // set as active if it's last crumb
-        })));
-      });
+const notifications = ref([]);
 
-      return crumbs;
-    },
-  },
-  setup() {
-    const notifications = ref([]);
-    const addToastNotification = (notification) => {
-      const id = Date.now().toString();
 
-      // add the id to the notification data
-      notification.id = id;
+const addToastNotification = (notification) => {
+  const id = Date.now().toString();
 
-      notification.type = notification.type || 'info';
+  notification.id = id;
+  notification.type = notification.type || 'info';
+  notification.autohide = notification.autohide !== undefined ? notification.autohide : true;
+  notification.delay = notification.delay || 5000;
 
-      // if autohide is not set, default it to true
-      notification.autohide = notification.autohide !== undefined ? notification.autohide : true;
+  notifications.value.push(notification);
 
-      // if delay is not set, default it to 5000 ms
-      notification.delay = notification.delay || 5000;
+  nextTick(() => {
+    const toastEl = document.getElementById(`toast-${id}`);
 
-      notifications.value.push(notification);
+    new Toast(toastEl, {
+      autohide: notification.autohide,
+      delay: notification.delay
+    }).show();
+  });
+};
 
-      nextTick(() => {
-        const toastEl = document.getElementById(`toast-${id}`);
+const toastTypeClass = (statusCode) => {
+  switch (true) {
+    case statusCode >= 200 && statusCode <= 299:
+      return 'success';
+    case statusCode >= 300 && statusCode <= 399:
+      return 'warning';
+    case statusCode >= 400 && statusCode <= 599:
+      return 'danger';
+    default:
+      return 'info';
+  }
+};
 
-        // "destroy" the previous instance if any and create a new toast instance
-        new Toast(toastEl, {
-          autohide: notification.autohide,
-          delay: notification.delay
-        }).show();
-      });
-    };
-
-    provide('addToastNotification', addToastNotification);
-
-    return { notifications };
-  },
+const resolveBreadcrumb = (name) => {
+  const breadcrumb = translations[name];
+  return !(breadcrumb === undefined) ? Array.isArray(breadcrumb) ? breadcrumb : [breadcrumb] : [{ name }];
 }
+
+const crumbs = computed(() => {
+  const pathArray = route.fullPath.split('/').filter(x => x);
+  const crumbs = [];
+
+  pathArray.forEach((path, idx) => {
+    let pathToLookup = '/' + pathArray.slice(0, idx + 1).join('/');
+    let routeResolved = router.resolve({ path: pathToLookup });
+
+    // Ignore dynamic route segments (e.g., IDs)
+    if (routeResolved.name && translations[routeResolved.name]) {
+      let breadcrumb = resolveBreadcrumb(routeResolved.name);
+
+      if (breadcrumb) {
+        breadcrumb = breadcrumb.map((breadcrumb, i, arr) => ({
+          text: breadcrumb.name,
+          to: breadcrumb.path || pathToLookup,
+          isActive: i === arr.length-1 && idx === pathArray.length-1
+        }));
+
+        crumbs.push(...breadcrumb);
+      }
+    }
+  });
+
+  return crumbs;
+});
+
+provide('addToastNotification', addToastNotification);
 </script>
 
 <template>
+  <transition name="fade" mode="out-in">
+    <div class="vl-parent" v-if="isLoading">
+      <Loading v-model:active="isLoading"
+               :loader="`bars`"
+               :can-cancel="false"
+               :is-full-page="true"
+               :color="`#9A2E26FF`"
+               :opacity="1"
+               :width="`6rem`"
+               :height="`6rem`"/>
+    </div>
+  </transition>
   <NavigationBar />
   <div id="app">
     <main class="container-xxl">
@@ -140,6 +146,20 @@ export default {
 </template>
 
 <style>
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.75s;
+}
+
+.vl-parent {
+  z-index: 9999;
+}
+
 #app {
   font-family: "Open Sans", sans-serif;
   -webkit-font-smoothing: antialiased;

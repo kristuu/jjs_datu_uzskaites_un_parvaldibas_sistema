@@ -24,7 +24,6 @@ const props = defineProps({
   headers: Array,
 });
 
-let isLoading = ref(true);
 const isUpdateMode = !!route.params.id;
 console.log(isUpdateMode);
 
@@ -78,6 +77,7 @@ const attachFormValidation = () => {
 };
 
 const fetchInstance = async () => {
+  store.commit('setLoading', true);
   const id = route.params.id;
   if (isUpdateMode) {
     try {
@@ -85,10 +85,12 @@ const fetchInstance = async () => {
         tableName: 'users', id
       });
       formInstance.value.masked_person_code = formInstance.value.person_code;
-      isLoading.value = false;
     } catch (error) {
-      generalErrorText.value = error.response.data.data.message;
-      generalErrorStatus.value = error.response.status;
+      store.commit('setErrorStatus', error.status);
+      store.commit('setErrorMessage', error.data.message);
+      await router.push({ name: 'ErrorView' });
+    } finally {
+      store.commit('setLoading', false);
     }
   }
 }
@@ -97,10 +99,6 @@ onMounted(() => {
   fetchInstance();
   attachFormValidation();
 });
-
-let generalErrorText = ref('');
-let generalErrorStatus = ref('');
-
 </script>
 
 <template>
@@ -109,10 +107,6 @@ let generalErrorStatus = ref('');
         <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
       </div>
       <div class="container-fluid content-card bg-white shadow-lg mb-2">
-        <div v-if="generalErrorText" class="text-center p-3">
-          <h1 class="text-danger-emphasis fw-bold" style="font-size: 96px;">{{ generalErrorStatus }}</h1>
-          <h1 class="text-danger-emphasis fw-bold">{{ generalErrorText }}</h1>
-        </div>
         <slot></slot>
       </div>
       <button class="btn btn-primary btn" @click="isUpdateMode ? updateInstance(route.params.id) : createInstance()">
