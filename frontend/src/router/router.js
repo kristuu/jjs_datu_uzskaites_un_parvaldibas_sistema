@@ -22,18 +22,6 @@ const routes = [
         meta: { public: true }
     },
     {
-        path: '/create-user',
-        name: 'CreateUser',
-        component: CreateUser,
-        meta: { public: false }
-    },
-    {
-        path: '/edit-user/:id',
-        name: 'EditUser',
-        component: EditUser,
-        meta: { public: false },
-    },
-    {
         path: '/booking',
         name: 'InstructorsList',
         component: InstructorsList,
@@ -68,13 +56,22 @@ const routes = [
       component: AdminDashboard,
       children: [
           {
-            path: '', name: 'AdminDashboard', component: AdminDashboard, meta: { public: false },
+              path: '', name: 'AdminDashboard', component: AdminDashboard, meta: { public: false },
           },
           {
-            path: 'users', name: 'UserList', component: UserList, meta: { public: false },
+              path: 'users', name: 'UserList', component: UserList, meta: { public: false },
+          },
+          {
+              path: 'users/:id/edit',  name: 'EditUser', component: EditUser, meta: { public: false },
+          },
+          {
+              path: 'users/create',  name: 'CreateUser', component: CreateUser, meta: { public: false },
           },
       ],
     },
+    {
+        path: '/:pathMatch(.*)*', component: ErrorView,
+    }
 ];
 
 const router = createRouter({

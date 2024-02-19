@@ -134,30 +134,6 @@ const handleErrorListUpdate = (updatedErrorList) => {
           <InputError :errors="errorList.iban_code" />
         </div>
       </div>
-      <div class="col-12">
-        <div class="form-group form-floating required">
-          <input v-model="formInstance.password"
-                 type="password"
-                 class="form-control"
-                 :class="{ 'is-invalid' : errorList.password?.length > 0 }"
-                 id="password"
-                 placeholder="Parole">
-          <label for="password">Parole</label>
-          <InputError :errors="errorList.password" />
-        </div>
-      </div>
-      <div class="col-12">
-        <div class="form-group form-floating required">
-          <input v-model="formInstance.password_confirmation"
-                 type="password"
-                 class="form-control"
-                 :class="{ 'is-invalid' : errorList.password_confirmation?.length > 0 }"
-                 id="password_confirmation"
-                 placeholder="Parole (atkārtoti)">
-          <label for="password_confirmation">Parole (atkārtoti)</label>
-          <InputError :errors="errorList.password_confirmation" />
-        </div>
-      </div>
     </form>
   </AdminForm>
 </template>

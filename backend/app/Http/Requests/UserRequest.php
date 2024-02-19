@@ -36,8 +36,9 @@ class UserRequest extends FormRequest
 
         $rules['birthdate'][] = 'before:' . date('d-m-Y');
 
-        if ($this->method('POST')) {
+        if ($this->method() === 'POST') {
             $rules['password'] = ['required', 'confirmed', 'min:8'];
+            $rules['person_code'] += ["unique:users,person_code,{$userPersonCode},person_Code"];
         }
 
         return $rules;

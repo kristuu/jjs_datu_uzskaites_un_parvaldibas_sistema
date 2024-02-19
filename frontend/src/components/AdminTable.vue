@@ -58,7 +58,7 @@ const deleteInstance = async (instanceId) => {
     addToastNotification({
       status: response.status,
       title: response.status + ' statuss',
-      message: response.data.data.message,
+      message: response.data.message,
     });
     await fetchDatabaseData();
   } catch (e) {

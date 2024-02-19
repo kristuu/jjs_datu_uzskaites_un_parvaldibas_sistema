@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "nembie/iban-rule": "^1.0",
+        "outhebox/laravel-translations": "^1.0.7",
         "propaganistas/laravel-phone": "^5.1",
         "spatie/laravel-permission": "^6.3"
     },
@@ -44,6 +45,7 @@
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan translations:publish --ansi",
             "@php artisan lang:update"
         ],
         "post-root-package-install": [

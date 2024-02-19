@@ -24,33 +24,8 @@ class Controller extends BaseController
 
     protected function sendResponse($data = null, int $status = 200, array $headers = [])
     {
-        switch(true) {
-            case $status >= 100 && $status <= 199:
-                $message = 'informational';
-                break;
-            case $status >= 200 && $status <= 299:
-                $message = 'successful';
-                break;
-            case $status >= 300 && $status <= 399:
-                $message = 'redirection';
-                break;
-            case $status >= 400 && $status <= 499:
-                $message = 'clientError';
-                break;
-            case $status >= 500 && $status <= 599:
-                $message = 'serverError';
-                break;
-            default:
-                $message = 'unknownError';
-                break;
-        };
-
-        $response = [
-          'message' => $message,
-        ];
-
         if (!is_null($data)) {
-            $response['data'] = $data;
+            $response = $data;
         }
 
         return response()->json($response, $status, $headers);
@@ -154,6 +129,8 @@ class Controller extends BaseController
         }
 
         $instance->delete();
-        return $this->sendResponse(['message' => class_basename($className) . ' with id ' . $instanceId . ' deleted successfully']);
+        return $this->sendResponse(['message' => __('validation.deleted', [
+            'model' => __('validation.models.' . class_basename($className)),
+            'id' => $instanceId])]);
     }
 }

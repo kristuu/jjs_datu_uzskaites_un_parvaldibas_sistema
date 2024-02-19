@@ -1,7 +1,6 @@
 export const lv = {
-    HomePage: { name: "Sākums" },
-    AdminHome: { name: "Admin" },
-    UserList: [{ name: "Lietotāji" }, { name: "Saraksts" }],
-    CreateUser: [{ name: "Lietotāji", path: "/users" }, { name: "Pievienošana", path: "/create-user" }],
-    EditUser: [{ name: "Lietotāji", path: "/users" }, { name: "Rediģēšana", path: "/edit-user"}],
+    AdminDashboard: [{ name: "Admin" }, { name: "Panelis" }],
+    UserList: [{ name: "Admin", path: "/admin" }, { name: "Lietotāji" }, { name: "Saraksts" }],
+    CreateUser: [{ name: "Admin", path: "/admin" }, { name: "Lietotāji", path: "/admin/users" }, { name: "Pievienošana", path: "/create-user" }],
+    EditUser: [{ name: "Admin", path: "/admin" }, { name: "Lietotāji", path: "/admin/users" }, { name: "Rediģēšana" }],
 }

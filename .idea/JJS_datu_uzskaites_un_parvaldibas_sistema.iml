@@ -142,6 +142,36 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/propaganistas/laravel-phone" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-permission" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/ahmedsaoud31/laravel-permission-to-vuejs" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/amp" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/byte-stream" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/dns" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/parallel" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/parser" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/pipeline" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/process" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/serialization" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/socket" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/sync" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/amphp/windows-registry" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/based/momentum-lock" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/based/momentum-modal" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/brick/varexporter" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/daverandom/libdns" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/inertiajs/inertia-laravel" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/kelunik/certificate" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/uri" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/outhebox/laravel-translations" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/revolt/event-loop" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-data" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-package-tools" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-query-builder" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-typescript-transformer" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/php-structure-discoverer" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/typescript-transformer" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/stichoza/google-translate-php" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/tightenco/ziggy" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

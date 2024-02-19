@@ -34,10 +34,10 @@ let createInstance = async() => {
     addToastNotification({
       status: response.status,
       title: response.status + ' statuss',
-      message: response.data.data.message,
+      message: response.data.message,
     });
     store.commit("resetFormInstance");
-    await router.push(`/${props.databaseTable}`);
+    await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
     console.error(`Error creating ${props.modelName}: `, e);
     errorList.value = e.response.data;
@@ -52,10 +52,10 @@ let updateInstance = async (instanceId) => {
     addToastNotification({
       status: response.status,
       title: response.status + ' statuss',
-      message: response.data.data.message,
+      message: response.data.message,
     });
     store.commit("resetFormInstance");
-    await router.push(`/${props.databaseTable}`);
+    await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
     console.error(`Error updating ${props.modelName}: `, e);
     errorList.value = e.response.data;

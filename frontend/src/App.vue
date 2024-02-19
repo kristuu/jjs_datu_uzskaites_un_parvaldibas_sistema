@@ -51,29 +51,43 @@ const toastTypeClass = (statusCode) => {
   }
 };
 
+/**
+ * Resolves the breadcrumb based on the given name.
+ *
+ * @param {string} name - The name to lookup the breadcrumb.
+ * @return {Array<Object>} - The resolved breadcrumb.
+ */
 const resolveBreadcrumb = (name) => {
   const breadcrumb = translations[name];
   return !(breadcrumb === undefined) ? Array.isArray(breadcrumb) ? breadcrumb : [breadcrumb] : [{ name }];
 }
 
+/**
+ * Returns an array of breadcrumb objects based on the current route.
+ *
+ * @returns {Array} An array of breadcrumb objects.
+ */
 const crumbs = computed(() => {
-  const pathArray = route.fullPath.split('/').filter(x => x);
+  const matchedRoutes = router.resolve({ path: route.fullPath }).matched;
   const crumbs = [];
 
-  pathArray.forEach((path, idx) => {
-    let pathToLookup = '/' + pathArray.slice(0, idx + 1).join('/');
-    let routeResolved = router.resolve({ path: pathToLookup });
-
-    // Ignore dynamic route segments (e.g., IDs)
-    if (routeResolved.name && translations[routeResolved.name]) {
-      let breadcrumb = resolveBreadcrumb(routeResolved.name);
+  matchedRoutes.forEach((matchedRoute) => {
+    if (matchedRoute.name && translations[matchedRoute.name]) {
+      let breadcrumb = resolveBreadcrumb(matchedRoute.name);
 
       if (breadcrumb) {
-        breadcrumb = breadcrumb.map((breadcrumb, i, arr) => ({
-          text: breadcrumb.name,
-          to: breadcrumb.path || pathToLookup,
-          isActive: i === arr.length-1 && idx === pathArray.length-1
-        }));
+        breadcrumb = breadcrumb.map((breadcrumb, i, arr) => {
+          const path = matchedRoute.redirect
+              ? typeof matchedRoute.redirect === "string"
+                  ? matchedRoute.redirect
+                  : matchedRoute.redirect.path
+              : matchedRoute.path;
+          return {
+            text: breadcrumb.name,
+            to: breadcrumb.path || path,
+            isActive: i === arr.length - 1 && matchedRoute === matchedRoutes[matchedRoutes.length - 1]
+          };
+        });
 
         crumbs.push(...breadcrumb);
       }

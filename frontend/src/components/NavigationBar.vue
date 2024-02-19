@@ -9,7 +9,7 @@ const route = useRoute();
 
 const path = computed(() => route.path);
 const authorized = computed(() => store.state.authorized);
-const logout = store.dispatch.bind('logout');
+const logout = () => store.dispatch('logout');
 
 let user = ref(null);
 

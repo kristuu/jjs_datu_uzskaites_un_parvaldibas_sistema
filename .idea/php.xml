@@ -149,6 +149,36 @@
       <path value="$PROJECT_DIR$/backend/vendor/nembie/iban-rule" />
       <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-permission" />
       <path value="$PROJECT_DIR$/backend/vendor/ahmedsaoud31/laravel-permission-to-vuejs" />
+      <path value="$PROJECT_DIR$/backend/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/backend/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/backend/vendor/brick/varexporter" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-typescript-transformer" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-package-tools" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/php-structure-discoverer" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/typescript-transformer" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-data" />
+      <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-query-builder" />
+      <path value="$PROJECT_DIR$/backend/vendor/inertiajs/inertia-laravel" />
+      <path value="$PROJECT_DIR$/backend/vendor/stichoza/google-translate-php" />
+      <path value="$PROJECT_DIR$/backend/vendor/kelunik/certificate" />
+      <path value="$PROJECT_DIR$/backend/vendor/outhebox/laravel-translations" />
+      <path value="$PROJECT_DIR$/backend/vendor/tightenco/ziggy" />
+      <path value="$PROJECT_DIR$/backend/vendor/based/momentum-lock" />
+      <path value="$PROJECT_DIR$/backend/vendor/based/momentum-modal" />
+      <path value="$PROJECT_DIR$/backend/vendor/revolt/event-loop" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/amp" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/byte-stream" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/socket" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/dns" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/process" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/parallel" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/windows-registry" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/pipeline" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/serialization" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/sync" />
+      <path value="$PROJECT_DIR$/backend/vendor/daverandom/libdns" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/cache" />
+      <path value="$PROJECT_DIR$/backend/vendor/amphp/parser" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

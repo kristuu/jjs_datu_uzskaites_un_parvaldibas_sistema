@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 return [
-    'reset'     => 'Jūsu parole ir atjaunināta!',
-    'sent'      => 'Mēs nosūtījām paroles maiņas saiti uz jūsu e-pastu.',
-    'throttled' => 'Lūdzu, uzgaidiet pirms atkārtotas mēģināšanas!',
-    'token'     => 'Paroles nomaiņas talons ir nederīgs.',
-    'user'      => 'Mēs nevaram atrast lietotāju ar tādu e-pasta adresi.',
+    'reset' => 'Jūsu parole ir atiestatīta.',
+    'sent' => 'Mēs esam nosūtījuši jūsu paroles atiestatīšanas saiti pa e-pastu.',
+    'throttled' => 'Lūdzu, uzgaidiet, pirms mēģināt vēlreiz.',
+    'token' => 'Šī paroles atiestatīšanas pilnvara nav derīga.',
+    'user' => 'Mēs nevaram atrast lietotāju ar šādu e-pasta adresi.',
 ];
