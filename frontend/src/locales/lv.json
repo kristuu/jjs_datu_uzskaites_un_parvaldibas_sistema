@@ -1,8 +1,28 @@
 {
-  "lv": {
-    "AdminDashboard": [{"name": "Admin"}, {"name": "Panelis"}],
-    "UserList": [{"name": "Admin", "path": "/admin"}, {"name": "Lietotāji"}, {"name": "Saraksts"}],
-    "CreateUser": [{"name": "Admin", "path": "/admin"}, {"name": "Lietotāji", "path": "/admin/users"}, {"name": "Pievienošana", "path": "/create-user"}],
-    "EditUser": [{"name": "Admin", "path": "/admin"}, {"name": "Lietotāji", "path": "/admin/users"}, {"name": "Rediģēšana"}]
+  "businessName": "Jauno Jātnieku skola",
+  "navigation": {
+    "dashboard": "Panelis",
+    "home": "Sākums",
+    "userList": "Lietotāji"
+  },
+  "breadcrumbs": {
+    "home": "Sākums",
+    "admin": "Admin",
+    "dashboard": "Panelis",
+    "userList": "Lietotāji",
+    "create": "Pievienošana",
+    "edit": "Rediģēšana"
+  },
+  "pageHeadings": {
+    "users": {
+      "users": "Lietotāji",
+      "manage users": "Lietotāju pārvaldība",
+      "create user": "Lietotāja pievienošana",
+      "edit user": "Lietotāja rediģēšana",
+      "in total x users": "Kopā {total} lietotāji"
+    }
+  },
+  "table": {
+    "actions": "Darbības"
   }
 }

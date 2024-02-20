@@ -19,6 +19,11 @@ class UserController extends Controller
 {
     use PaginationTrait;
 
+    public function getUsersColumnNames() {
+        $model = new User;
+        return $this->sendResponse($this->getColumnNames($model));
+    }
+
     public function getAllUsers()
     {
         return $this->getAll(User::class);

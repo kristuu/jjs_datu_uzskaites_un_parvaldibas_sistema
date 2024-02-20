@@ -19,8 +19,9 @@ const handleErrorListUpdate = (updatedErrorList) => {
 </script>
 
 <template>
-  <AdminForm :page-name="`Lietotāji`"
-             :short-desc="`Lietotāja rediģēšana`"
+  <AdminForm v-if="can('edit users')"
+             :page-name="$t(`pageHeadings.users.users`)"
+             :short-desc="$t(`pageHeadings.users.edit user`)"
              :model-name="`User`"
              :database-table="`users`"
              @update-error-list="handleErrorListUpdate">

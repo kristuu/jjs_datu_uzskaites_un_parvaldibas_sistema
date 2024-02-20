@@ -18,8 +18,8 @@ const handleErrorListUpdate = (updatedErrorList) => {
 </script>
 
 <template>
-<AdminForm :page-name="`Lietotāji`"
-           :short-desc="`Lietotāja pievienošana`"
+<AdminForm :page-name="$t(`pageHeadings.users.users`)"
+           :short-desc="$t(`pageHeadings.users.create user`)"
            :model-name="`User`"
            :database-table="`users`"
            @update-error-list="handleErrorListUpdate">

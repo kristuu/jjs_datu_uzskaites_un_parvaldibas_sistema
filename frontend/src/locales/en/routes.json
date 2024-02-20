@@ -1,0 +1,6 @@
+{
+  "AdminDashboard": [{"name": "Admin"}, {"name": "Dashboard"}],
+  "UserList": [{"name": "Admin", "path": "/admin"}, {"name": "Users"}, {"name": "List"}],
+  "CreateUser": [{"name": "Admin", "path": "/admin"}, {"name": "Users", "path": "/admin/users"}, {"name": "Create", "path": "/create-user"}],
+  "EditUser": [{"name": "Admin", "path": "/admin"}, {"name": "Users", "path": "/admin/users"}, {"name": "Edit"}]
+}

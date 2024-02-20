@@ -10,6 +10,20 @@ import 'bootstrap-icons/font/bootstrap-icons.min.css';
 
 import './assets/css/main.css';
 
+import { createI18n } from 'vue-i18n';
+import en from '@/locales/en.json';
+import lv from '@/locales/lv.json';
+
+const i18n = createI18n({
+    legacy: false,
+    locale: 'lv',
+    fallbackLocale: 'en',
+    messages: {
+        en: en,
+        lv: lv,
+    }
+})
+
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -47,8 +61,8 @@ axios.get('/get-permissions').then(
 )
 import LaravelPermissionToVuejs from "laravel-permission-to-vuejs";
 
+app.use(i18n);
 app.use(LaravelPermissionToVuejs);
-
 app.use(VueTelInput, globalOptions);
 
 app.mount('#app');

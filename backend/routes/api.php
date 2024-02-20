@@ -5,6 +5,7 @@ use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,19 +26,31 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout']);
+Route::post('/setlocale', function (Request $request) { App::setLocale($request->getLocale()); });
 
-Route::middleware('auth:sanctum')->group(function(){
+Route::middleware('auth:sanctum')->group(function() {
+
     Route::get('/get-permissions', function () {
         return auth()->check()?auth()->user()->jsPermissions():0;
     });
 
-    Route::get('/users', [UserController::class, 'getPaginatedUsers']);
-    Route::group(['middleware' => ['can:edit instances']], function () {
+    Route::group(['middleware' => ['can:manage users']], function () {
+        Route::get('/users/columns', [UserController::class, 'getUsersColumnNames']);
+        Route::get('/users', [UserController::class, 'getAllUsers']);
         Route::get('/users/{id}', [UserController::class, 'findUserById']);
+
+        Route::group(['middleware' => ['can:create instances']], function () {
+            Route::post('/users', [UserController::class, 'storeUser']);
+        });
+
+        Route::group(['middleware' => ['can:edit instances']], function () {
+            Route::put('/users/{id}', [UserController::class, 'updateUser']);
+        });
+
+        Route::group(['middleware' => ['can:delete instances']], function () {
+            Route::delete('/users/{id}', [UserController::class, 'destroyUser']);
+        });
     });
-    Route::post('/users', [UserController::class, 'storeUser']);
-    Route::put('/users/{id}', [UserController::class, 'updateUser']);
-    Route::delete('/users/{id}', [UserController::class, 'destroyUser']);
 
     Route::get('/instructors', [InstructorController::class, 'getAllInstructorData']);
     Route::post('/book', [ReservationController::class, 'store']);

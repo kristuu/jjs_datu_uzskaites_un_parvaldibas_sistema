@@ -39,7 +39,8 @@ export default {
 
 <template>
   <div class="container-xl">
-    <h1 class="fw-bold">{{ formattedDate }}</h1>
+    <h1 class="h1">{{ formattedDate }}</h1>
+    <h3 class="h3">{{ $t("businessName") }}</h3>
   </div>
 </template>
 

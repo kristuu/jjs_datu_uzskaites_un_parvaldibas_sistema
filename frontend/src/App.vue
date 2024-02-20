@@ -3,16 +3,18 @@ import { provide, ref, nextTick, computed } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import { Toast } from 'bootstrap';
 import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 
 import NavigationBar from './components/NavigationBar.vue';
-import { lv } from '@/assets/translations/routes/translations';
+import routeTranslationsLV from '@/locales/lv/routes.json';
+import routeTranslationsEN from '@/locales/en/routes.json';
 import Loading from "vue-loading-overlay";
 import 'vue-loading-overlay/dist/css/index.css';
 
-const translations = lv;
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+const locale = useI18n();
 const isLoading = computed(() => store.state.isLoading);
 
 const notifications = ref([]);
@@ -51,6 +53,8 @@ const toastTypeClass = (statusCode) => {
   }
 };
 
+let routeTranslations = ref(routeTranslationsLV);
+
 /**
  * Resolves the breadcrumb based on the given name.
  *
@@ -58,7 +62,8 @@ const toastTypeClass = (statusCode) => {
  * @return {Array<Object>} - The resolved breadcrumb.
  */
 const resolveBreadcrumb = (name) => {
-  const breadcrumb = translations[name];
+  routeTranslations.value = locale.locale.value === 'lv' ? routeTranslationsLV : routeTranslationsEN;
+  const breadcrumb = routeTranslations.value[name];
   return !(breadcrumb === undefined) ? Array.isArray(breadcrumb) ? breadcrumb : [breadcrumb] : [{ name }];
 }
 
@@ -72,7 +77,8 @@ const crumbs = computed(() => {
   const crumbs = [];
 
   matchedRoutes.forEach((matchedRoute) => {
-    if (matchedRoute.name && translations[matchedRoute.name]) {
+    console.log(`lalalla`);
+    if (matchedRoute.name && routeTranslations.value[matchedRoute.name]) {
       let breadcrumb = resolveBreadcrumb(matchedRoute.name);
 
       if (breadcrumb) {
@@ -115,11 +121,11 @@ provide('addToastNotification', addToastNotification);
   </transition>
   <NavigationBar />
   <div id="app">
-    <main class="container-xxl">
-      <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb"
+    <main class="container-xl">
+      <nav style="--bs-breadcrumb-divider: '//'" aria-label="breadcrumb"
            class="d-flex justify-content-end">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><router-link to="/" class="text-capitalize">Sākums</router-link></li>
+          <li class="breadcrumb-item"><router-link to="/" class="text-capitalize">{{ $t("breadcrumbs.home") }}</router-link></li>
           <li v-for="(crumb, i) in crumbs" :key="i"
               class="breadcrumb-item" :class='i + 1 === crumbs.length ? "active" : ""'
               :aria-current='i + 1 === crumbs.length ? "page" : ""'>

@@ -1,0 +1,28 @@
+{
+  "businessName": "Young Riders school",
+  "navigation": {
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "userList": "Users"
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "userList": "User list",
+    "create": "Create",
+    "edit": "Edit"
+  },
+  "pageHeadings": {
+    "users": {
+      "users": "Users",
+      "manage users": "Manage users",
+      "create user": "Create user",
+      "edit user": "Edit user",
+      "in total x users": "{total} users in total"
+    }
+  },
+  "table": {
+    "actions": "Actions"
+  }
+}

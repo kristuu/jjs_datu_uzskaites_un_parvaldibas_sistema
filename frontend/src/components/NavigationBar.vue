@@ -3,13 +3,29 @@ import axios from '@/services/axios';
 import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import router from "@/router/router";
 
 const store = useStore();
 const route = useRoute();
+const locale = useI18n();
 
 const path = computed(() => route.path);
 const authorized = computed(() => store.state.authorized);
 const logout = () => store.dispatch('logout');
+
+const changeLocale = async (newLocale) => {
+  locale.value = newLocale;
+  console.log(locale.value);
+  try {
+    await axios.post('/setlocale', { locale: newLocale })
+    console.log(`success`)
+  } catch (error) {
+    store.commit('setErrorStatus', error.status);
+    store.commit('setErrorMessage', error.data.message);
+    await router.push({ name: 'ErrorView' });
+  }
+}
 
 let user = ref(null);
 
@@ -43,13 +59,13 @@ onMounted(async () => {
             <li class="nav-item">
               <router-link class="nav-link" :to="{ name: 'HomePage' }">
                 <i class="bi bi-house-fill"></i>
-                <span>Sākums</span>
+                <span>{{ $t("navigation.home") }}</span>
               </router-link>
             </li>
           </ul>
           <ul class="nav navbar-nav d-md-down-none"></ul>
           <ul class="nav navbar-nav d-flex flex-row flex-shrink-0">
-            <li class="nav-item" v-if="can('Access Admin Dashboard')">
+            <li class="nav-item" v-if="can('access admin dashboard')">
               <router-link class="nav-link" :to="{ name: 'AdminDashboard' }">
                 <i class="bi bi-speedometer"></i>
                 <span>ADMIN</span>
@@ -67,8 +83,15 @@ onMounted(async () => {
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                  <a class="dropdown-item active">
-                    <span>Latviešu</span>
+                  <a class="dropdown-item"
+                     :class="$i18n.locale === 'lv' ? 'active' : ''"
+                     @click="changeLocale('lv')">
+                    <span>[LV] Latviešu</span>
+                  </a>
+                  <a class="dropdown-item"
+                     :class="$i18n.locale === 'en' ? 'active' : ''"
+                     @click="changeLocale('en')">
+                    <span>[EN] English</span>
                   </a>
                 </li>
               </ul>
@@ -145,17 +168,17 @@ onMounted(async () => {
       </ul>
     </div>
   </aside>
-  <div v-if="can('Access Admin Dashboard') && path.startsWith('/admin')">
+  <div v-if="can('access admin dashboard') && path.startsWith('/admin')">
     <div class="nav-scroller container-xl mt-2 mb-2">
       <nav class="nav rounded-1" aria-label="Admin navigation">
         <li class="nav-item">
           <router-link class="nav-link" :to="{ name: 'AdminDashboard'}">
-            <span>Panelis</span>
+            <span>{{ $t("navigation.dashboard") }}</span>
           </router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link" :to="{ name: 'UserList'}">
-            <span>Lietotāji</span>
+            <span>{{ $t("navigation.userList") }}</span>
           </router-link>
         </li>
       </nav>

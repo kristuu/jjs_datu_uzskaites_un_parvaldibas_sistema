@@ -19,11 +19,12 @@ const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
 <template>
   <div>
     <AdminTable
-        :page-name="`Lietotāju pārvaldība`"
+        v-show="can('manage users')"
+        :page-name="$t(`pageHeadings.users.manage users`)"
         :database-table="'users'"
         :model-name="'User'"
         :instance-id-column="'person_code'"
-        :short-desc="`Kopā ${totalInstances} lietotāju`"
+        :short-desc="$t(`pageHeadings.users.in total x users`, {total: totalInstances})"
         :headers="headers"
         @updateItems="newItems => items.value = newItems"
         @update:totalInstances="handleTotalInstancesUpdate"

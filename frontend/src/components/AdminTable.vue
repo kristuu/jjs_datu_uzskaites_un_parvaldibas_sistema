@@ -1,16 +1,19 @@
 <script setup>
-import {onMounted, ref, watch, inject, onUnmounted, watchEffect, computed} from 'vue';
+import {onMounted, ref, onUnmounted, watchEffect} from 'vue';
 import axios from '@/services/axios';
 import { useRoute } from 'vue-router';
 import router from "@/router/router";
 import { useStore } from 'vuex';
 
+import DataTable from 'datatables.net-vue3';
+import DataTablesCore from 'datatables.net-bs5';
+
+DataTable.use(DataTablesCore);
+
 const store = useStore();
 const route = useRoute();
 
-let isLoading = computed(() => store.state.isLoading);
-
-const addToastNotification = inject('addToastNotification');
+// const addToastNotification = inject('addToastNotification');
 
 const props = defineProps({
   pageName: String,
@@ -27,22 +30,18 @@ const emit = defineEmits({
 });
 
 let instances = ref([]);
-
-let currentPage = ref(1);
-let totalPages = ref(0);
-let perPage = ref(12);
+let columns = ref([]);
 
 let totalInstances = ref([]);
 
 const fetchDatabaseData = async () => {
   store.commit('setLoading', true);
   try {
-    const response = await axios.get(`/${props.databaseTable}?page=${currentPage.value}&perPage=${perPage.value}`);
-    console.log(response);
-    instances.value = response.data[0].data;
-    totalInstances.value = response.data[0].total;
-    currentPage.value = response.data[0].current_page;
-    totalPages.value = response.data[0].last_page;
+    const response = await axios.get(`/${props.databaseTable}`);
+    const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
+    columns.value = tempHeadings.data;
+    instances.value = response.data;
+    console.log(columns.value);
     emit('update:totalInstances', totalInstances.value);
   } catch (e) {
     console.error(`Error fetching ${props.databaseTable}: `, e);
@@ -51,22 +50,21 @@ const fetchDatabaseData = async () => {
   }
 }
 
-const deleteInstance = async (instanceId) => {
-  try {
-    const response = await axios.delete(`/${props.databaseTable}/${instanceId}`);
-    console.log(response);
-    addToastNotification({
-      status: response.status,
-      title: response.status + ' statuss',
-      message: response.data.message,
-    });
-    await fetchDatabaseData();
-  } catch (e) {
-    console.error(`Error fetching ${props.databaseTable}: `, e);
-  }
-}
+// const deleteInstance = async (instanceId) => {
+//   try {
+//     const response = await axios.delete(`/${props.databaseTable}/${instanceId}`);
+//     console.log(response);
+//     addToastNotification({
+//       status: response.status,
+//       title: response.status + ' statuss',
+//       message: response.data.message,
+//     });
+//     await fetchDatabaseData();
+//   } catch (e) {
+//     console.error(`Error fetching ${props.databaseTable}: `, e);
+//   }
+// }
 
-watch(currentPage, fetchDatabaseData);
 watchEffect(() => {
   const { params } = route;
 
@@ -85,7 +83,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="!isLoading && can('List Instances')">
+  <div>
     <div class="d-flex justify-content-between text-white mb-3">
       <div class="d-flex align-items-baseline">
         <h2 class="fw-bold">{{ props.pageName }}</h2>
@@ -99,103 +97,21 @@ onUnmounted(() => {
 
     </div>
     <div class="container-fluid content-card bg-white shadow-lg">
-      <div class="table-responsive">
-        <table class="table small table-hover">
-          <caption>
-            <div class="d-flex justify-content-between">
-              <span @change="fetchDatabaseData">Lapa {{ currentPage }} no {{ totalPages }}</span>
-              <!--      Pagination-->
-              <nav aria-label="Tabulas navigācija" v-if="totalInstances > 1">
-                <div class="d-flex align-items-center">
-                  <div class="input-group input-group-sm">
-                    <label class="input-group-text" for="entriesPerPage">Ieraksti lapā:</label>
-                    <select v-model="perPage" id="entriesPerPage" class="form-select" @change="fetchDatabaseData">
-                      <option selected value="12">12</option>
-                      <option value="24">24</option>
-                      <option value="36">36</option>
-                      <option value="48">48</option>
-                    </select>
-                  </div>
-                  <ul class="pagination ms-2">
-                    <li class="page-item ms-auto">
-                      <button class="btn btn-sm btn-primary"
-                              @click="currentPage = 1"
-                              :disabled="currentPage <= 1">
-                        <i class="bi bi-chevron-bar-left"></i>
-                      </button>
-                    </li>
-                    <li class="page-item">
-                      <button class="btn btn-sm btn-primary"
-                              @click="currentPage > 1 ? currentPage-- : null"
-                              :disabled="currentPage === 1">
-                        <i class="bi bi-chevron-left"></i>
-                      </button>
-                    </li>
-                    <li class="page-item">
-                      <button class="btn btn-sm btn-primary"
-                              @click="currentPage < totalPages ? currentPage++ : null"
-                              :disabled="currentPage === totalPages">
-                        <i class="bi bi-chevron-right"></i>
-                      </button>
-                    </li>
-                    <li class="page-item me-auto">
-                      <button class="btn btn-sm btn-primary"
-                              @click="currentPage = totalPages"
-                              :disabled="currentPage >= totalPages">
-                        <i class="bi bi-chevron-bar-right"></i>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-              </nav>
-            </div>
-          </caption>
-          <!-- Table header -->
-          <thead class="table-light">
-            <th v-for="header in headers" :key="header.label"
-                scope="col">{{ header.label.toUpperCase() }}</th>
-            <th scope="col" class="text-end">DARBĪBAS</th>
-          </thead>
-
-          <!-- Table body -->
-          <tbody>
-          <template v-if="isLoading">
-            <tr>
-              <td colspan="8">
-                <div class="d-flex justify-content-center align-items-center">
-                  <div class="spinner-border me-2" aria-hidden="true"></div>
-                  <strong role="status">Atgūst datus...</strong>
-                </div>
-              </td>
-            </tr>
-          </template>
-          <template v-else>
-            <tr v-for="instance in instances" :key="instance[instanceIdColumn]">
-              <td v-for="header in headers" :key="header.label">
-                {{ instance[header.key] }}</td>
-              <!-- Actions -->
-              <td style="text-align: right;">
-                <button class="btn btn-sm btn-primary me-2" type="button">
-                  <i class="bi bi-three-dots"></i>
-                </button>
-                <button class="btn btn-sm btn-warning me-2" @click="router.push({ name: 'Edit' + modelName, params: { id: instance[instanceIdColumn] } })">
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-                <button class="btn btn-sm btn-danger"
-                        @click="deleteInstance(instance[instanceIdColumn])">
-                  <i class="bi bi-trash3-fill"></i>
-                </button>
-              </td>
-            </tr>
-          </template>
-          </tbody>
-        </table>
-      </div>
+      <DataTable :columns="columns"
+                 :items="instances"
+                 class="table table-hover table-striped">
+        <thead>
+          <tr v-for="(column) in columns" :key="column">
+            <th>{{ column }}</th>
+          </tr>
+        </thead>
+      </DataTable>
     </div>
   </div>
 </template>
 
 <style scoped>
+@import 'datatables.net-bs5';
   p {
     margin: 0;
   }

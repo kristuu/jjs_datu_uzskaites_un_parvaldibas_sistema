@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
@@ -31,6 +32,24 @@ class Controller extends BaseController
         return response()->json($response, $status, $headers);
     }
 
+    protected function getColumnNames($model) {
+        $tableName = $model->getTable();
+
+        $allColumns = DB::getSchemaBuilder()->getColumnListing($tableName);
+        $hiddenColumns = $model->getHidden();
+        $visibleColumns = array_diff($allColumns, $hiddenColumns);
+
+        $returnColumns = [];
+
+        foreach ($visibleColumns as $column) {
+            $returnColumns[] = [
+                'data' => $column,
+            ];
+        }
+
+        return $returnColumns;
+    }
+
     protected function sendError($list = null, $status = 422)
     {
         return response()->json($list, $status);
@@ -49,7 +68,7 @@ class Controller extends BaseController
 
         $instances = $className::all();
         if ($instances) {
-            return response()->json([$instances]);
+            return response()->json($instances);
         } else {
             return $this->sendResponse(['message' => __('validation.instance.none_found', [
                 'model' => __('validation.models.' . class_basename($className))
