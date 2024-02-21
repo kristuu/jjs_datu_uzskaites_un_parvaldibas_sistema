@@ -36,6 +36,7 @@ const fetchDatabaseData = async () => {
     const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
     tableColumns.value = tempHeadings.data;
     instances.value = response.data;
+    totalInstances.value = response.data.total;
     console.log(tableColumns.value);
     emit('update:totalInstances', totalInstances.value);
   } catch (e) {
@@ -95,10 +96,9 @@ onUnmounted(() => {
     </div>
     <div class="container-fluid content-card bg-white shadow-lg">
       <table id="listTable"></table>
-      <DataTable :value="instances">
-        <div v-for="(data) in tableColumns" :key="data">
-          <Column :field="data.data" :header="data.data"></Column>
-        </div>
+      <DataTable :value="instances" size="normal" stripedRows showGridlines removableSort
+                 paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+          <Column v-for="(data) in tableColumns" sortable :key="data.database" :field="data.database" :header="data.translated"></Column>
       </DataTable>
     </div>
   </div>
