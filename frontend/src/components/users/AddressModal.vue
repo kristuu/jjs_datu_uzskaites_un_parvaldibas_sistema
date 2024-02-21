@@ -1,6 +1,5 @@
 <script>
 import VueGoogleAutocomplete from 'vue-google-autocomplete';
-import { Modal } from 'bootstrap';
 import axios from "@/services/axios";
 
 export default {

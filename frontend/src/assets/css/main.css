@@ -1,5 +1,3 @@
-@import 'base.css';
-
 :root {
     --yrs-primary: #9a2e26;
     --yrs-primary-rgb: 154, 46, 38;
@@ -17,6 +15,10 @@ body {
 
 .navbar {
     flex-grow: 1;
+}
+
+.navbar ul {
+    margin: 0 !important;
 }
 
 a:visited {
@@ -88,6 +90,13 @@ label {
 .nav-link:hover {
     box-shadow: none;
     background-color: white;
+}
+
+.navbar a {
+    color: white;
+    &:hover {
+        color: var(--yrs-primary) !important;
+    }
 }
 
 li > a {

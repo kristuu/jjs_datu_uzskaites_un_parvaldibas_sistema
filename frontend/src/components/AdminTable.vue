@@ -5,11 +5,6 @@ import { useRoute } from 'vue-router';
 import router from "@/router/router";
 import { useStore } from 'vuex';
 
-import DataTable from 'datatables.net-vue3';
-import DataTablesCore from 'datatables.net-bs5';
-
-DataTable.use(DataTablesCore);
-
 const store = useStore();
 const route = useRoute();
 
@@ -100,15 +95,16 @@ onUnmounted(() => {
     </div>
     <div class="container-fluid content-card bg-white shadow-lg">
       <table id="listTable"></table>
-<!--      <DataTable :columns="columns"
-                 :data="instances">
-      </DataTable>-->
+      <DataTable :value="instances">
+        <div v-for="(data) in tableColumns" :key="data">
+          <Column :field="data.data" :header="data.data"></Column>
+        </div>
+      </DataTable>
     </div>
   </div>
 </template>
 
 <style scoped>
-@import 'datatables.net-bs5';
   p {
     margin: 0;
   }

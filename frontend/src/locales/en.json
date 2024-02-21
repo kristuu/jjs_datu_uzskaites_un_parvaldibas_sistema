@@ -23,6 +23,7 @@
     }
   },
   "table": {
-    "actions": "Actions"
+    "actions": "Actions",
+    "search": "Search"
   }
 }

@@ -1,7 +1,6 @@
 <script setup>
-import { provide, ref, nextTick, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute, useRouter } from "vue-router";
-import { Toast } from 'bootstrap';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 
@@ -16,42 +15,6 @@ const route = useRoute();
 const store = useStore();
 const locale = useI18n();
 const isLoading = computed(() => store.state.isLoading);
-
-const notifications = ref([]);
-
-
-const addToastNotification = (notification) => {
-  const id = Date.now().toString();
-
-  notification.id = id;
-  notification.type = notification.type || 'info';
-  notification.autohide = notification.autohide !== undefined ? notification.autohide : true;
-  notification.delay = notification.delay || 5000;
-
-  notifications.value.push(notification);
-
-  nextTick(() => {
-    const toastEl = document.getElementById(`toast-${id}`);
-
-    new Toast(toastEl, {
-      autohide: notification.autohide,
-      delay: notification.delay
-    }).show();
-  });
-};
-
-const toastTypeClass = (statusCode) => {
-  switch (true) {
-    case statusCode >= 200 && statusCode <= 299:
-      return 'success';
-    case statusCode >= 300 && statusCode <= 399:
-      return 'warning';
-    case statusCode >= 400 && statusCode <= 599:
-      return 'danger';
-    default:
-      return 'info';
-  }
-};
 
 let routeTranslations = ref(routeTranslationsLV);
 
@@ -102,8 +65,6 @@ const crumbs = computed(() => {
 
   return crumbs;
 });
-
-provide('addToastNotification', addToastNotification);
 </script>
 
 <template>

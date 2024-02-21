@@ -1,6 +1,6 @@
 <script>
 import axios from '@/services/axios';
-import { Modal } from 'bootstrap';
+let Modal = '';
 export default {
   name: "InstructorsList",
   data() {

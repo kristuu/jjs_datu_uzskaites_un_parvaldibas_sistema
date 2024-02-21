@@ -5,10 +5,13 @@ import router from './router/router.js';
 import axios from '@/services/axios.js';
 
 import PrimeVue from 'primevue/config';
+import ToastService from 'primevue/toastservice';
+import Toast from "primevue/toast";
+import "primevue/resources/themes/aura-light-indigo/theme.css";
+import "/node_modules/primeflex/primeflex.css";
 
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 import './assets/css/main.css';
 
@@ -27,7 +30,7 @@ const i18n = createI18n({
 })
 
 import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
 
 import VueTelInput from 'vue-tel-input';
 import 'vue-tel-input/vue-tel-input.css';
@@ -52,10 +55,12 @@ const globalOptions = {
 const app = createApp(App);
 
 app.component('VueDatePicker', VueDatePicker);
+app.component("Toast", Toast);
 
 app.use(store);
 app.use(router);
 app.use(PrimeVue);
+app.use(ToastService);
 
 axios.get('/get-permissions').then(
     response => {

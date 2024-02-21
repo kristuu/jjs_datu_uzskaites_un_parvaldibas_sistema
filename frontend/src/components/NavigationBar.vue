@@ -12,7 +12,17 @@ const locale = useI18n();
 
 const path = computed(() => route.path);
 const authorized = computed(() => store.state.authorized);
-const logout = () => store.dispatch('logout');
+// const logout = () => store.dispatch('logout');
+
+const items = ref([
+  {
+    label: locale.t("navigation.home"),
+    icon: "bi bi-house",
+    command: () => {
+      router.push({ name: 'HomePage' });
+    }
+  }
+]);
 
 const changeLocale = async (newLocale) => {
   locale.value = newLocale;
@@ -48,6 +58,33 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="navbar navbar-overlap yrs-bg-primary">
+    <div class="container-xl">
+      <Menubar :model="items" class="w-100 yrs-bg-primary border-none align-items-center">
+        <template #start>
+          <img src="@/assets/logo-white.svg" style="width: 50px; height: auto;"
+               class="h-2rem" @click="changeLocale"/>
+        </template>
+        <template #item="{ item, props, hasSubmenu, root }">
+          <a v-ripple class="flex align-items-center ml-auto" v-bind="props.action">
+            <span :class="item.icon" />
+            <span class="ml-2">{{ item.label }}</span>
+            <Badge v-if="item.badge" :class="{ 'ml-auto' : !root, 'ml-2' : root }" :value="item.badge" />
+            <span v-if="item.shortcut" class="ml-auto border-1 surface-border surface-100 text-xs p-1">{{ item.shortcut }}</span>
+            <i v-if="hasSubmenu" :class="['pi pi-angle-down', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"></i>
+          </a>
+        </template>
+        <template #end class="ml-5">
+          <div class="flex align-items-center gap-2">
+            <InputText :placeholder="$t('table.search')" type="text" class="w-8rem sm:w-auto" />
+            <Avatar shape="circle" color="white">KB</Avatar>
+          </div>
+        </template>
+      </Menubar>
+    </div>
+  </div>
+
+  <Button class="btn btn-primary" />
 
   <div v-if="can('access admin dashboard') && path.startsWith('/admin')">
     <div class="nav-scroller container-xl mt-2 mb-2">

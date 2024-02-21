@@ -23,6 +23,7 @@
     }
   },
   "table": {
-    "actions": "Darbības"
+    "actions": "Darbības",
+    "search": "Meklēšana"
   }
 }

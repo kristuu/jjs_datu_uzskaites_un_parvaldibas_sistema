@@ -1,33 +1,8 @@
 <script setup>
-import { Modal } from 'bootstrap';
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps(['modalId', 'title'])
-const modalRef = ref(null)
-let bsModal = null
-
-onMounted(() => {
-  bsModal = new Modal(modalRef.value)
-})
-
-onUnmounted(() => {
-  if (bsModal !== null) {
-    bsModal.dispose()
-  }
-})
-
-const openModal = () => {
-  bsModal?.show()
-}
-
-const closeModal = () => {
-  bsModal?.hide()
-}
-
-defineExpose({
-  openModal,
-  closeModal,
-});
+const modalRef = ref(null);
 </script>
 
 <template>
