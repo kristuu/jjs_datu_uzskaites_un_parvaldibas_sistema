@@ -4,6 +4,8 @@ import store from './auth/store.js';
 import router from './router/router.js';
 import axios from '@/services/axios.js';
 
+import PrimeVue from 'primevue/config';
+
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
@@ -53,6 +55,7 @@ app.component('VueDatePicker', VueDatePicker);
 
 app.use(store);
 app.use(router);
+app.use(PrimeVue);
 
 axios.get('/get-permissions').then(
     response => {

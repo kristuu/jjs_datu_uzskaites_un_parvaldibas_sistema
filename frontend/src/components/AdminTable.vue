@@ -30,7 +30,7 @@ const emit = defineEmits({
 });
 
 let instances = ref([]);
-let columns = ref([]);
+let tableColumns = ref([]);
 
 let totalInstances = ref([]);
 
@@ -39,9 +39,9 @@ const fetchDatabaseData = async () => {
   try {
     const response = await axios.get(`/${props.databaseTable}`);
     const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
-    columns.value = tempHeadings.data;
+    tableColumns.value = tempHeadings.data;
     instances.value = response.data;
-    console.log(columns.value);
+    console.log(tableColumns.value);
     emit('update:totalInstances', totalInstances.value);
   } catch (e) {
     console.error(`Error fetching ${props.databaseTable}: `, e);
@@ -75,6 +75,8 @@ watchEffect(() => {
 
 onMounted(() => {
   fetchDatabaseData();
+
+
 });
 
 onUnmounted(() => {
@@ -89,7 +91,7 @@ onUnmounted(() => {
         <h2 class="fw-bold">{{ props.pageName }}</h2>
         <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
       </div>
-      <button class="btn btn-primary" @click="router.push({ name: 'Create' + modelName})">
+      <button v-if="can('create instances')" class="btn btn-primary" @click="router.push({ name: 'Create' + modelName})">
         <i class="bi bi-person-add" style="font-size: 24px;"></i>
       </button>
     </div>
@@ -97,15 +99,10 @@ onUnmounted(() => {
 
     </div>
     <div class="container-fluid content-card bg-white shadow-lg">
-      <DataTable :columns="columns"
-                 :items="instances"
-                 class="table table-hover table-striped">
-        <thead>
-          <tr v-for="(column) in columns" :key="column">
-            <th>{{ column }}</th>
-          </tr>
-        </thead>
-      </DataTable>
+      <table id="listTable"></table>
+<!--      <DataTable :columns="columns"
+                 :data="instances">
+      </DataTable>-->
     </div>
   </div>
 </template>
