@@ -2,14 +2,32 @@
 import {ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
 import { useTotalInstances } from "@/hooks/useTotalInstances.js";
+import {FilterMatchMode, FilterOperator} from "primevue/api";
 
-const headers = ref([
-  {key: 'person_code', label: 'Personas kods'},
-  {key: 'name', label: 'Vārds (-i)'},
-  {key: 'surname', label: 'Uzvārds (-i)'},
-  {key: 'email', label: 'E-pasts'},
-  {key: 'phone', label: 'Tel. nr.'},
-]);
+const filterOptions = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  name: {
+    sortable: true, filterType: 'text', dataType: 'text',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+  },
+  surname: {
+    sortable: true, filterType: 'text', dataType: 'text',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+  },
+  person_code: {
+    sortable: true, filterType: 'personCode', dataType: 'text',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+  },
+  birthdate: {
+    sortable: true, filterType: 'date', dataType: 'date',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }]
+  },
+
+});
 const items = ref([]);
 
 const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
@@ -25,7 +43,7 @@ const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
         :model-name="'User'"
         :instance-id-column="'person_code'"
         :short-desc="$t(`pageHeadings.users.in total x users`, {total: totalInstances})"
-        :headers="headers"
+        :filterOptions="filterOptions"
         @updateItems="newItems => items.value = newItems"
         @update:totalInstances="handleTotalInstancesUpdate"
     />

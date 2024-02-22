@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\Instructor;
 use App\Models\Region;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
@@ -19,6 +20,8 @@ class UserController extends Controller
 {
     use PaginationTrait;
 
+    private array $globalFilterFields = ['person_code', 'name', 'surname', 'email', 'phone', 'iban_code'];
+
     public function getUsersColumnNames() {
         $model = new User;
         return $this->sendResponse($this->getColumnNames($model));
@@ -26,7 +29,7 @@ class UserController extends Controller
 
     public function getAllUsers()
     {
-        return $this->getAll(User::class);
+        return $this->getAll(User::class, $this->globalFilterFields);
     }
 
     public function getPaginatedUsers(Request $request)
@@ -34,7 +37,8 @@ class UserController extends Controller
         return $this->getPaginated($request,
                           User::class,
                                    ['address', 'address.region', 'address.region.country'],
-                                   $request->perPage);
+                                   $request->perPage,
+                                   $this->globalFilterFields);
     }
 
     public function storeUser(UserRequest $request)
@@ -44,7 +48,10 @@ class UserController extends Controller
 
     public function findUserById(string $person_code)
     {
-        return $this->findById(User::class, $person_code);
+        $user = $this->findById(User::class, $person_code);
+
+        $user->birthdate->format('d/m/Y');
+        return $user;
     }
 
     public function updateUser(UserRequest $request, string $person_code)

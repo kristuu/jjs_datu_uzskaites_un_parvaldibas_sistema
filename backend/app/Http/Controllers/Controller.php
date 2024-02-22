@@ -63,13 +63,13 @@ class Controller extends BaseController
         }
     }
 
-    protected function getAll(string $className)
+    protected function getAll(string $className, array $globalFilterFields = [])
     {
         $this->checkClassExistence($className);
 
         $instances = $className::all();
         if ($instances) {
-            return response()->json($instances);
+            return response()->json([$instances, 'globalFilterFields' => $globalFilterFields]);
         } else {
             return $this->sendResponse(['message' => __('validation.instance.none_found', [
                 'model' => __('validation.models.' . class_basename($className))
@@ -77,7 +77,7 @@ class Controller extends BaseController
         }
     }
 
-    protected function getPaginated(Request $request, string $className, array $relationships = [], ?int $pages = 10)
+    protected function getPaginated(Request $request, string $className, array $relationships = [], ?int $pages = 10, array $globalFilterFields = [])
     {
         $this->checkClassExistence($className);
 
@@ -85,7 +85,7 @@ class Controller extends BaseController
 
         $instances = $className::with($relationships)->paginate($pages);
 
-        return response()->json([$instances]);
+        return response()->json([$instances, 'globalFilterFields' => $globalFilterFields]);
     }
 
     protected function store(FormRequest $formRequest, string $className)

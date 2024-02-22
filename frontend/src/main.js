@@ -7,13 +7,12 @@ import axios from '@/services/axios.js';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import Toast from "primevue/toast";
+import '@/assets/css/main.css';
 import "primevue/resources/themes/aura-light-indigo/theme.css";
 import "/node_modules/primeflex/primeflex.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
-
-import './assets/css/main.css';
 
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
