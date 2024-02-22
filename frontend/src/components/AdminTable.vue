@@ -33,26 +33,30 @@ let filters = ref();
 
 let totalInstances = ref([]);
 
+const selectedColumns = ref(tableColumns.value);
+const onToggle = (val) => {
+  selectedColumns.value = tableColumns.value.filter(col => val.includes(col));
+}
+
 const fetchDatabaseData = async () => {
   store.commit('setLoading', true);
   try {
     const response = await axios.get(`/${props.databaseTable}`);
     const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
-    console.log(response);
     tableColumns.value = tempHeadings.data;
     globalFilterFields.value = response.data.globalFilterFields;
     instances.value = response.data[0];
+
+    // convert json string dates returned from laravel to JS Date objects
     instances.value.forEach((instance) => {
-      // console.log(instance);
-      // instance.birthdate = new Date(instance.birthdate);
       for (let property in instance) {
         if (!isNaN(Date.parse(instance[property]))) {
           instance[property] = new Date(instance[property]);
         }
       }
     });
+
     totalInstances.value = response.data.total;
-    console.log(tableColumns.value);
     emit('update:totalInstances', totalInstances.value);
   } catch (e) {
     console.error(`Error fetching ${props.databaseTable}: `, e);
@@ -126,11 +130,15 @@ onUnmounted(() => {
     </div>
     <div class="container-fluid content-card bg-white shadow-lg">
       <table id="listTable"></table>
-      <DataTable :value="instances" size="small" class="" stripedRows removableSort
+      <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields">
         <template #header>
-          <div class="flex justify-content-end">
+          <div class="flex justify-content-between">
+            <div style="text-align:left">
+              <MultiSelect :modelValue="selectedColumns" :options="tableColumns" optionLabel="header" @update:modelValue="onToggle"
+                           display="chip" placeholder="Select Columns" />
+            </div>
             <IconField iconPosition="left">
               <InputIcon>
                 <i class="pi pi-search" />
@@ -139,44 +147,43 @@ onUnmounted(() => {
             </IconField>
           </div>
         </template>
-        <Column v-for="(column) in tableColumns" :value="instances" :sortable="props.filterOptions[column.database]?.sortable" :key="column.database" :field="column.database" :header="column.translated"
-                :filterField="column.database" :dataType="props.filterOptions[column.database]?.dataType">
+        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column.field]?.sortable" :key="column.field + '_' + index" :field="column.field" :header="column.header"
+                :filterField="column.field" :dataType="props.filterOptions[column.field]?.dataType">
           <template #body="{ data }">
-            {{ props.filterOptions[column.database]?.dataType === 'date' ? formatDate(data[column.database]) : data[column.database] }}
+            {{ props.filterOptions[column.field]?.dataType === 'date' ? formatDate(data[column.field]) : data[column.field] }}
           </template>
-          <template #filter="{ filterModel }" v-if="filters[column.database]">
+          <template #filter="{ filterModel }" v-if="filters[column.field]">
               <InputText
-                  v-if="props.filterOptions[column.database].filterType === 'personCode'"
+                  v-if="props.filterOptions[column.field].filterType === 'personCode'"
                   v-model="filterModel.value"
-                  :type="props.filterOptions[column.database].filterType"
-                  :placeholder="'search' + column.translated"/>
+                  :type="props.filterOptions[column.field].filterType"
+                  :placeholder="'search' + column.header"/>
 
-              <div v-if="props.filterOptions[column.database].filterType === 'text'">
+              <div v-if="props.filterOptions[column.field].filterType === 'text'">
                 <InputText
                     v-model="filterModel.value"
-                    :type="props.filterOptions[column.database].filterType"
-                    :placeholder="'search' + column.translated"/>
+                    :type="props.filterOptions[column.field].filterType"
+                    :placeholder="'search' + column.header"/>
               </div>
 
-              <div v-if="props.filterOptions[column.database].filterType === 'select'">
+              <div v-if="props.filterOptions[column.field].filterType === 'select'">
                 <Dropdown
                     :options="column.options"
                     v-model="filterModel.value"/>
               </div>
 
-              <div v-if="props.filterOptions[column.database].filterType === 'multiSelect'">
+              <div v-if="props.filterOptions[column.field].filterType === 'multiSelect'">
                 <MultiSelect
                     :options="column.options"
                     v-model="filterModel.value"/>
               </div>
 
             <Calendar
-                v-if="props.filterOptions[column.database].filterType === 'date'"
+                v-if="props.filterOptions[column.field].filterType === 'date'"
                 type="date"
                 v-model="filterModel.value"
-                dateFormat="mm.dd.yy"
-                :maxDate="new Date()"
-                @input="console.log(filterModel.value.toDateString())"/>
+                dateFormat="dd.mm.yy"
+                :maxDate="new Date()"/>
 
               <!-- Add more `v-else-if` statements as needed for other filter types -->
             </template>

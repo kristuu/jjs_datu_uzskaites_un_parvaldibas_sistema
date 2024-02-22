@@ -43,8 +43,8 @@ class Controller extends BaseController
 
         foreach ($visibleColumns as $column) {
             $returnColumns[] = [
-                'database' => $column,
-                'translated' => __("validation.attributes." . $column)
+                'field' => $column,
+                'header' => __("validation.attributes." . $column)
             ];
         }
 
