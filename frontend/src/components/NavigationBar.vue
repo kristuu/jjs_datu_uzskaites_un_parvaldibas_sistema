@@ -58,9 +58,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="navbar navbar-overlap yrs-bg-primary">
+  <div class="navbar navbar-overlap">
     <div class="container-xl">
-      <Menubar :model="items" class="w-100 yrs-bg-primary border-none align-items-center">
+      <Menubar :model="items" class="w-100 border-none align-items-center">
         <template #start>
           <img src="@/assets/logo-white.svg" style="width: 50px; height: auto;"
                class="h-2rem" @click="changeLocale"/>

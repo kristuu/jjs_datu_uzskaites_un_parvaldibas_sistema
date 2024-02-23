@@ -7,9 +7,13 @@ import axios from '@/services/axios.js';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import Toast from "primevue/toast";
+import "@/assets/css/theme.css";
 import '@/assets/css/main.css';
-import "primevue/resources/themes/aura-light-indigo/theme.css";
 import "/node_modules/primeflex/primeflex.css";
+
+import IconField from "primevue/iconfield";
+import InputIcon from "primevue/inputicon";
+import "primeicons/primeicons.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
@@ -55,6 +59,8 @@ const app = createApp(App);
 
 app.component('VueDatePicker', VueDatePicker);
 app.component("Toast", Toast);
+app.component("IconField", IconField);
+app.component("InputIcon", InputIcon);
 
 app.use(store);
 app.use(router);

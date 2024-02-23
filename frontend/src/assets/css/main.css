@@ -3,10 +3,13 @@
     --yrs-primary-rgb: 154, 46, 38;
     --yrs-primary-shaded-10: #8b2922;
     --yrs-primary-shaded-20: #7b251e;
+    --primary-color: var(--yrs-primary) !important;
+    --highlight-bg: var(--red-300) !important;
 }
 
 body {
     background-color: var(--bs-secondary-bg);
+    line-height: normal !important;
 }
 
 .pac-container {
@@ -82,6 +85,10 @@ label {
     font-weight: bold;
 }
 
+.navbar-overlap, .p-menubar {
+    background-color: var(--yrs-primary-shaded-10) !important;
+}
+
 .navbar-brand:hover {
     box-shadow: none;
     background-color: inherit;
@@ -109,45 +116,6 @@ li > a {
     }
 }
 
-.dropdown-menu {
-    border-radius: 4px;
-}
-
-.dropdown-item {
-    color: var(--yrs-primary-shaded-20);
-    margin: auto;
-}
-
-.dropdown-item.active {
-    background-color: var(--yrs-primary-shaded-20) !important;
-    & span {
-        font-weight: bold;
-    }
-}
-
-.dropdown-item:hover {
-    background-color: rgba(var(--yrs-primary-rgb), 0.85);
-    box-shadow: none;
-    color: white !important;
-    cursor: pointer;
-}
-
-.toast {
-    border-radius: var(--bs-border-radius) 0;
-    border: 0;
-}
-
-.toast-header {
-    border: none;
-    border-radius: var(--bs-border-radius) 0 0 0;
-    background: none;
-}
-
-.toast-body {
-    background-color: var(--bs-white);
-    border-radius: 0 0 var(--bs-border-radius) 0;
-}
-
 .breadcrumb-item a, .breadcrumb-item.active,
 .breadcrumb-item::before,
 .breadcrumb-item.active::before {
@@ -159,98 +127,6 @@ li > a {
     font-weight: bold;
 }
 
-th {
-    padding: 0.75rem 0.5rem;
-}
-
-.form-group.required label::after {
-    content: " *";
-    color: red;
-}
-
-.form-control {
-    border-radius: 0;
-}
-
-.form-control:focus, .vue-tel-input:focus-within {
-    border-color: var(--yrs-primary-shaded-20) !important;
-    box-shadow: 0 0 0 0.2rem rgba(var(--yrs-primary-rgb), 0.25) !important;
-}
-
-.is-invalid {
-    border-color: #dc3545 !important;
-}
-.invalid-feedback {
-    display: block;
-}
-
-.input-group, .input-group-sm, .input-group-text, .form-select {
-    border-radius: 0 !important;
-}
-
-.form-select:focus {
-    border-color: var(--yrs-primary-shaded-20);
-    box-shadow: 0 0 0 0.2rem rgba(var(--yrs-primary-rgb), 0.25);
-}
-
 .content-card {
     border-radius: var(--bs-border-radius-sm);
-}
-
-.btn {
-    border-radius: 0 var(--bs-border-radius);
-}
-
-.page-item > .btn {
-    border-radius: 0 !important;
-}
-
-.page-item:first-child > .btn {
-    border-radius: 0 0 0 var(--bs-border-radius) !important;
-}
-
-.page-item:last-child > .btn {
-    border-radius: 0 var(--bs-border-radius) 0 0 !important;
-}
-
-.btn-primary {
-    --bs-btn-bg: var(--yrs-primary-shaded-10);
-    --bs-btn-border-color: var(--yrs-primary-shaded-10);
-    --bs-btn-color: var(--bs-white);
-    --bs-btn-hover-color: var(--bs-white);
-    --bs-btn-hover-bg: var(--yrs-primary-shaded-20);
-    --bs-btn-hover-border-color: var(--yrs-primary-shaded-20);
-    --bs-btn-active-color: var(--bs-btn-hover-color);
-    --bs-btn-active-bg: var(--yrs-primary-shaded-20);
-    --bs-btn-active-border-color: var(--yrs-primary-shaded-20);
-}
-
-.btn-disabled {
-    --bs-btn-bg: var(--yrs-primary);
-    --bs-btn-border-color: var(--yrs-primary);
-    --bs-btn-color: var(--bs-white);
-    --bs-btn-hover-color: var(--bs-white);
-    --bs-btn-hover-bg: var(--yrs-primary-shaded-10);
-    --bs-btn-hover-border-color: var(--yrs-primary-shaded-10);
-    --bs-btn-active-color: var(--bs-btn-hover-color);
-    --bs-btn-active-bg: var(--yrs-primary-shaded-20);
-    --bs-btn-active-border-color: var(--yrs-primary-shaded-20);
-}
-
-button:disabled {
-    background-color: var(--yrs-primary) !important;
-    border-color: var(--yrs-primary) !important;
-}
-
-.pagination {
-    --bs-pagination-bg: var(--yrs-primary);
-    --bs-pagination-border-color: var(--yrs-primary);
-    --bs-pagination-color: var(--bs-white);
-    --bs-pagination-hover-bg: var(--bs-white);
-    --bs-pagination-hover-color: var(--yrs-primary);
-    --bs-pagination-disabled-bg: var(--yrs-primary-shaded-20);
-}
-
-.btn-close {
-    margin: 0 !important;
 }

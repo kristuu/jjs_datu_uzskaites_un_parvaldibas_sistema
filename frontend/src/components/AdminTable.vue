@@ -44,6 +44,7 @@ const fetchDatabaseData = async () => {
     const response = await axios.get(`/${props.databaseTable}`);
     const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
     tableColumns.value = tempHeadings.data;
+    selectedColumns.value = tableColumns.value;
     globalFilterFields.value = response.data.globalFilterFields;
     instances.value = response.data[0];
 
@@ -121,9 +122,10 @@ onUnmounted(() => {
         <h2 class="fw-bold">{{ props.pageName }}</h2>
         <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
       </div>
-      <button v-if="can('create instances')" class="btn btn-primary" @click="router.push({ name: 'Create' + modelName})">
-        <i class="bi bi-person-add" style="font-size: 24px;"></i>
-      </button>
+      <Button v-if="can('create instances')"
+              icon="bi bi-person-add"
+              @click="router.push({ name: 'Create' + modelName})" raised>
+      </Button>
     </div>
     <div class="mb-2">
 
@@ -134,9 +136,9 @@ onUnmounted(() => {
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields">
         <template #header>
-          <div class="flex justify-content-between">
+          <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <div style="text-align:left">
-              <MultiSelect :modelValue="selectedColumns" :options="tableColumns" optionLabel="header" @update:modelValue="onToggle"
+              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" optionLabel="header" @update:modelValue="onToggle"
                            display="chip" placeholder="Select Columns" />
             </div>
             <IconField iconPosition="left">
