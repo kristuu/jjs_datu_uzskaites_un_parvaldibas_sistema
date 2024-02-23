@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/primevue-sass-theme-main
 .env
 .env.backup
 .env.dusk.local
