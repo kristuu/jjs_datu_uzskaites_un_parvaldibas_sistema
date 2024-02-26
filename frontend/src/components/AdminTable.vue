@@ -165,7 +165,7 @@ onUnmounted(() => {
                 <InputText
                     v-model="filterModel.value"
                     :type="props.filterOptions[column.field].filterType"
-                    :placeholder="'search' + column.header"/>
+                    :placeholder="'Meklēt pēc ' + column.header"/>
               </div>
 
               <div v-if="props.filterOptions[column.field].filterType === 'select'">

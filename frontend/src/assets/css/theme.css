@@ -550,7 +550,7 @@
     padding: 0.25rem 0.5rem;
     background: #dee2e6;
     color: #495057;
-    border-radius: 16px;
+    border-radius: 0.25rem;
   }
   .p-autocomplete .p-autocomplete-multiple-container .p-autocomplete-token .p-autocomplete-token-icon {
     margin-left: 0.5rem;
@@ -822,7 +822,7 @@
   .p-datepicker table td > span {
     width: 2.5rem;
     height: 2.5rem;
-    border-radius: 50%;
+    border-radius: 5%;
     transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
     border: 1px solid transparent;
     outline-color: transparent;
@@ -1282,7 +1282,7 @@
     margin-right: 0.5rem;
     background: #dee2e6;
     color: #495057;
-    border-radius: 16px;
+    border-radius: 0.25rem;
   }
   .p-chips .p-chips-multiple-container .p-chips-token.p-focus {
     background: #dee2e6;
@@ -2195,7 +2195,7 @@
     margin-right: 0.5rem;
     background: #dee2e6;
     color: #495057;
-    border-radius: 16px;
+    border-radius: 0.25rem;
   }
   .p-multiselect.p-multiselect-chip .p-multiselect-token .p-multiselect-token-icon {
     margin-left: 0.5rem;
@@ -2705,7 +2705,7 @@
     margin-right: 0.5rem;
     background: #dee2e6;
     color: #495057;
-    border-radius: 16px;
+    border-radius: 0.25rem;
   }
   .p-treeselect .p-treeselect-trigger {
     background: transparent;
@@ -2875,8 +2875,8 @@
   .p-button {
     color: #ffffff;
     background: #9a2e26;
-    border: 1px solid #9a2e26;
-    padding: 0.5rem 2rem;
+    border: 0px solid #9a2e26;
+    padding: 0.5rem 0.5rem;
     font-size: 1rem;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
     border-radius: 0px;
@@ -2981,7 +2981,7 @@
   }
   .p-button.p-button-icon-only {
     width: 2.357rem;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.5rem;
   }
   .p-button.p-button-icon-only .p-button-icon-left,
   .p-button.p-button-icon-only .p-button-icon-right {
@@ -2993,14 +2993,14 @@
   }
   .p-button.p-button-sm {
     font-size: 0.875rem;
-    padding: 0.4375rem 1.75rem;
+    padding: 0.4375rem 0.4375rem;
   }
   .p-button.p-button-sm .p-button-icon {
     font-size: 0.875rem;
   }
   .p-button.p-button-lg {
     font-size: 1.25rem;
-    padding: 0.625rem 2.5rem;
+    padding: 0.625rem 0.625rem;
   }
   .p-button.p-button-lg .p-button-icon {
     font-size: 1.25rem;
@@ -9194,7 +9194,7 @@
   .p-chip {
     background-color: #dee2e6;
     color: #495057;
-    border-radius: 16px;
+    border-radius: 0.25rem;
     padding: 0 0.5rem;
   }
   .p-chip .p-chip-text {

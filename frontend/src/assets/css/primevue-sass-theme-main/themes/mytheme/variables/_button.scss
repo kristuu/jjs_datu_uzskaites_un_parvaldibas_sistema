@@ -1,6 +1,6 @@
 /// Padding of a button, must be defined with a shorthand for vertical and horizontal values e.g. ".5rem .5rem"
 /// @group button
-$buttonPadding: .5rem 2rem;
+$buttonPadding: .5rem .5rem;
 
 /// Width of a button having an icon with no label
 /// @group button
@@ -8,7 +8,7 @@ $buttonIconOnlyWidth: 2.357rem;
 
 /// Padding of a button having an icon with no label
 /// @group button
-$buttonIconOnlyPadding: .5rem 0;
+$buttonIconOnlyPadding: .5rem .5rem;
 
 /// Background of a button
 /// @group button
@@ -20,7 +20,7 @@ $buttonTextColor: $primaryTextColor;
 
 /// Border of a button
 /// @group button
-$buttonBorder: 1px solid $primaryColor;
+$buttonBorder: 0px solid $primaryColor;
 
 /// Background of a button in hover state
 /// @group button

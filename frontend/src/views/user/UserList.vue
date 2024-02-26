@@ -7,7 +7,7 @@ import {FilterMatchMode, FilterOperator} from "primevue/api";
 const filterOptions = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   name: {
-    sortable: true, filterType: 'text', dataType: 'text',
+    sortable: true, filterType: 'text',
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
   },
@@ -25,6 +25,21 @@ const filterOptions = ref({
     sortable: true, filterType: 'date', dataType: 'date',
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }]
+  },
+  email: {
+    sortable: true, filterType: 'text', dataType: 'text',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+  },
+  phone: {
+    sortable: true, filterType: 'text', dataType: 'text',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+  },
+  iban_code: {
+    sortable: true, filterType: 'text', dataType: 'text',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
   },
 
 });
