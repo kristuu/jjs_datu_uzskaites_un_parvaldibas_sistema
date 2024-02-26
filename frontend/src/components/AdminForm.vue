@@ -103,16 +103,19 @@ onMounted(() => {
 </script>
 
 <template>
-      <div class="d-flex align-items-baseline text-white mb-4">
-        <h2 class="fw-bold">{{ props.pageName }}</h2>
-        <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
-      </div>
-      <div class="container-fluid content-card bg-white shadow-lg mb-2">
-        <slot></slot>
-      </div>
-      <button class="btn btn-primary btn" @click="isUpdateMode ? updateInstance(route.params.id) : createInstance()">
-        Saglabāt
-      </button>
+  <div class="mb-3">
+    <div class="d-flex align-items-baseline text-white mb-4">
+      <h2 class="fw-bold">{{ props.pageName }}</h2>
+      <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
+    </div>
+    <div class="container-fluid content-card bg-white shadow-lg mb-2">
+      <slot></slot>
+    </div>
+    <Button label="Saglabāt" icon="bi bi-check-lg" class="mr-2" raised
+            @click="isUpdateMode ? updateInstance(route.params.id) : createInstance()" />
+    <Button severity="secondary" label="Atcelt" icon="bi bi-x-lg" text outlined
+            @click="router.go(-1);" />
+  </div>
 </template>
 
 <style scoped>

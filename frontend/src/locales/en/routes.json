@@ -1,6 +1,6 @@
 {
-  "AdminDashboard": [{"name": "Admin"}, {"name": "Dashboard"}],
-  "UserList": [{"name": "Admin", "path": "/admin"}, {"name": "Users"}, {"name": "List"}],
-  "CreateUser": [{"name": "Admin", "path": "/admin"}, {"name": "Users", "path": "/admin/users"}, {"name": "Create", "path": "/create-user"}],
-  "EditUser": [{"name": "Admin", "path": "/admin"}, {"name": "Users", "path": "/admin/users"}, {"name": "Edit"}]
+  "AdminDashboard": [{"label": "Admin"}, {"label": "Dashboard"}],
+  "UserList": [{"label": "Admin", "route": "/admin"}, {"label": "Users"}, {"label": "List"}],
+  "CreateUser": [{"label": "Admin", "route": "/admin"}, {"label": "Users", "route": "/admin/users"}, {"label": "Create", "route": "/create-user"}],
+  "EditUser": [{"label": "Admin", "route": "/admin"}, {"label": "Users", "route": "/admin/users"}, {"label": "Edit"}]
 }

@@ -156,35 +156,35 @@ $menuSeparatorMargin: .25rem 0;
 
 /// Padding of a breadcrumb
 /// @group menu
-$breadcrumbPadding: 1rem;
+$breadcrumbPadding: .25rem;
 
 /// Background of a breadcrumb
 /// @group menu
-$breadcrumbBg: $menuBg;
+$breadcrumbBg: none;
 
 /// Border of a breadcrumb
 /// @group menu
-$breadcrumbBorder: $menuBorder;
+$breadcrumbBorder: none;
 
 /// Text color of a breadcrumb item
 /// @group menu
-$breadcrumbItemTextColor: $menuitemTextColor;
+$breadcrumbItemTextColor: white;
 
 /// Icon color of a breadcrumb item
 /// @group menu
-$breadcrumbItemIconColor: $menuitemIconColor;
+$breadcrumbItemIconColor: white;
 
 /// Text color of the breadcrumb item
 /// @group menu
-$breadcrumbLastItemTextColor: $menuitemTextColor;
+$breadcrumbLastItemTextColor: white;
 
 /// Icon color of the breadcrumb item
 /// @group menu
-$breadcrumbLastItemIconColor: $menuitemIconColor;
+$breadcrumbLastItemIconColor: white;
 
 /// Color of a breadcrumb separator
 /// @group menu
-$breadcrumbSeparatorColor: $menuitemTextColor;
+$breadcrumbSeparatorColor: white;
 
 /// Padding of a horizontal menu e.g. menubar
 /// @group menu

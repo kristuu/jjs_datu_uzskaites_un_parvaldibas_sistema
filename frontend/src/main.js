@@ -15,7 +15,7 @@ import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import "primeicons/primeicons.css";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap-grid.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 import { createI18n } from 'vue-i18n';

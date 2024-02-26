@@ -76,15 +76,13 @@ onMounted(async () => {
         </template>
         <template #end class="ml-5">
           <div class="flex align-items-center gap-2">
-            <InputText :placeholder="$t('table.search')" type="text" class="w-8rem sm:w-auto" />
+<!--            <InputText :placeholder="$t('table.search')" type="text" class="w-8rem sm:w-auto" />-->
             <Avatar shape="circle" color="white">KB</Avatar>
           </div>
         </template>
       </Menubar>
     </div>
   </div>
-
-  <Button class="btn btn-primary" />
 
   <div v-if="can('access admin dashboard') && path.startsWith('/admin')">
     <div class="nav-scroller container-xl mt-2 mb-2">

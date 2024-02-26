@@ -52,8 +52,8 @@ const crumbs = computed(() => {
                   : matchedRoute.redirect.path
               : matchedRoute.path;
           return {
-            text: breadcrumb.name,
-            to: breadcrumb.path || path,
+            label: breadcrumb.label,
+            route: breadcrumb.route || route,
             isActive: i === arr.length - 1 && matchedRoute === matchedRoutes[matchedRoutes.length - 1]
           };
         });
@@ -64,6 +64,11 @@ const crumbs = computed(() => {
   });
 
   return crumbs;
+});
+
+const home = ref({
+  icon: 'bi bi-house-door-fill',
+  route: '/'
 });
 </script>
 
@@ -83,46 +88,23 @@ const crumbs = computed(() => {
   <NavigationBar />
   <div id="app">
     <main class="container-xl">
-      <nav style="--bs-breadcrumb-divider: '//'" aria-label="breadcrumb"
-           class="d-flex justify-content-end">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><router-link to="/" class="text-capitalize">{{ $t("breadcrumbs.home") }}</router-link></li>
-          <li v-for="(crumb, i) in crumbs" :key="i"
-              class="breadcrumb-item" :class='i + 1 === crumbs.length ? "active" : ""'
-              :aria-current='i + 1 === crumbs.length ? "page" : ""'>
-              <router-link :to="crumb.to"
-                           class="text-capitalize"
-                           v-if="i + 1 !== crumbs.length">{{ crumb.text }}</router-link>
-              {{ i + 1 === crumbs.length ? crumb.text : "" }}
-          </li>
-        </ol>
-      </nav>
+      <div class="flex justify-content-end mt-2 mb-4">
+        <Breadcrumb :home="home" :model="crumbs" class="text-white">
+          <template #item="{ item, props }">
+            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+              <a :href="href" v-bind="props.action" @click="navigate">
+                <span :class="item.icon" />
+                <span class="font-semibold">{{ item.label }}</span>
+              </a>
+            </router-link>
+            <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+              <span>{{ item.label }}</span>
+            </a>
+          </template>
+        </Breadcrumb>
+      </div>
       <router-view />
     </main>
-  </div>
-  <div aria-live="polite" aria-atomic="true" class="position-relative">
-    <div class="toast-container top-0 end-0 p-3 position-fixed">
-      <div v-for="notification in notifications"
-           :key="notification.id"
-           :id="`toast-${ notification.id }`"
-           class="toast" role="alert" aria-live="assertive"
-           :class="'bg-' + toastTypeClass(notification.status) + '-subtle'"
-           aria-atomic="true">
-        <div class="toast-header"
-             :class="'text-' + toastTypeClass(notification.status)">
-          <strong class="me-auto">{{ notification.title }}</strong>
-          <button class="bi bi-x-lg fs-5"
-                  :class="'text-' + toastTypeClass(notification.status)"
-                  style="border: none; background: none;"
-                  data-bs-dismiss="toast"
-                  aria-label="Close"></button>
-        </div>
-        <div class="toast-body"
-             :class="'text-' + toastTypeClass(notification.status)">
-          {{ notification.message }}
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -148,7 +130,9 @@ const crumbs = computed(() => {
   color: #2c3e50;
 }
 
-h1, h2, h3, h4, h5, h6, label, .nav-link {
+h1, h2, h3, h4, h5, h6, label,
+button,
+.p-breadcrumb, .p-column-title {
   font-family: Ubuntu, sans-serif;
 }
 </style>

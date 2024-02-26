@@ -1,6 +1,6 @@
 {
-  "AdminDashboard": [{"name": "Admin"}, {"name": "Panelis"}],
-  "UserList": [{"name": "Admin", "path": "/admin"}, {"name": "Lietotāji"}, {"name": "Saraksts"}],
-  "CreateUser": [{"name": "Admin", "path": "/admin"}, {"name": "Lietotāji", "path": "/admin/users"}, {"name": "Pievienošana", "path": "/create-user"}],
-  "EditUser": [{"name": "Admin", "path": "/admin"}, {"name": "Lietotāji", "path": "/admin/users"}, {"name": "Rediģēšana"}]
+  "AdminDashboard": [{"label": "Admin"}, {"label": "Panelis"}],
+  "UserList": [{"label": "Admin", "route": "/admin"}, {"label": "Lietotāji"}, {"label": "Saraksts"}],
+  "CreateUser": [{"label": "Admin", "route": "/admin"}, {"label": "Lietotāji", "route": "/admin/users"}, {"label": "Pievienošana", "route": "/create-user"}],
+  "EditUser": [{"label": "Admin", "route": "/admin"}, {"label": "Lietotāji", "route": "/admin/users"}, {"label": "Rediģēšana"}]
 }

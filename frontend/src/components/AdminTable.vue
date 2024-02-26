@@ -1,11 +1,9 @@
 <script setup>
-import {onMounted, ref, onUnmounted, watchEffect, watch} from 'vue';
+import {onMounted, ref, onUnmounted, watchEffect, watch, computed} from 'vue';
 import axios from '@/services/axios';
 import { useRoute } from 'vue-router';
 import router from "@/router/router";
 import { useStore } from 'vuex';
-import {FilterMatchMode, FilterOperator} from "primevue/api";
-import {isDate} from "date-fns";
 
 const store = useStore();
 const route = useRoute();
@@ -33,7 +31,9 @@ let filters = ref();
 
 let totalInstances = ref([]);
 
-const selectedColumns = ref(tableColumns.value);
+const selectedColumns = ref();
+const selectedInstance = ref();
+
 const onToggle = (val) => {
   selectedColumns.value = tableColumns.value.filter(col => val.includes(col));
 }
@@ -44,7 +44,7 @@ const fetchDatabaseData = async () => {
     const response = await axios.get(`/${props.databaseTable}`);
     const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
     tableColumns.value = tempHeadings.data;
-    selectedColumns.value = tableColumns.value;
+    selectedColumns.value = tableColumns.value.slice(0, 5);
     globalFilterFields.value = response.data.globalFilterFields;
     instances.value = response.data[0];
 
@@ -117,24 +117,23 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div class="d-flex justify-content-between text-white mb-3">
-      <div class="d-flex align-items-baseline">
-        <h2 class="fw-bold">{{ props.pageName }}</h2>
-        <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
+    <div class="flex justify-content-between text-white mb-3">
+      <div class="flex align-items-baseline">
+        <h1 class="fw-bold">{{ props.pageName }}</h1>
+        <span class="ml-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
       </div>
       <Button v-if="can('create instances')"
-              icon="bi bi-person-add"
-              @click="router.push({ name: 'Create' + modelName})" raised>
+              icon="bi bi-plus-lg"
+              rounded raised
+              @click="router.push({ name: 'Create' + modelName})">
       </Button>
-    </div>
-    <div class="mb-2">
-
     </div>
     <div class="container-fluid content-card bg-white shadow-lg">
       <table id="listTable"></table>
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
-                 v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields">
+                 v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
+                 v-model:selection="selectedInstance" selectionMode="single">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <div style="text-align:left">
@@ -188,8 +187,15 @@ onUnmounted(() => {
                 :maxDate="new Date()"/>
 
               <!-- Add more `v-else-if` statements as needed for other filter types -->
-            </template>
-          </Column>
+          </template>
+        </Column>
+        <Column :exportable="false">
+          <template #body="{ data }">
+            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
+                    @click="router.push({ name: 'Edit' + modelName, params: { id: data[props.instanceIdColumn] } })"/>
+            <Button icon="bi bi-trash-fill" outlined rounded />
+          </template>
+        </Column>
       </DataTable>
     </div>
   </div>

@@ -2,6 +2,9 @@
 import {ref, computed} from "vue";
 import { useStore } from 'vuex';
 
+import Password from 'primevue/password';
+
+
 import { format } from 'date-fns';
 import { vMaska } from 'maska';
 
@@ -25,135 +28,103 @@ const handleErrorListUpdate = (updatedErrorList) => {
            @update-error-list="handleErrorListUpdate">
   <form id="createUserForm" class="row gap-3 py-3 text-start needs-validation">
     <div class="col-12">
-      <div class="form-group form-floating required">
-        <input v-model="formInstance.name"
-               type="text"
-               maxlength="60"
-               v-maska data-maska="A A" data-maska-tokens="A:[A-ž\s\-]:multiple"
-               class="form-control"
-               :class="{ 'is-invalid' : errorList.name }"
-               id="name"
-               placeholder="Vārds (-i)">
+      <div class="flex flex-column gap-1">
         <label for="name">Vārds (-i)</label>
+        <InputText v-model="formInstance.name"
+                   maxlength="60"
+                   pattern="A:[A-ž\s\-]:multiple"
+                   :invalid="errorList.name"
+                   id="name"/>
         <InputError :errors="errorList.name" />
       </div>
     </div>
     <div class="col-12">
-      <div class="form-group form-floating required">
-        <input v-model="formInstance.surname"
-               type="text"
-               maxlength="60"
-               v-maska data-maska="A A" data-maska-tokens="A:[A-ž]:multiple"
-               class="form-control"
-               :class="{ 'is-invalid' : errorList.surname?.length > 0 }"
-               id="surname"
-               placeholder="Uzvārds (-i)">
+      <div class="flex flex-column gap-1">
         <label for="surname">Uzvārds (-i)</label>
+        <InputText v-model="formInstance.surname"
+                   maxlength="60"
+                   v-maska data-maska="A A" data-maska-tokens="A:[A-ž\s\-]:multiple"
+                   :invalid="errorList.surname"
+                   id="surname"/>
         <InputError :errors="errorList.surname" />
       </div>
     </div>
     <div class="col-12">
-      <div class="form-group form-floating required">
-        <input v-model="formInstance.masked_person_code"
-               inputmode="numeric" type="text"
-               v-maska data-maska-eager data-maska="######-#####"
-               @maska="caller => formInstance.person_code = caller.detail.unmasked"
-               class="form-control"
-               :class="{ 'is-invalid' : errorList.person_code?.length > 0 }"
-               id="person_code"
-               placeholder="Personas kods">
+      <div class="flex flex-column gap-1">
         <label for="person_code">Personas kods</label>
+        <InputMask v-model="formInstance.person_code"
+                   mask="999999-99999"
+                   :invalid="errorList.person_code"
+                   id="person_code"
+                   unmask />
         <InputError :errors="errorList.person_code" />
       </div>
     </div>
     <div class="col-12">
-      <VueDatePicker v-model="formInstance.birthdate"
-                     locale="lv"
-                     position="left"
-                     cancelText="Atcelt"
-                     selectText="Saglabāt"
-                     :enable-time-picker="false"
-                     :format="'dd.MM.yyyy'"
-                     auto-apply
-                     @update:modelValue="val => formInstance.birthdate = format(new Date(val), 'yyyy-MM-dd HH:mm:ss')">
-        <template #dp-input="{ value }">
-          <div class="form-group form-floating required">
-            <input id="birthdate"
-                   type="text"
-                   :value="value"
-                   class="form-control"
-                   :class="{ 'is-invalid' : errorList.birthdate?.length > 0 }"
-                   placeholder="Dzimšanas datums"
-                   autocomplete="off" readonly />
-            <label for="birthdate">Dzimšanas datums</label>
-            <InputError :errors="errorList.birthdate" />
-          </div>
-        </template>
-      </VueDatePicker>
+      <div class="flex flex-column gap-1">
+        <label for="birthdate">Dzimšanas datums</label>
+        <Calendar v-model="formInstance.birthdate"
+                  :invalid="errorList.birthdate"
+                  id="birthdate"
+                  dateFormat="dd.mm.yy"
+                  :maxDate="new Date()"
+                  panelClass="min-w-min"/>
+        <InputError :errors="errorList.birthdate" />
+      </div>
     </div>
     <div class="col-12">
-      <div class="form-group form-floating required">
-        <input v-model="formInstance.email"
-               inputmode="email" type="email"
-               class="form-control"
-               :class="{ 'is-invalid' : errorList.email?.length > 0 }"
-               id="email"
-               placeholder="E-pasta adrese">
-        <label for="email">E-pasta adrese</label>
+      <div class="flex flex-column gap-1">
+        <label for="email">E-pasts</label>
+        <InputText v-model="formInstance.email"
+                  :invalid="errorList.email"
+                  id="email"/>
         <InputError :errors="errorList.email" />
       </div>
     </div>
     <div class="col-12">
-      <div class="form-group form-floating required">
+      <div class="flex flex-column gap-1">
+        <label for="phone">Telefona nr.</label>
         <vue-tel-input v-model="formInstance.phone"
-                       class="form-control"
-                       :class="{ 'is-invalid' : errorList.phone?.length > 0 }"
                        :auto-format="true"
                        autocomplete="off"
                        mode="international">
           <template #input="{ props, actions, value, update }">
-            <input ref="phone" v-on="{ ...actions }" v-bind="props"
-                   :value="value" @input="update($event.target.value)"
-                   class="form-control" placeholder=" "/>
+            <InputText ref="phone" v-on="{ ...actions }" v-bind="props"
+                       :value="value" @input="update($event.target.value)"
+                       :invalid="errorList.phone?.length > 0"/>
           </template>
         </vue-tel-input>
-        <label for="phone">Telefona nr.</label>
         <InputError :errors="errorList.phone" />
       </div>
     </div>
     <div class="col-12">
-      <div class="form-group form-floating">
-        <input v-model="formInstance.iban_code"
-               type="text"
-               class="form-control"
-               :class="{ 'is-invalid' : errorList.iban_code?.length > 0 }"
-               id="iban_code"
-               placeholder="IBAN (starptautiskais bankas konta numurs)">
-        <label for="iban_code">IBAN (starptautiskais bankas konta numurs)</label>
+      <div class="flex flex-column gap-1">
+        <label for="iban_code">Bankas konts</label>
+        <InputMask v-model="formInstance.iban_code"
+                   :invalid="errorList.iban_code?.length > 0"
+                   id="iban_code"
+                   mask="aa*************?******************"
+                   placeholder="Bankas konts" />
         <InputError :errors="errorList.iban_code" />
       </div>
     </div>
     <div class="col-12">
-      <div class="form-group form-floating required">
-        <input v-model="formInstance.password"
-               type="password"
-               class="form-control"
-               :class="{ 'is-invalid' : errorList.password?.length > 0 }"
-               id="password"
-               placeholder="Parole">
+      <div class="flex flex-column gap-1">
         <label for="password">Parole</label>
+        <Password v-model="formInstance.password"
+               :invalid="errorList.password?.length > 0"
+               id="password"
+               inputStyle="width: 100%" toggleMask />
         <InputError :errors="errorList.password" />
       </div>
     </div>
     <div class="col-12">
-      <div class="form-group form-floating required">
-        <input v-model="formInstance.password_confirmation"
-               type="password"
-               class="form-control"
-               :class="{ 'is-invalid' : errorList.password_confirmation?.length > 0 }"
-               id="password_confirmation"
-               placeholder="Parole (atkārtoti)">
-        <label for="password_confirmation">Parole (atkārtoti)</label>
+      <div class="flex flex-column gap-1">
+        <label for="password_confirmation">Paroles apstiprinājums</label>
+        <Password v-model="formInstance.password_confirmation"
+                  :invalid="errorList.password_confirmation?.length > 0"
+                  id="password_confirmation"
+                  inputStyle="width: 100%" toggleMask />
         <InputError :errors="errorList.password_confirmation" />
       </div>
     </div>

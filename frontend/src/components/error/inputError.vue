@@ -8,8 +8,8 @@ defineProps({
 </script>
 
 <template>
-  <div v-for="(error, index) in errors" :key="index" class="invalid-feedback">
-    {{ error }}
+  <div v-for="(error, index) in errors" :key="index">
+    <InlineMessage>{{ error }}</InlineMessage>
   </div>
 </template>
 

@@ -5,11 +5,13 @@
 }
 
 .p-icon-field-left > .p-input-icon:first-of-type {
+    position: absolute;
     left: nth($inputPadding, 2);
     color: $inputIconColor;
 }
 
 .p-icon-field-right > .p-input-icon:last-of-type  {
+    position: absolute;
     right: nth($inputPadding, 2);
     color: $inputIconColor;
 }
