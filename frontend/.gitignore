@@ -1,4 +1,6 @@
 .DS_Store
+primevue-sass-theme-main
+.sass-cache
 node_modules
 /dist
 
