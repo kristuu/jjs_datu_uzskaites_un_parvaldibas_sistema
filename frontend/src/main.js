@@ -67,7 +67,7 @@ app.use(router);
 app.use(PrimeVue);
 app.use(ToastService);
 
-axios.get('/get-permissions').then(
+await axios.get('/get-permissions').then(
     response => {
         window.Laravel.jsPermissions = response.data;
     }

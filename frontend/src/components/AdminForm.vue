@@ -54,23 +54,13 @@ let updateInstance = async (instanceId) => {
   }
 };
 
-const attachFormValidation = () => {
-  const forms = document.querySelectorAll('.needs-validation');
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      form.classList.add('was-validated');
-    }, false);
-  });
-};
-
+/**
+ * Fetch an instance from the database based on the instance ID.
+ * If in update mode, dispatch the 'fetchInstance' action with the provided tableName and ID.
+ */
 const fetchInstance = async () => {
   store.commit('setLoading', true);
   const id = route.params.id;
-  console.log(id);
   if (isUpdateMode) {
     try {
       await store.dispatch('fetchInstance', {
@@ -86,6 +76,9 @@ const fetchInstance = async () => {
   }
 }
 
+/**
+ * Format the specified date fields (for example, not supposed to contain time) in the given instance object.
+ */
 const formatDates = (instance) => {
   Object.keys(instance.value).forEach((key) => {
     if (key === 'birthdate') {
@@ -111,7 +104,6 @@ const formatDates = (instance) => {
 
 onMounted(() => {
   fetchInstance();
-  attachFormValidation();
 });
 </script>
 

@@ -40,7 +40,6 @@ const crumbs = computed(() => {
   const crumbs = [];
 
   matchedRoutes.forEach((matchedRoute) => {
-    console.log(`lalalla`);
     if (matchedRoute.name && routeTranslations.value[matchedRoute.name]) {
       let breadcrumb = resolveBreadcrumb(matchedRoute.name);
 
@@ -88,7 +87,7 @@ const home = ref({
   <NavigationBar />
   <div id="app">
     <main class="container-xl">
-      <div class="flex justify-content-end mt-2 mb-4">
+      <div class="flex justify-content-end mt-2 mb-3">
         <Breadcrumb :home="home" :model="crumbs" class="text-white">
           <template #item="{ item, props }">
             <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>

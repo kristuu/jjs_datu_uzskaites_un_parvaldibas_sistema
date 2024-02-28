@@ -15,7 +15,6 @@ let errorList = ref({});
 
 const handleErrorListUpdate = (updatedErrorList) => {
   errorList.value = updatedErrorList;
-  console.log('ļalalal');
 }
 </script>
 

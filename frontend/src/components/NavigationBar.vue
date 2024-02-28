@@ -54,7 +54,20 @@ onMounted(async () => {
     }
   }
   store.commit('setLoading', false);
-})
+});
+
+const adminItems = ref([
+  {
+    label: locale.t('navigation.dashboard'),
+    icon: 'bi bi-speedometer',
+    route: { name: 'AdminDashboard' }
+  },
+  {
+    label: locale.t('navigation.userList'),
+    icon: 'bi bi-person-fill',
+    route: { name: 'UserList' }
+  }
+]);
 </script>
 
 <template>
@@ -86,18 +99,20 @@ onMounted(async () => {
 
   <div v-if="can('access admin dashboard') && path.startsWith('/admin')">
     <div class="nav-scroller container-xl mt-2 mb-2">
-      <nav class="nav rounded-1" aria-label="Admin navigation">
-        <li class="nav-item">
-          <router-link class="nav-link" :to="{ name: 'AdminDashboard'}">
-            <span>{{ $t("navigation.dashboard") }}</span>
+      <TabMenu :model="adminItems" class="nav p-2" aria-label="Admin navigation">
+        <template #item="{ item, props }">
+          <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+            <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+              <span :class="item.icon" />
+              <span class="ml-2">{{ item.label }}</span>
+            </a>
           </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" :to="{ name: 'UserList'}">
-            <span>{{ $t("navigation.userList") }}</span>
-          </router-link>
-        </li>
-      </nav>
+          <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+            <span :class="item.icon" />
+            <span class="ml-2">{{ item.label }}</span>
+          </a>
+        </template>
+      </TabMenu>
     </div>
   </div>
 </template>
@@ -138,7 +153,7 @@ onMounted(async () => {
   text-align: center;
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, .75);
 }
 
 .avatar {
