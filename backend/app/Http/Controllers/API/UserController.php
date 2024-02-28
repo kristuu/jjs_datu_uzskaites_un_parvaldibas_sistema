@@ -50,7 +50,6 @@ class UserController extends Controller
     {
         $user = $this->findById(User::class, $person_code);
 
-        $user->birthdate->format('d/m/Y');
         return $user;
     }
 
@@ -88,5 +87,4 @@ class UserController extends Controller
     {
         return response()->json(['status' => $status, 'message' => $message], $status);
     }
-
 }

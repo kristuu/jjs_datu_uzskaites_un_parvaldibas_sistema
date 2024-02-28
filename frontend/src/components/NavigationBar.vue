@@ -66,7 +66,7 @@ onMounted(async () => {
                class="h-2rem" @click="changeLocale"/>
         </template>
         <template #item="{ item, props, hasSubmenu, root }">
-          <a v-ripple class="flex align-items-center ml-auto" v-bind="props.action">
+          <a class="flex align-items-center ml-auto" v-bind="props.action">
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
             <Badge v-if="item.badge" :class="{ 'ml-auto' : !root, 'ml-2' : root }" :value="item.badge" />

@@ -32,7 +32,6 @@ let filters = ref();
 let totalInstances = ref([]);
 
 const selectedColumns = ref();
-const selectedInstance = ref();
 
 const onToggle = (val) => {
   selectedColumns.value = tableColumns.value.filter(col => val.includes(col));
@@ -48,15 +47,6 @@ const fetchDatabaseData = async () => {
     globalFilterFields.value = response.data.globalFilterFields;
     instances.value = response.data[0];
 
-    // convert json string dates returned from laravel to JS Date objects
-    instances.value.forEach((instance) => {
-      for (let property in instance) {
-        if (!isNaN(Date.parse(instance[property]))) {
-          instance[property] = new Date(instance[property]);
-        }
-      }
-    });
-
     totalInstances.value = response.data.total;
     emit('update:totalInstances', totalInstances.value);
   } catch (e) {
@@ -66,28 +56,19 @@ const fetchDatabaseData = async () => {
   }
 }
 
-// const deleteInstance = async (instanceId) => {
-//   try {
-//     const response = await axios.delete(`/${props.databaseTable}/${instanceId}`);
-//     console.log(response);
-//     addToastNotification({
-//       status: response.status,
-//       title: response.status + ' statuss',
-//       message: response.data.message,
-//     });
-//     await fetchDatabaseData();
-//   } catch (e) {
-//     console.error(`Error fetching ${props.databaseTable}: `, e);
-//   }
-// }
+const deleteInstance = async (instanceId) => {
+  try {
+    const response = await axios.delete(`/${props.databaseTable}/${instanceId}`);
+    console.log(response);
+    await fetchDatabaseData();
+  } catch (e) {
+    console.error(`Error fetching ${props.databaseTable}: `, e);
+  }
+}
 
 
 const formatDate = (value) => {
-  return new Date(value).toLocaleDateString('lv', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
+  return value
 };
 
 const initFilters = () => {
@@ -132,8 +113,7 @@ onUnmounted(() => {
       <table id="listTable"></table>
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
-                 v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 v-model:selection="selectedInstance" selectionMode="single">
+                 v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <div style="text-align:left">
@@ -193,7 +173,7 @@ onUnmounted(() => {
           <template #body="{ data }">
             <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
                     @click="router.push({ name: 'Edit' + modelName, params: { id: data[props.instanceIdColumn] } })"/>
-            <Button icon="bi bi-trash-fill" outlined rounded />
+            <Button icon="bi bi-trash-fill" @click="deleteInstance(data[instanceIdColumn])" outlined rounded />
           </template>
         </Column>
       </DataTable>

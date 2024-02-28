@@ -18,9 +18,9 @@ const goBack = () => {
 </script>
 
 <template>
-  <div class="w-100 h-100 top-0 start-0 position-absolute bg-body-secondary">
-    <div class="w-100 h-100 d-flex flex-column justify-content-center position-absolute top-0 align-items-center">
-      <img class="position-absolute top-0 p-3" src="@/assets/logo-red.svg"/>
+  <div class="w-full h-full top-0 left-0 absolute surface-200">
+    <div class="w-full h-full flex flex-column justify-content-center absolute top-0 align-items-center">
+      <img class="absolute top-0 p-3" src="@/assets/logo-red.svg"/>
         <div class="p-3">
           <a href="#" @click="goBack"><span class="bi bi-arrow-return-left"> Atgriezties</span></a>
           <h1 class="fw-bold display-1 mt-5">{{ localErrorStatus }}</h1>

@@ -81,8 +81,8 @@ const home = ref({
                :is-full-page="true"
                :color="`#9A2E26FF`"
                :opacity="1"
-               :width="`6rem`"
-               :height="`6rem`"/>
+               :width="Number(96)"
+               :height="Number(96)" />
     </div>
   </transition>
   <NavigationBar />

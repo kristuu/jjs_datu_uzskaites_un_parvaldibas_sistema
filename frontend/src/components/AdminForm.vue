@@ -1,9 +1,10 @@
 <script setup>
-import {inject, computed, onMounted, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import axios from '@/services/axios';
 import router from "@/router/router";
+import {format} from "date-fns";
 
 const route = useRoute();
 const store = useStore();
@@ -11,8 +12,6 @@ const emit = defineEmits(['update-error-list'])
 
 let formInstance = computed(() => store.state.formInstance);
 let errorList = ref({});
-
-const addToastNotification = inject('addToastNotification');
 
 const props = defineProps({
   pageName: String,
@@ -29,13 +28,9 @@ console.log(isUpdateMode);
 
 let createInstance = async() => {
   try {
+    formatDates(formInstance);
     const response = await axios.post(`/${props.databaseTable}`, formInstance.value)
     console.log(response);
-    addToastNotification({
-      status: response.status,
-      title: response.status + ' statuss',
-      message: response.data.message,
-    });
     store.commit("resetFormInstance");
     await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
@@ -47,13 +42,9 @@ let createInstance = async() => {
 
 let updateInstance = async (instanceId) => {
   try {
+    formatDates(formInstance);
     const response = await axios.put(`/${props.databaseTable}/${instanceId}`, formInstance.value);
     console.log(response);
-    addToastNotification({
-      status: response.status,
-      title: response.status + ' statuss',
-      message: response.data.message,
-    });
     store.commit("resetFormInstance");
     await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
@@ -85,7 +76,6 @@ const fetchInstance = async () => {
       await store.dispatch('fetchInstance', {
         tableName: props.databaseTable, id
       });
-      formInstance.value.masked_person_code = formInstance.value.person_code;
     } catch (error) {
       store.commit('setErrorStatus', error.status);
       store.commit('setErrorMessage', error.data.message);
@@ -94,6 +84,29 @@ const fetchInstance = async () => {
       store.commit('setLoading', false);
     }
   }
+}
+
+const formatDates = (instance) => {
+  Object.keys(instance.value).forEach((key) => {
+    if (key === 'birthdate') {
+      let date;
+
+      if (instance.value[key] instanceof Date) {
+        date = instance.value[key];
+      } else {
+        // Parse time in the 'dd.mm.yyyy' format
+        let parts = instance.value[key].split(".");
+        date = new Date(parts[2], parts[1] - 1, parts[0]);
+      }
+
+      let year = date.getFullYear();
+      let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Ensure month is 2 digits
+      let day = date.getDate().toString().padStart(2, '0'); // Ensure day is 2 digits
+
+      instance.value[key] = `${year}-${month}-${day}`;
+      console.log(instance.value[key])
+    }
+  });
 }
 
 onMounted(() => {
