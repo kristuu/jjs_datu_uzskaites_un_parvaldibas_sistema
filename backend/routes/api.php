@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\InstructorController;
+use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
@@ -50,6 +51,11 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::group(['middleware' => ['can:delete instances']], function () {
             Route::delete('/users/{id}', [UserController::class, 'destroyUser']);
         });
+    });
+
+    Route::group(['middleware' => ['can:manage permissions']], function () {
+       Route::get('/permissions/columns', [PermissionController::class, 'getPermissionsColumnNames']);
+       Route::get('/permissions', [PermissionController::class, 'getAllPermissions']);
     });
 
     Route::get('/instructors', [InstructorController::class, 'getAllInstructorData']);

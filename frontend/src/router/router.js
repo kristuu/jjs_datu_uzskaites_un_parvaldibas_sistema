@@ -13,6 +13,9 @@ import AdminDashboard from "@/views/admin/AdminDashboard.vue";
 import MaugloCompute from '@/views/calculateReportDiapazone.vue'
 import store from "@/auth/store";
 import ErrorView from "@/views/error/ErrorView.vue";
+import PermissionList from "@/views/permission/PermissionList.vue";
+import CreatePermission from "@/views/permission/CreatePermission.vue";
+import EditPermission from "@/views/permission/EditPermission.vue";
 
 const routes = [
     {
@@ -66,6 +69,15 @@ const routes = [
           },
           {
               path: 'users/create',  name: 'CreateUser', component: CreateUser, meta: { public: false },
+          },
+          {
+            path: 'permissions', name: 'PermissionList', component: PermissionList, meta: { public: false },
+          },
+          {
+            path: 'permissions/create', name: 'CreatePermission', component: CreatePermission, meta: { public: false },
+          },
+          {
+            path: 'permissions/:id/edit', name: 'EditPermission', component: EditPermission, meta: { public: false },
           },
       ],
     },
