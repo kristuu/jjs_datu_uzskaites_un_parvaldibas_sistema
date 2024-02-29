@@ -150,16 +150,6 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-    'attributes' => [
-        'name' => 'Name (-s)',
-        'surname' => 'Surname (-s)',
-        'person_code' => 'Person code',
-        'birthdate' => 'Date of birth',
-        'iban_code' => 'Bank account',
-        'password' => 'Password',
-        'phone' => 'Phone no.',
-        'email' => 'E-mail address',
-    ],
     'phone' => 'The field :attribute must be a valid phone number.',
     'iban' => 'The :attribute field must be a valid international bank account number.',
     'models' => [
@@ -172,5 +162,24 @@ return [
         'creation_failed' => ':model creation failed.',
         'creation' => ':model succesfully created.',
         'none_found' => 'No instances of model :model found.',
+    ],
+    'attributes' => [
+        'users' => [
+            'name' => 'Name (-s)',
+            'surname' => 'Surname (-s)',
+            'person_code' => 'Person code',
+            'birthdate' => 'Birthdate',
+            'iban_code' => 'Bank (IBAN) number',
+            'password' => 'Password',
+            'phone' => 'Phone',
+            'email' => 'E-mail',
+        ],
+        'permissions' => [
+            'name' => 'Name',
+            'guard_name' => 'Authentication guard name',
+        ],
+        'created_at' => 'Created at',
+        'updated_at' => 'Updated at',
+        'id' => 'ID',
     ],
 ];

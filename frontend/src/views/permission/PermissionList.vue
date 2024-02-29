@@ -22,7 +22,7 @@ const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
   <div>
     <AdminTable
         v-show="can('manage permissions')"
-        :page-name="$t(`pageHeadings.users.manage permissions`)"
+        :page-name="$t(`pageHeadings.permissions.manage permissions`)"
         :database-table="'permissions'"
         :model-name="'Permission'"
         :instance-id-column="'id'"

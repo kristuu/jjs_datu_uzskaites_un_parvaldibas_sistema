@@ -150,16 +150,6 @@ return [
             'rule-name' => 'pielāgots ziņojums',
         ],
     ],
-    'attributes' => [
-        'name' => 'Vārds (-i)',
-        'surname' => 'Uzvārds (-i)',
-        'person_code' => 'Personas kods',
-        'birthdate' => 'Dzimšanas datums',
-        'iban_code' => 'Bankas konts',
-        'password' => 'Parole',
-        'phone' => 'Tel. nr.',
-        'email' => 'E-pasta adrese',
-    ],
     'phone' => 'Laukam ":attribute" ir jābūt derīgam tālruņa numuram.',
     'iban' => 'Laukam ":attribute" ir jābūt derīgam starptautiskam bankas konta numuram.',
     'models' => [
@@ -172,5 +162,24 @@ return [
         'creation_failed' => ':model izveide neizdevās.',
         'creation' => ':model veiksmīgi izveidots (-i / -a).',
         'none_found' => 'Nav atrasts neviens :model objekts.',
+    ],
+    'attributes' => [
+        'users' => [
+            'name' => 'Vārds (-i)',
+            'surname' => 'Uzvārds (-i)',
+            'person_code' => 'Personas kods',
+            'birthdate' => 'Dzimšanas datums',
+            'iban_code' => 'Konta (IBAN) numurs',
+            'password' => 'Parole',
+            'phone' => 'Tālrunis',
+            'email' => 'E-pasts',
+        ],
+        'permissions' => [
+            'name' => 'Nosaukums',
+            'guard_name' => 'Autentifikācijas aizsarga nosaukums',
+        ],
+        'created_at' => 'Izveidots',
+        'updated_at' => 'Atjaunināts',
+        'id' => 'ID',
     ],
 ];

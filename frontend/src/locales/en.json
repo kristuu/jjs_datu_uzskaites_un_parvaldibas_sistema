@@ -3,7 +3,8 @@
   "navigation": {
     "dashboard": "Dashboard",
     "home": "Home",
-    "userList": "Users"
+    "userList": "Users",
+    "permissionList": "Permissions"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -20,6 +21,13 @@
       "create user": "Create user",
       "edit user": "Edit user",
       "in total x users": "{total} users in total"
+    },
+    "permissions": {
+      "permissions": "Permissions",
+      "manage permissions": "Manage permissions",
+      "create permission": "Create permission",
+      "edit permission": "Edit permission",
+      "in total x permissions": "{total} permissions in total"
     }
   },
   "table": {

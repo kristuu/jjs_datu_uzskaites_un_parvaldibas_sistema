@@ -3,7 +3,8 @@
   "navigation": {
     "dashboard": "Panelis",
     "home": "Sākums",
-    "userList": "Lietotāji"
+    "userList": "Lietotāji",
+    "permissionList": "Tiesības"
   },
   "breadcrumbs": {
     "home": "Sākums",
@@ -20,6 +21,13 @@
       "create user": "Lietotāja pievienošana",
       "edit user": "Lietotāja rediģēšana",
       "in total x users": "Kopā {total} lietotāji"
+    },
+    "permissions": {
+      "permissions": "Piekļuves tiesības",
+      "manage permissions": "Piekļuves pārvaldība",
+      "create permission": "Tiesību pievienošana",
+      "edit permission": "Tiesību rediģēšana",
+      "in total x permissions": "Kopā {total} tiesību"
     }
   },
   "table": {

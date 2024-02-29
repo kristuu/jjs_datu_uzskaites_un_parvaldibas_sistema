@@ -4,19 +4,15 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionRequest;
-use App\Models\Country;
-use App\Models\Region;
-use App\Http\Requests\UserRequest;
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Traits\PaginationTrait;
+use Carbon\Carbon;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
     use PaginationTrait;
 
-    private array $globalFilterFields = ['name'];
+    private array $globalFilterFields = ['name', 'guard_name'];
 
     public function getPermissionsColumnNames() {
         $model = new Permission;
@@ -37,8 +33,9 @@ class PermissionController extends Controller
                                    $this->globalFilterFields);
     }
 
-    public function storePermission(Request $request)
+    public function storePermission(PermissionRequest $request)
     {
+        $request["guard_name"] = 'web';
         return $this->store($request, Permission::class);
     }
 

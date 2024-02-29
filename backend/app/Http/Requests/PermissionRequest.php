@@ -23,7 +23,8 @@ class PermissionRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:permissions,name,' . $this->route('id') ?? null],
+            'guard_name' => ['required'],
         ];
 
         return $rules;
@@ -33,6 +34,18 @@ class PermissionRequest extends FormRequest
         return [
 
         ];
+    }
+
+    public function attributes()
+    {
+        return trans('validation.attributes.permissions');
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'guard_name' => 'web',
+        ]);
     }
 
     protected function failedValidation(Validator $validator)

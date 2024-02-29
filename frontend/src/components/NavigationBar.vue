@@ -70,7 +70,11 @@ const adminItems = ref([
   {
     label: locale.t('navigation.permissionList'),
     icon: 'bi bi-lock',
-    route: { name: 'PermissionList' }
+    items: [
+      {
+        label: `Tiesības`
+      }
+    ]
   }
 ]);
 </script>
@@ -105,16 +109,17 @@ const adminItems = ref([
   <div v-if="can('access admin dashboard') && path.startsWith('/admin')">
     <div class="nav-scroller container-xl mt-2 mb-2">
       <TabMenu :model="adminItems" class="nav p-2" aria-label="Admin navigation">
-        <template #item="{ item, props }">
+        <template #item="{ item, props, hasSubmenu }">
           <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-            <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+            <a :href="href" v-bind="props.action" @click="navigate">
               <span :class="item.icon" />
               <span class="ml-2">{{ item.label }}</span>
             </a>
           </router-link>
-          <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+          <a v-else :href="item.url" :target="item.target" v-bind="props.action">
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
+            <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
           </a>
         </template>
       </TabMenu>

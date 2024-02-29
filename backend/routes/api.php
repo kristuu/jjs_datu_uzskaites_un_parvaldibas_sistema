@@ -56,6 +56,19 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::group(['middleware' => ['can:manage permissions']], function () {
        Route::get('/permissions/columns', [PermissionController::class, 'getPermissionsColumnNames']);
        Route::get('/permissions', [PermissionController::class, 'getAllPermissions']);
+       Route::get('/permissions/{id}', [PermissionController::class, 'findPermissionById']);
+
+        Route::group(['middleware' => ['can:create instances']], function () {
+            Route::post('/permissions', [PermissionController::class, 'storePermission']);
+        });
+
+        Route::group(['middleware' => ['can:edit instances']], function () {
+            Route::put('/permissions/{id}', [PermissionController::class, 'updatePermission']);
+        });
+
+        Route::group(['middleware' => ['can:delete instances']], function () {
+            Route::delete('/permissions/{id}', [PermissionController::class, 'destroyPermission']);
+        });
     });
 
     Route::get('/instructors', [InstructorController::class, 'getAllInstructorData']);

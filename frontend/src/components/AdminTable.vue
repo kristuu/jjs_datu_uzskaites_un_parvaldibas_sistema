@@ -41,6 +41,7 @@ const fetchDatabaseData = async () => {
   store.commit('setLoading', true);
   try {
     const response = await axios.get(`/${props.databaseTable}`);
+    console.log(response);
     const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
     tableColumns.value = tempHeadings.data;
     selectedColumns.value = tableColumns.value.slice(0, 5);
@@ -97,7 +98,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
+  <div v-if="can('list instances')">
     <div class="flex justify-content-between text-white mb-3">
       <div class="flex align-items-baseline">
         <h1 class="fw-bold">{{ props.pageName }}</h1>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Http\FormRequest;
@@ -32,6 +33,9 @@ class Controller extends BaseController
         return response()->json($response, $status, $headers);
     }
 
+    /**
+     * Retrieve the column names and translated headers for a given model.
+     */
     protected function getColumnNames($model) {
         $tableName = $model->getTable();
 
@@ -39,12 +43,16 @@ class Controller extends BaseController
         $hiddenColumns = $model->getHidden();
         $visibleColumns = array_diff($allColumns, $hiddenColumns);
 
+        $visibleColumns = array_diff($visibleColumns, ['created_at', 'updated_at']);
+
         $returnColumns = [];
 
         foreach ($visibleColumns as $column) {
             $returnColumns[] = [
                 'field' => $column,
-                'header' => __("validation.attributes." . $column)
+                'header' => $column === 'created_at' || $column === 'updated_at' || $column === 'id'
+                    ? __("validation.attributes." . $column)
+                    : __("validation.attributes." . $tableName . "." . $column)
             ];
         }
 
@@ -56,6 +64,9 @@ class Controller extends BaseController
         return response()->json($list, $status);
     }
 
+    /**
+     * Check if the given class name exists and is a subclass of the Model class.
+     */
     protected function checkClassExistence(string $className)
     {
         if (!is_subclass_of($className, Model::class)) {
@@ -63,11 +74,18 @@ class Controller extends BaseController
         }
     }
 
+    /**
+     * Retrieve all instances of the given class and append global filter fields (searchable on front-end).
+     */
     protected function getAll(string $className, array $globalFilterFields = [])
     {
         $this->checkClassExistence($className);
 
-        $instances = $className::all();
+        $instances = $className::all()->map(function ($instance) {
+            unset($instance->created_at, $instance->updated_at);
+            return $instance;
+        });
+
         if ($instances) {
             return response()->json([$instances, 'globalFilterFields' => $globalFilterFields]);
         } else {
@@ -77,6 +95,9 @@ class Controller extends BaseController
         }
     }
 
+    /**
+     * Retrieve instances of a class in a paginated format.
+     */
     protected function getPaginated(Request $request, string $className, array $relationships = [], ?int $pages = 10, array $globalFilterFields = [])
     {
         $this->checkClassExistence($className);
@@ -88,6 +109,9 @@ class Controller extends BaseController
         return response()->json([$instances, 'globalFilterFields' => $globalFilterFields]);
     }
 
+    /**
+     * Store an instance of a class using the provided FormRequest object and class name.
+     */
     protected function store(FormRequest $formRequest, string $className)
     {
         try {
@@ -102,7 +126,7 @@ class Controller extends BaseController
                     'model' => __('validation.models.' . class_basename($className))
                 ])]);
             } else {
-                return $this->sendResponse(['message' => __('validation.instance.creation_failed', [
+                return $this->sendResponse(['message' => __('`validation.instance.creation_failed', [
                     'model' => __('validation.models.' . class_basename($className))
                 ])], 500);
             }
@@ -130,6 +154,9 @@ class Controller extends BaseController
         }
     }
 
+    /**
+     * Update an instance of a class using the provided FormRequest object, instance ID, and class name.
+     */
     protected function update(FormRequest $formRequest, $instanceId, string $className)
     {
         $this->checkClassExistence($className);
@@ -151,6 +178,9 @@ class Controller extends BaseController
         }
     }
 
+    /**
+     * Delete an instance of a class using the provided instance ID and class name.
+     */
     protected function destroy($instanceId, string $className)
     {
         $this->checkClassExistence($className);
