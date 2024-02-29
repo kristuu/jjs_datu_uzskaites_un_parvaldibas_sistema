@@ -179,6 +179,9 @@
       <path value="$PROJECT_DIR$/backend/vendor/daverandom/libdns" />
       <path value="$PROJECT_DIR$/backend/vendor/amphp/cache" />
       <path value="$PROJECT_DIR$/backend/vendor/amphp/parser" />
+      <path value="$PROJECT_DIR$/backend/vendor/pusher/pusher-php-server" />
+      <path value="$PROJECT_DIR$/backend/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/backend/vendor/paragonie/sodium_compat" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
