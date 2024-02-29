@@ -87,7 +87,8 @@ class Controller extends BaseController
         });
 
         if ($instances) {
-            return response()->json([$instances, 'globalFilterFields' => $globalFilterFields]);
+            $total = $instances->count();
+            return response()->json(['instances' => $instances, 'total' => $total, 'globalFilterFields' => $globalFilterFields]);
         } else {
             return $this->sendResponse(['message' => __('validation.instance.none_found', [
                 'model' => __('validation.models.' . class_basename($className))

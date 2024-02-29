@@ -63,18 +63,20 @@ const adminItems = ref([
     route: { name: 'AdminDashboard' }
   },
   {
+    icon: 'divider'
+  },
+  {
     label: locale.t('navigation.userList'),
     icon: 'bi bi-person-fill',
     route: { name: 'UserList' }
   },
   {
+    icon: 'divider'
+  },
+  {
     label: locale.t('navigation.permissionList'),
     icon: 'bi bi-lock',
-    items: [
-      {
-        label: `Tiesības`
-      }
-    ]
+    route: { name: 'PermissionList' }
   }
 ]);
 </script>
@@ -109,17 +111,17 @@ const adminItems = ref([
   <div v-if="can('access admin dashboard') && path.startsWith('/admin')">
     <div class="nav-scroller container-xl mt-2 mb-2">
       <TabMenu :model="adminItems" class="nav p-2" aria-label="Admin navigation">
-        <template #item="{ item, props, hasSubmenu }">
-          <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+        <template #item="{ item, props }">
+          <router-link v-if="item.route && item.icon !== 'divider'" v-slot="{ href, navigate }" :to="item.route" custom>
             <a :href="href" v-bind="props.action" @click="navigate">
               <span :class="item.icon" />
               <span class="ml-2">{{ item.label }}</span>
             </a>
           </router-link>
+          <Divider v-else-if="item.icon === 'divider'" layout="vertical" />
           <a v-else :href="item.url" :target="item.target" v-bind="props.action">
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
-            <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down ml-2" />
           </a>
         </template>
       </TabMenu>

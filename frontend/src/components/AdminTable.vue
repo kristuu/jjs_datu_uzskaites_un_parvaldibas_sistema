@@ -46,7 +46,7 @@ const fetchDatabaseData = async () => {
     tableColumns.value = tempHeadings.data;
     selectedColumns.value = tableColumns.value.slice(0, 5);
     globalFilterFields.value = response.data.globalFilterFields;
-    instances.value = response.data[0];
+    instances.value = response.data.instances;
 
     totalInstances.value = response.data.total;
     emit('update:totalInstances', totalInstances.value);
