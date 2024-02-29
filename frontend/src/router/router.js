@@ -16,6 +16,9 @@ import ErrorView from "@/views/error/ErrorView.vue";
 import PermissionList from "@/views/permission/PermissionList.vue";
 import CreatePermission from "@/views/permission/CreatePermission.vue";
 import EditPermission from "@/views/permission/EditPermission.vue";
+import RoleList from "@/views/role/RoleList.vue";
+import CreateRole from "@/views/role/CreateRole.vue";
+import EditRole from "@/views/role/EditRole.vue";
 
 const routes = [
     {
@@ -78,6 +81,15 @@ const routes = [
           },
           {
             path: 'permissions/:id/edit', name: 'EditPermission', component: EditPermission, meta: { public: false },
+          },
+          {
+              path: 'roles', name: 'RoleList', component: RoleList, meta: { public: false },
+          },
+          {
+              path: 'roles/create', name: 'CreateRole', component: CreateRole, meta: { public: false },
+          },
+          {
+              path: 'roles/:id/edit', name: 'EditRole', component: EditRole, meta: { public: false },
           },
       ],
     },

@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\API\ReservationController;
+use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -68,6 +69,24 @@ Route::middleware('auth:sanctum')->group(function() {
 
         Route::group(['middleware' => ['can:delete instances']], function () {
             Route::delete('/permissions/{id}', [PermissionController::class, 'destroyPermission']);
+        });
+    });
+
+    Route::group(['middleware' => ['can:manage roles']], function () {
+        Route::get('/roles/columns', [RoleController::class, 'getRolesColumnNames']);
+        Route::get('/roles', [RoleController::class, 'getAllRoles']);
+        Route::get('/roles/{id}', [RoleController::class, 'findRoleById']);
+
+        Route::group(['middleware' => ['can:create instances']], function () {
+            Route::post('/roles', [RoleController::class, 'storeRole']);
+        });
+
+        Route::group(['middleware' => ['can:edit instances']], function () {
+            Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
+        });
+
+        Route::group(['middleware' => ['can:delete instances']], function () {
+            Route::delete('/roles/{id}', [RoleController::class, 'destroyRole']);
         });
     });
 

@@ -4,7 +4,8 @@
     "dashboard": "Panelis",
     "home": "Sākums",
     "userList": "Lietotāji",
-    "permissionList": "Tiesības"
+    "permissionList": "Tiesības",
+    "roleList": "Lomas"
   },
   "breadcrumbs": {
     "home": "Sākums",
@@ -27,7 +28,14 @@
       "manage permissions": "Piekļuves pārvaldība",
       "create permission": "Tiesību pievienošana",
       "edit permission": "Tiesību rediģēšana",
-      "in total x permissions": "Kopā {total} tiesību"
+      "in total x permissions": "Kopā {total} tiesības"
+    },
+    "roles": {
+      "roles": "Lomas",
+      "manage roles": "Lomu pārvaldība",
+      "create role": "Lomu pievienošana",
+      "edit role": "Lomu rediģēšana",
+      "in total x roles": "Kopā {total} lomas"
     }
   },
   "table": {

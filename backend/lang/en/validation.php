@@ -181,5 +181,9 @@ return [
         'created_at' => 'Created at',
         'updated_at' => 'Updated at',
         'id' => 'ID',
+        'roles' => [
+            'name' => 'Name',
+            'guard_name' => 'Authentication guard name',
+        ],
     ],
 ];

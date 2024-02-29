@@ -181,5 +181,9 @@ return [
         'created_at' => 'Izveidots',
         'updated_at' => 'Atjaunināts',
         'id' => 'ID',
+        'roles' => [
+            'name' => 'Nosaukums',
+            'guard_name' => 'Autentifikācijas aizsarga nosaukums',
+        ],
     ],
 ];

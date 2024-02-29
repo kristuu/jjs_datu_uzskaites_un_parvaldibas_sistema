@@ -2,12 +2,14 @@
 import {computed, onMounted, ref} from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
 import axios from '@/services/axios';
 import router from "@/router/router";
 import {format} from "date-fns";
 
 const route = useRoute();
 const store = useStore();
+const toast = useToast();
 const emit = defineEmits(['update-error-list'])
 
 let formInstance = computed(() => store.state.formInstance);
@@ -34,6 +36,8 @@ let createInstance = async() => {
     store.commit("resetFormInstance");
     await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
+    toast.add({ severity: "error", summary: e.response.status,
+                detail: e.response.data.message, life: 5000 })
     console.error(`Error creating ${props.modelName}: `, e);
     errorList.value = e.response.data;
     emit('update-error-list', errorList.value);
@@ -48,6 +52,8 @@ let updateInstance = async (instanceId) => {
     store.commit("resetFormInstance");
     await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
+    toast.add({ severity: "error", summary: e.response.status,
+                detail: e.response.data.message, life: 5000 })
     console.error(`Error updating ${props.modelName}: `, e);
     errorList.value = e.response.data;
     emit('update-error-list', errorList.value);
@@ -108,7 +114,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mb-3">
+  <Toast />
+  <div class="mb-3" v-if="isUpdateMode ? can('edit instances') : can('create instances')">
     <div class="d-flex align-items-baseline text-white mb-4">
       <h2 class="fw-bold">{{ props.pageName }}</h2>
       <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>

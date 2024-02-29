@@ -4,7 +4,8 @@
     "dashboard": "Dashboard",
     "home": "Home",
     "userList": "Users",
-    "permissionList": "Permissions"
+    "permissionList": "Permissions",
+    "roleList": "Roles"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -28,6 +29,13 @@
       "create permission": "Create permission",
       "edit permission": "Edit permission",
       "in total x permissions": "{total} permissions in total"
+    },
+    "roles": {
+      "roles": "Roles",
+      "manage roles": "Manage roles",
+      "create role": "Create role",
+      "edit role": "Edit role",
+      "in total x roles": "{total} roles in total"
     }
   },
   "table": {

@@ -77,7 +77,12 @@ const adminItems = ref([
     label: locale.t('navigation.permissionList'),
     icon: 'bi bi-lock',
     route: { name: 'PermissionList' }
-  }
+  },
+  {
+    label: locale.t('navigation.roleList'),
+    icon: 'bi bi-person-check-fill',
+    route: { name: 'RoleList' }
+  },
 ]);
 </script>
 
