@@ -172,9 +172,6 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/typescript-transformer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/stichoza/google-translate-php" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/tightenco/ziggy" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/paragonie/random_compat" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/paragonie/sodium_compat" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/pusher/pusher-php-server" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

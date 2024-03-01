@@ -185,5 +185,8 @@ return [
             'name' => 'Nosaukums',
             'guard_name' => 'Autentifikācijas aizsarga nosaukums',
         ],
+        'countries' => [
+            'name' => 'Nosaukums',
+        ],
     ],
 ];

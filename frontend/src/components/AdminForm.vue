@@ -3,6 +3,7 @@ import {computed, onMounted, ref} from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
+import { useI18n } from 'vue-i18n';
 import axios from '@/services/axios';
 import router from "@/router/router";
 import {format} from "date-fns";
@@ -10,6 +11,7 @@ import {format} from "date-fns";
 const route = useRoute();
 const store = useStore();
 const toast = useToast();
+const locale = useI18n();
 const emit = defineEmits(['update-error-list'])
 
 let formInstance = computed(() => store.state.formInstance);
@@ -37,7 +39,7 @@ let createInstance = async() => {
     await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
     toast.add({ severity: "error", summary: e.response.status,
-                detail: e.response.data.message, life: 5000 })
+                detail: locale.t(e.response.data.message), life: 5000 })
     console.error(`Error creating ${props.modelName}: `, e);
     errorList.value = e.response.data;
     emit('update-error-list', errorList.value);
@@ -48,7 +50,7 @@ let updateInstance = async (instanceId) => {
   try {
     formatDates(formInstance);
     const response = await axios.put(`/${props.databaseTable}/${instanceId}`, formInstance.value);
-    console.log(response);
+    console.log(`After update response:` + response);
     store.commit("resetFormInstance");
     await router.push(`/admin/${props.databaseTable}`);
   } catch (e) {
@@ -103,7 +105,6 @@ const formatDates = (instance) => {
       let day = date.getDate().toString().padStart(2, '0'); // Ensure day is 2 digits
 
       instance.value[key] = `${year}-${month}-${day}`;
-      console.log(instance.value[key])
     }
   });
 }

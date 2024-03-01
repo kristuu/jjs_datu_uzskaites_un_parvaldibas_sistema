@@ -19,6 +19,9 @@ import EditPermission from "@/views/permission/EditPermission.vue";
 import RoleList from "@/views/role/RoleList.vue";
 import CreateRole from "@/views/role/CreateRole.vue";
 import EditRole from "@/views/role/EditRole.vue";
+import CountryList from "@/views/country/CountryList.vue";
+import CreateCountry from "@/views/country/CreateCountry.vue";
+import EditCountry from "@/views/country/EditCountry.vue";
 
 const routes = [
     {
@@ -64,6 +67,7 @@ const routes = [
           {
               path: '', name: 'AdminDashboard', component: AdminDashboard, meta: { public: false },
           },
+
           {
               path: 'users', name: 'UserList', component: UserList, meta: { public: false },
           },
@@ -73,6 +77,7 @@ const routes = [
           {
               path: 'users/create',  name: 'CreateUser', component: CreateUser, meta: { public: false },
           },
+
           {
             path: 'permissions', name: 'PermissionList', component: PermissionList, meta: { public: false },
           },
@@ -82,6 +87,7 @@ const routes = [
           {
             path: 'permissions/:id/edit', name: 'EditPermission', component: EditPermission, meta: { public: false },
           },
+
           {
               path: 'roles', name: 'RoleList', component: RoleList, meta: { public: false },
           },
@@ -90,6 +96,16 @@ const routes = [
           },
           {
               path: 'roles/:id/edit', name: 'EditRole', component: EditRole, meta: { public: false },
+          },
+
+          {
+              path: 'countries', name: 'CountryList', component: CountryList, meta: { public: false },
+          },
+          {
+              path: 'countries/create', name: 'CreateCountry', component: CreateCountry, meta: { public: false },
+          },
+          {
+              path: 'countries/:id/edit', name: 'EditCountry', component: EditCountry, meta: { public: false },
           },
       ],
     },

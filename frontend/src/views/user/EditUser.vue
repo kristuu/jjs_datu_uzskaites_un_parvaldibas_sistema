@@ -127,6 +127,17 @@ const handleErrorListUpdate = (updatedErrorList) => {
           <InputError :errors="errorList.password_confirmation" />
         </div>
       </div>
+      <div class="col-12">
+        <label for="roles">Lomas</label>
+        <div class="row">
+          <div class="col-12 col-md-4 d-flex align-items-center" v-for="(role, index) in formInstance.all_roles" :key="index">
+            <ToggleButton v-model="role.userHas" class="w-full h-full"
+                         :invalid="errorList.name"
+                          :off-label="role.name" :on-label="role.name"
+                         @update:modelValue="console.log(formInstance.roles)"/>
+          </div>
+        </div>
+      </div>
     </form>
   </AdminForm>
 </template>

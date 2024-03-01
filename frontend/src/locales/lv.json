@@ -5,7 +5,8 @@
     "home": "Sākums",
     "userList": "Lietotāji",
     "permissionList": "Tiesības",
-    "roleList": "Lomas"
+    "roleList": "Lomas",
+    "countryList": "Valstis"
   },
   "breadcrumbs": {
     "home": "Sākums",
@@ -36,10 +37,18 @@
       "create role": "Lomu pievienošana",
       "edit role": "Lomu rediģēšana",
       "in total x roles": "Kopā {total} lomas"
+    },
+    "countries": {
+      "countries": "Valstis",
+      "manage countries": "Valstu pārvaldība",
+      "create country": "Valsts pievienošana",
+      "edit country": "Valsts rediģēšana",
+      "in total x countries": "Kopā {total} valstis"
     }
   },
   "table": {
     "actions": "Darbības",
     "search": "Meklēšana"
-  }
+  },
+  "This action is unauthorized.": "Jums nav tiesību veikt šo darbību."
 }

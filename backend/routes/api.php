@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\API\ReservationController;
@@ -87,6 +88,24 @@ Route::middleware('auth:sanctum')->group(function() {
 
         Route::group(['middleware' => ['can:delete instances']], function () {
             Route::delete('/roles/{id}', [RoleController::class, 'destroyRole']);
+        });
+    });
+
+    Route::group(['middleware' => ['can:manage countries']], function () {
+        Route::get('/countries/columns', [CountryController::class, 'getCountriesColumnNames']);
+        Route::get('/countries', [CountryController::class, 'getAllCountries']);
+        Route::get('/countries/{id}', [CountryController::class, 'findCountryById']);
+
+        Route::group(['middleware' => ['can:create instances']], function () {
+            Route::post('/countries', [CountryController::class, 'storeCountry']);
+        });
+
+        Route::group(['middleware' => ['can:edit instances']], function () {
+            Route::put('/countries/{id}', [CountryController::class, 'updateCountry']);
+        });
+
+        Route::group(['middleware' => ['can:delete instances']], function () {
+            Route::delete('/countries/{id}', [CountryController::class, 'destroyCountry']);
         });
     });
 

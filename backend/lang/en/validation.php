@@ -185,5 +185,8 @@ return [
             'name' => 'Name',
             'guard_name' => 'Authentication guard name',
         ],
+        'countries' => [
+            'name' => 'Name',
+        ],
     ],
 ];

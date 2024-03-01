@@ -15,6 +15,7 @@ use App\Http\Traits\PaginationTrait;
 use Propaganistas\LaravelPhone\PhoneNumber;
 use Propaganistas\LaravelPhone\Exceptions\NumberParseException as libNumberParseException;
 use App\Exceptions\PhoneNumberException;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -48,14 +49,22 @@ class UserController extends Controller
 
     public function findUserById(string $person_code)
     {
-        $user = $this->findById(User::class, $person_code);
+        $user = User::find($person_code);
+        $userRoles = $user->roles;
+        $user["all_roles"] = Role::get()->each(function ($role) use ($userRoles) {
+            $role->userHas = $userRoles->contains($role);
+        });
 
-        return $user;
+        return response()->json($user);
     }
 
     public function updateUser(UserRequest $request, string $person_code)
     {
-        return $this->update($request, $person_code, User::class);
+        $user = User::find($person_code);
+        $roles = array_map(function ($role) {
+           return $role["userHas"] ? $role["id"] : null;
+        }, $request->all_roles);
+        return $user->syncRoles($roles);
     }
 
     public function setAddress(Request $request)
