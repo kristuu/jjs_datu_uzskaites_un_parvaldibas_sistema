@@ -147,7 +147,7 @@ onUnmounted(() => {
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <div style="text-align:left">
-              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" optionLabel="" @update:modelValue="onToggle"
+              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" :optionLabel="option => $t(`table.${props.databaseTable}.${option}`)" @update:modelValue="onToggle"
                            display="chip" placeholder="Select Columns" />
             </div>
             <IconField iconPosition="left">
@@ -158,7 +158,7 @@ onUnmounted(() => {
             </IconField>
           </div>
         </template>
-        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column.field]?.sortable" :key="column + '_' + index" :field="column" :header="column"
+        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column.field]?.sortable" :key="column + '_' + index" :field="column" :header="$t(`table.${props.databaseTable}.${column}`)"
                 :filterField="column" :dataType="props.filterOptions[column]?.dataType">
           <template #body="{ data }">
             {{ props.filterOptions[column]?.dataType === 'date' ? formatDate(data[column]) : data[column] }}

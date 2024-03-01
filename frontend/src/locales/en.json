@@ -56,6 +56,14 @@
   },
   "table": {
     "actions": "Actions",
-    "search": "Search"
+    "search": "Search",
+    "regions": {
+      "id": "ID",
+      "name": "Name",
+      "country": {
+        "id": "ID",
+        "name": "Country"
+      }
+    }
   }
 }

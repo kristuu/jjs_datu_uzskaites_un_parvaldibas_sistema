@@ -56,7 +56,15 @@
   },
   "table": {
     "actions": "Darbības",
-    "search": "Meklēšana"
+    "search": "Meklēšana",
+    "regions": {
+      "id": "ID",
+      "name": "Nosaukums",
+      "country": {
+        "id": "ID",
+        "name": "Valsts"
+      }
+    }
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību."
 }
