@@ -188,5 +188,8 @@ return [
         'countries' => [
             'name' => 'Nosaukums',
         ],
+        'regions' => [
+            'name' => 'Nosaukums',
+        ],
     ],
 ];

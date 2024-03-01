@@ -188,5 +188,8 @@ return [
         'countries' => [
             'name' => 'Name',
         ],
+        'regions' => [
+            'name' => 'Name',
+        ],
     ],
 ];

@@ -90,6 +90,11 @@ const adminItems = ref([
     label: locale.t('navigation.countryList'),
     icon: 'bi bi-flag-fill',
     route: { name: 'CountryList' }
+  },
+  {
+    label: locale.t('navigation.regionList'),
+    icon: 'bi bi-compass',
+    route: { name: 'RegionList' }
   }
 ]);
 </script>

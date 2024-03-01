@@ -39,11 +39,19 @@ const onToggle = (val) => {
 
 const fetchDatabaseData = async () => {
   store.commit('setLoading', true);
+  let flattenedInstances = [];
   try {
     const response = await axios.get(`/${props.databaseTable}`);
     console.log(response);
-    const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
-    tableColumns.value = tempHeadings.data;
+    // const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
+    flattenedInstances = response.data.instances.map(instance => flattenObject(instance))
+
+    // dynamic column retrieval
+    if (flattenedInstances.length > 0) {
+      tableColumns.value = Object.keys(flattenedInstances[0]);
+    }
+    console.log(flattenedInstances);
+    instances = flattenedInstances;
     selectedColumns.value = tableColumns.value.slice(0, 5);
     globalFilterFields.value = response.data.globalFilterFields;
     instances.value = response.data.instances;
@@ -55,7 +63,7 @@ const fetchDatabaseData = async () => {
   } finally {
     store.commit('setLoading', false);
   }
-}
+};
 
 const deleteInstance = async (instanceId) => {
   try {
@@ -65,8 +73,7 @@ const deleteInstance = async (instanceId) => {
   } catch (e) {
     console.error(`Error fetching ${props.databaseTable}: `, e);
   }
-}
-
+};
 
 const formatDate = (value) => {
   return value
@@ -74,7 +81,28 @@ const formatDate = (value) => {
 
 const initFilters = () => {
   filters.value = props.filterOptions;
-}
+};
+
+/**
+ * Flatten a nested object into a single-level object.
+ */
+const flattenObject = (obj) => {
+  let toReturn = {};
+
+  for (let i in obj) {
+    if (!obj.hasOwnProperty(i)) continue;
+    if ((typeof obj[i]) == 'object') {
+      let flatObject = flattenObject(obj[i]);
+      for (let x in flatObject) {
+        if (!flatObject.hasOwnProperty(x)) continue;
+        toReturn[i + '.' + x] = flatObject[x];
+      }
+    } else {
+      toReturn[i] = obj[i];
+    }
+  }
+  return toReturn;
+};
 
 initFilters();
 
@@ -113,12 +141,13 @@ onUnmounted(() => {
     <div class="container-fluid content-card bg-white shadow-lg">
       <table id="listTable"></table>
       <DataTable :value="instances" size="small" stripedRows removableSort
+                 :columns="tableColumns"
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <div style="text-align:left">
-              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" optionLabel="header" @update:modelValue="onToggle"
+              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" optionLabel="" @update:modelValue="onToggle"
                            display="chip" placeholder="Select Columns" />
             </div>
             <IconField iconPosition="left">
@@ -129,10 +158,10 @@ onUnmounted(() => {
             </IconField>
           </div>
         </template>
-        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column.field]?.sortable" :key="column.field + '_' + index" :field="column.field" :header="column.header"
-                :filterField="column.field" :dataType="props.filterOptions[column.field]?.dataType">
+        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column.field]?.sortable" :key="column + '_' + index" :field="column" :header="column"
+                :filterField="column" :dataType="props.filterOptions[column]?.dataType">
           <template #body="{ data }">
-            {{ props.filterOptions[column.field]?.dataType === 'date' ? formatDate(data[column.field]) : data[column.field] }}
+            {{ props.filterOptions[column]?.dataType === 'date' ? formatDate(data[column]) : data[column] }}
           </template>
           <template #filter="{ filterModel }" v-if="filters[column.field]">
               <InputText

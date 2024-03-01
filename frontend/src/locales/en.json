@@ -6,7 +6,8 @@
     "userList": "Users",
     "permissionList": "Permissions",
     "roleList": "Roles",
-    "countryList": "Countries"
+    "countryList": "Countries",
+    "regionList": "Regions"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -44,6 +45,13 @@
       "create country": "Create country",
       "edit country": "Edit country",
       "in total x countries": "{total} countries in total"
+    },
+    "regions": {
+      "regions": "Regions",
+      "manage regions": "Manage regions",
+      "create region": "Create region",
+      "edit region": "Edit region",
+      "in total x regions": "{total} regions in total"
     }
   },
   "table": {

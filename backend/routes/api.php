@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\PermissionController;
+use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\UserController;
@@ -106,6 +107,24 @@ Route::middleware('auth:sanctum')->group(function() {
 
         Route::group(['middleware' => ['can:delete instances']], function () {
             Route::delete('/countries/{id}', [CountryController::class, 'destroyCountry']);
+        });
+    });
+
+    Route::group(['middleware' => ['can:manage regions']], function () {
+        Route::get('/regions/columns', [RegionController::class, 'getRegionsColumnNames']);
+        Route::get('/regions', [RegionController::class, 'getAllRegions']);
+        Route::get('/regions/{id}', [RegionController::class, 'findRegionById']);
+
+        Route::group(['middleware' => ['can:create instances']], function () {
+            Route::post('/regions', [RegionController::class, 'storeRegion']);
+        });
+
+        Route::group(['middleware' => ['can:edit instances']], function () {
+            Route::put('/regions/{id}', [RegionController::class, 'updateRegion']);
+        });
+
+        Route::group(['middleware' => ['can:delete instances']], function () {
+            Route::delete('/regions/{id}', [RegionController::class, 'destroyRegion']);
         });
     });
 

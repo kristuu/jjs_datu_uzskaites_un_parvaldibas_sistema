@@ -22,6 +22,9 @@ import EditRole from "@/views/role/EditRole.vue";
 import CountryList from "@/views/country/CountryList.vue";
 import CreateCountry from "@/views/country/CreateCountry.vue";
 import EditCountry from "@/views/country/EditCountry.vue";
+import RegionList from "@/views/region/RegionList.vue";
+import CreateRegion from "@/views/region/CreateRegion.vue";
+import EditRegion from "@/views/region/EditRegion.vue";
 
 const routes = [
     {
@@ -106,6 +109,16 @@ const routes = [
           },
           {
               path: 'countries/:id/edit', name: 'EditCountry', component: EditCountry, meta: { public: false },
+          },
+
+          {
+              path: 'regions', name: 'RegionList', component: RegionList, meta: { public: false },
+          },
+          {
+              path: 'regions/create', name: 'CreateRegion', component: CreateRegion, meta: { public: false },
+          },
+          {
+              path: 'regions/:id/edit', name: 'EditRegion', component: EditRegion, meta: { public: false },
           },
       ],
     },

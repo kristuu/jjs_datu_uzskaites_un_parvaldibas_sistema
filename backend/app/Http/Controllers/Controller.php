@@ -43,8 +43,6 @@ class Controller extends BaseController
         $hiddenColumns = $model->getHidden();
         $visibleColumns = array_diff($allColumns, $hiddenColumns);
 
-        $visibleColumns = array_diff($visibleColumns, ['created_at', 'updated_at']);
-
         $returnColumns = [];
 
         foreach ($visibleColumns as $column) {
@@ -77,12 +75,19 @@ class Controller extends BaseController
     /**
      * Retrieve all instances of the given class and append global filter fields (searchable on front-end).
      */
-    protected function getAll(string $className, array $globalFilterFields = [])
+    protected function getAll(string $className, array $globalFilterFields = [], array $relationships = [], array $fieldsToHide = [])
     {
         $this->checkClassExistence($className);
 
-        $instances = $className::all()->map(function ($instance) {
-            unset($instance->created_at, $instance->updated_at);
+        $instances = is_array($relationships) && !empty($relationships) ? $className::with($relationships)->get()
+                                                                        : $className::all();
+
+        $instances = $instances->map(function ($instance) use ($fieldsToHide) {
+            foreach($fieldsToHide as $table => $fields) {
+                if ($instance->$table) {
+                    $instance->$table->makeHidden($fields);
+                };
+            }
             return $instance;
         });
 

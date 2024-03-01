@@ -13,6 +13,11 @@ class Region extends Model
         'country_id',
     ];
 
+    protected $hidden = [
+        'country_id',
+        'created_at', 'updated_at'
+    ];
+
     public function country() : BelongsTo
     {
         return $this->belongsTo(Country::class);

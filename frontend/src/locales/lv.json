@@ -6,7 +6,8 @@
     "userList": "Lietotāji",
     "permissionList": "Tiesības",
     "roleList": "Lomas",
-    "countryList": "Valstis"
+    "countryList": "Valstis",
+    "regionList": "Reģioni"
   },
   "breadcrumbs": {
     "home": "Sākums",
@@ -44,6 +45,13 @@
       "create country": "Valsts pievienošana",
       "edit country": "Valsts rediģēšana",
       "in total x countries": "Kopā {total} valstis"
+    },
+    "regions": {
+      "regions": "Reģioni",
+      "manage regions": "Reģionu pārvaldība",
+      "create region": "Reģiona pievienošana",
+      "edit region": "Reģiona rediģēšana",
+      "in total x regions": "Kopā {total} reģioni"
     }
   },
   "table": {
