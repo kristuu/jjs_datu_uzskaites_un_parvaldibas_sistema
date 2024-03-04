@@ -39,7 +39,6 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['middleware' => ['can:manage users']], function () {
-        Route::get('/users/columns', [UserController::class, 'getUsersColumnNames']);
         Route::get('/users', [UserController::class, 'getAllUsers']);
         Route::get('/users/{id}', [UserController::class, 'findUserById']);
 
@@ -57,7 +56,6 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['middleware' => ['can:manage permissions']], function () {
-       Route::get('/permissions/columns', [PermissionController::class, 'getPermissionsColumnNames']);
        Route::get('/permissions', [PermissionController::class, 'getAllPermissions']);
        Route::get('/permissions/{id}', [PermissionController::class, 'findPermissionById']);
 
@@ -75,7 +73,6 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['middleware' => ['can:manage roles']], function () {
-        Route::get('/roles/columns', [RoleController::class, 'getRolesColumnNames']);
         Route::get('/roles', [RoleController::class, 'getAllRoles']);
         Route::get('/roles/{id}', [RoleController::class, 'findRoleById']);
 
@@ -93,7 +90,6 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['middleware' => ['can:manage countries']], function () {
-        Route::get('/countries/columns', [CountryController::class, 'getCountriesColumnNames']);
         Route::get('/countries', [CountryController::class, 'getAllCountries']);
         Route::get('/countries/{id}', [CountryController::class, 'findCountryById']);
 
@@ -111,7 +107,6 @@ Route::middleware('auth:sanctum')->group(function() {
     });
 
     Route::group(['middleware' => ['can:manage regions']], function () {
-        Route::get('/regions/columns', [RegionController::class, 'getRegionsColumnNames']);
         Route::get('/regions', [RegionController::class, 'getAllRegions']);
         Route::get('/regions/{id}', [RegionController::class, 'findRegionById']);
 
@@ -128,7 +123,23 @@ Route::middleware('auth:sanctum')->group(function() {
         });
     });
 
-    Route::get('/instructors', [InstructorController::class, 'getAllInstructorData']);
+    Route::group(['middleware' => ['can:manage instructors']], function () {
+        Route::get('/instructors', [InstructorController::class, 'getAllInstructors']);
+        Route::get('/instructors/{id}', [InstructorController::class, 'findInstructorById']);
+
+        Route::group(['middleware' => ['can:create instances']], function () {
+            Route::post('/instructors', [InstructorController::class, 'storeInstructor']);
+        });
+
+        Route::group(['middleware' => ['can:edit instances']], function () {
+            Route::put('/instructors/{id}', [InstructorController::class, 'updateInstructor']);
+        });
+
+        Route::group(['middleware' => ['can:delete instances']], function () {
+            Route::delete('/instructors/{id}', [InstructorController::class, 'destroyInstructor']);
+        });
+    });
+
     Route::post('/book', [ReservationController::class, 'store']);
 
     Route::put('/address/{id}', [UserController::class, 'setAddress']);

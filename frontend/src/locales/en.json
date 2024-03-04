@@ -7,7 +7,8 @@
     "permissionList": "Permissions",
     "roleList": "Roles",
     "countryList": "Countries",
-    "regionList": "Regions"
+    "regionList": "Regions",
+    "instructorList": "Instructors"
   },
   "breadcrumbs": {
     "home": "Home",
@@ -52,18 +53,33 @@
       "create region": "Create region",
       "edit region": "Edit region",
       "in total x regions": "{total} regions in total"
+    },
+    "instructors": {
+      "instructors": "Instructors",
+      "manage instructors": "Manage instructors",
+      "create instructor": "Create instructor",
+      "edit instructor": "Edit instructor",
+      "total": "{total} instructors in total"
     }
   },
   "table": {
     "actions": "Actions",
     "search": "Search",
+    "id": "ID",
+    "countries": {
+      "name": "Name"
+    },
     "regions": {
-      "id": "ID",
       "name": "Name",
       "country": {
-        "id": "ID",
         "name": "Country"
       }
-    }
+    },
+    "roles": {
+      "name": "Name",
+      "guard_name": "Auth guard"
+    },
+    "created_at": "Created",
+    "updated_at": "Updated"
   }
 }

@@ -25,6 +25,9 @@ import EditCountry from "@/views/country/EditCountry.vue";
 import RegionList from "@/views/region/RegionList.vue";
 import CreateRegion from "@/views/region/CreateRegion.vue";
 import EditRegion from "@/views/region/EditRegion.vue";
+import InstructorList from "@/views/instructor/InstructorList.vue";
+import CreateInstructor from "@/views/instructor/CreateInstructor.vue";
+import EditInstructor from "@/views/instructor/EditInstructor.vue";
 
 const routes = [
     {
@@ -119,6 +122,16 @@ const routes = [
           },
           {
               path: 'regions/:id/edit', name: 'EditRegion', component: EditRegion, meta: { public: false },
+          },
+
+          {
+              path: 'instructors', name: 'InstructorList', component: InstructorList, meta: { public: false },
+          },
+          {
+              path: 'instructors/create', name: 'CreateInstructor', component: CreateInstructor, meta: { public: false },
+          },
+          {
+              path: 'instructors/:id/edit', name: 'EditInstructor', component: EditInstructor, meta: { public: false },
           },
       ],
     },

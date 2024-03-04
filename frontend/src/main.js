@@ -67,15 +67,19 @@ app.use(router);
 app.use(PrimeVue);
 app.use(ToastService);
 
-await axios.get('/get-permissions').then(
-    response => {
-        window.Laravel.jsPermissions = response.data;
-    }
-)
 import LaravelPermissionToVuejs from "laravel-permission-to-vuejs";
 
-app.use(i18n);
-app.use(LaravelPermissionToVuejs);
-app.use(VueTelInput, globalOptions);
+async function fetchPermissions() {
+    await axios.get('/get-permissions').then(
+        response => {
+            window.Laravel.jsPermissions = response.data;
+        }
+    )
+}
+fetchPermissions().then(() => {
+    app.use(i18n);
+    app.use(LaravelPermissionToVuejs);
+    app.use(VueTelInput, globalOptions);
 
-app.mount('#app');
+    app.mount('#app');
+});

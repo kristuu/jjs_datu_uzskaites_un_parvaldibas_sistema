@@ -3,43 +3,61 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InstructorRequest;
 use App\Http\Traits\PaginationTrait;
 
 use App\Models\Instructor;
+use Illuminate\Http\Request;
 
 class InstructorController extends Controller
 {
     use PaginationTrait;
 
-    public function getAllInstructorData()
-    {
-        $users = Instructor::with(['user', 'reservation', 'certificate', 'certificate.category',
+    private array $globalFilterFields = [];
+    private array $relationships = [];
+
+    public function __construct() {
+        $this->relationships = ['user', 'reservation', 'certificate', 'certificate.category',
             'availability' => function ($query) {
                 $query->whereDoesntHave('reservation');
             }
-        ])->get();
-
-        if ($users) {
-            return response()->json(['message' => $users]);
-        }
-
-        return $this->getResponseWithMessage(self::STATUS_MESSAGE['no_instructors_found'], 404);
+        ];
     }
-}
+
+    public function getAllInstructors()
+    {
+        return $this->getAll(Instructor::class, $this->globalFilterFields, $this->relationships);
+    }
+
+    public function getPaginatedInstructors(Request $request)
+    {
+        //
+    }
+
+    public function storeInstructor(InstructorRequest $request)
+    {
+        return $this->store($request, Instructor::class);
+    }
+
+    public function findInstructorById(string $id)
+    {
+        return $this->findById(Instructor::class, $id, $this->relationships);
+    }
+
+    public function updateInstructor(InstructorRequest $request, string $id)
+    {
+        $instructor = Instructor::find($id);
 
 
+    }
 
-$roleSuperAdmin = \Spatie\Permission\Models\Role::create(['name' => 'super admin', "guard_name" => "api"]);
+    public function destroyInstructor(string $id)
+    {
+        return $this->destroy($id, Instructor::class);
+    }
 
-$permissions = [
-    'can-view-users',
-    'can-create-users',
-    'can-edit-users',
-    'can-delete-users',
-];
-
-foreach($permissions as $permissionName) {
-    $permission = \Spatie\Permission\Models\Permission::create(['name' => $permissionName, "guard_name" => "api"]);
-
-    $roleSuperAdmin->givePermissionTo($permission);
+    private function getResponseWithMessage(string $message, int $status)
+    {
+        return response()->json(['status' => $status, 'message' => $message], $status);
+    }
 }

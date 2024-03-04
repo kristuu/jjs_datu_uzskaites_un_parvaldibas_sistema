@@ -31,6 +31,7 @@ let filters = ref();
 
 let totalInstances = ref([]);
 
+let globalTranslateColumns = ref(['id', 'created_at', 'updated_at']);
 const selectedColumns = ref();
 
 const onToggle = (val) => {
@@ -147,7 +148,7 @@ onUnmounted(() => {
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <div style="text-align:left">
-              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" :optionLabel="option => $t(`table.${props.databaseTable}.${option}`)" @update:modelValue="onToggle"
+              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" :optionLabel="option => globalTranslateColumns.includes(option) ? $t(`table.${option}`) : $t(`table.${props.databaseTable}.${option}`)" @update:modelValue="onToggle"
                            display="chip" placeholder="Select Columns" />
             </div>
             <IconField iconPosition="left">
@@ -158,39 +159,39 @@ onUnmounted(() => {
             </IconField>
           </div>
         </template>
-        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column.field]?.sortable" :key="column + '_' + index" :field="column" :header="$t(`table.${props.databaseTable}.${column}`)"
+        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column]?.sortable" :key="column + '_' + index" :field="column" :header="globalTranslateColumns.includes(column) ? $t(`table.${column}`) : $t(`table.${props.databaseTable}.${column}`)"
                 :filterField="column" :dataType="props.filterOptions[column]?.dataType">
           <template #body="{ data }">
             {{ props.filterOptions[column]?.dataType === 'date' ? formatDate(data[column]) : data[column] }}
           </template>
-          <template #filter="{ filterModel }" v-if="filters[column.field]">
+          <template #filter="{ filterModel }" v-if="filters[column]">
+            <InputText
+                v-if="props.filterOptions[column].filterType === 'personCode'"
+                v-model="filterModel.value"
+                :type="props.filterOptions[column].filterType"
+                :placeholder="'search' + column"/>
+
+            <div v-if="props.filterOptions[column].filterType === 'text'">
               <InputText
-                  v-if="props.filterOptions[column.field].filterType === 'personCode'"
                   v-model="filterModel.value"
-                  :type="props.filterOptions[column.field].filterType"
-                  :placeholder="'search' + column.header"/>
+                  :type="props.filterOptions[column].filterType"
+                  :placeholder="'Meklēt pēc ' + column"/>
+            </div>
 
-              <div v-if="props.filterOptions[column.field].filterType === 'text'">
-                <InputText
-                    v-model="filterModel.value"
-                    :type="props.filterOptions[column.field].filterType"
-                    :placeholder="'Meklēt pēc ' + column.header"/>
-              </div>
+            <div v-if="props.filterOptions[column].filterType === 'select'">
+              <Dropdown
+                  :options="column.options"
+                  v-model="filterModel.value"/>
+            </div>
 
-              <div v-if="props.filterOptions[column.field].filterType === 'select'">
-                <Dropdown
-                    :options="column.options"
-                    v-model="filterModel.value"/>
-              </div>
-
-              <div v-if="props.filterOptions[column.field].filterType === 'multiSelect'">
-                <MultiSelect
-                    :options="column.options"
-                    v-model="filterModel.value"/>
-              </div>
+            <div v-if="props.filterOptions[column].filterType === 'multiSelect'">
+              <MultiSelect
+                  :options="column.options"
+                  v-model="filterModel.value"/>
+            </div>
 
             <Calendar
-                v-if="props.filterOptions[column.field].filterType === 'date'"
+                v-if="props.filterOptions[column].filterType === 'date'"
                 type="date"
                 v-model="filterModel.value"
                 dateFormat="dd.mm.yy"
@@ -222,6 +223,13 @@ onUnmounted(() => {
 
   nav ul {
     margin-bottom: 0 !important;
+  }
+
+  td {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 </style>
 

@@ -146,11 +146,11 @@ class Controller extends BaseController
         }
     }
 
-    protected function findById(string $className, $instanceId)
+    protected function findById(string $className, $instanceId, array $relationships = [])
     {
         $this->checkClassExistence($className);
 
-        $instance = $className::find($instanceId);
+        $instance = $className::with($relationships)->find($instanceId);
         if ($instance) {
             return $this->sendResponse($instance);
         } else {

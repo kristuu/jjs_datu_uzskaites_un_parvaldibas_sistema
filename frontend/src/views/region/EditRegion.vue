@@ -1,5 +1,5 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import { useStore } from 'vuex';
 import axios from '@/services/axios';
 
@@ -9,8 +9,7 @@ import InputError from "@/components/error/inputError.vue";
 const store = useStore();
 let formInstance = computed(() => store.state.formInstance);
 
-let selectedCountry = ref([]);
-selectedCountry = formInstance.value.country;
+let selectedCountry = ref(null);
 let countryList = ref([]);
 axios.get(`/countries`)
     .then(response => {
@@ -25,6 +24,12 @@ let errorList = ref({});
 const handleErrorListUpdate = (updatedErrorList) => {
   errorList.value = updatedErrorList;
 }
+
+watch(formInstance, (newValue) => {
+  if (newValue) {
+    selectedCountry.value = newValue.country;
+  }
+});
 </script>
 
 <template>

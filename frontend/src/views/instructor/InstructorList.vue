@@ -11,11 +11,6 @@ const filterOptions = ref({
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
   },
-  "country.name": {
-    sortable: true, filterType: 'text',
-    operator: FilterOperator.AND,
-    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
-  },
 });
 const items = ref([]);
 
@@ -26,12 +21,12 @@ const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
 <template>
   <div>
     <AdminTable
-        v-show="can('manage regions')"
-        :page-name="$t(`pageHeadings.regions.manage regions`)"
-        :database-table="'regions'"
-        :model-name="'Region'"
+        v-show="can('manage instructors')"
+        :page-name="$t(`pageHeadings.instructors.manage instructors`)"
+        :database-table="'instructors'"
+        :model-name="'Instructor'"
         :instance-id-column="'id'"
-        :short-desc="$t(`pageHeadings.regions.in total x regions`, {total: totalInstances})"
+        :short-desc="$t(`pageHeadings.instructors.total`, {total: totalInstances})"
         :filterOptions="filterOptions"
         @updateItems="newItems => items.value = newItems"
         @update:totalInstances="handleTotalInstancesUpdate"

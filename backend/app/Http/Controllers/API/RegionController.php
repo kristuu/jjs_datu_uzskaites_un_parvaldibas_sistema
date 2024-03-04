@@ -13,6 +13,7 @@ class RegionController extends Controller
     use PaginationTrait;
 
     private array $globalFilterFields = ['name', 'country.name'];
+    private array $relationships = ['country'];
 
     public function getRegionsColumnNames() {
         $model = new Region;
@@ -44,7 +45,7 @@ class RegionController extends Controller
 
     public function findRegionById(string $id)
     {
-        return $this->findById(Region::class, $id);
+        return $this->findById(Region::class, $id, $this->relationships);
     }
 
     public function updateRegion(RegionRequest $request, string $id)

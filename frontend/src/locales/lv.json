@@ -7,7 +7,8 @@
     "permissionList": "Tiesības",
     "roleList": "Lomas",
     "countryList": "Valstis",
-    "regionList": "Reģioni"
+    "regionList": "Reģioni",
+    "instructorList": "Treneri"
   },
   "breadcrumbs": {
     "home": "Sākums",
@@ -52,19 +53,34 @@
       "create region": "Reģiona pievienošana",
       "edit region": "Reģiona rediģēšana",
       "in total x regions": "Kopā {total} reģioni"
+    },
+    "instructors": {
+      "instructors": "Treneri",
+      "manage instructors": "Treneru pārvaldība",
+      "create instructor": "Trenera pievienošana",
+      "edit instructor": "Trenera rediģēšana",
+      "total": "Kopā {total} treneri"
     }
   },
   "table": {
     "actions": "Darbības",
     "search": "Meklēšana",
+    "id": "ID",
+    "countries": {
+      "name": "Nosaukums"
+    },
     "regions": {
-      "id": "ID",
       "name": "Nosaukums",
       "country": {
-        "id": "ID",
         "name": "Valsts"
       }
-    }
+    },
+    "roles": {
+      "name": "Nosaukums",
+      "guard_name": "Autentifikācijas aizsargs"
+    },
+    "created_at": "Izveidots",
+    "updated_at": "Atjaunināts"
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību."
 }
