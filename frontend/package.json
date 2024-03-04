@@ -16,6 +16,7 @@
     "core-js": "^3.8.3",
     "date-fns": "^3.2.0",
     "laravel-permission-to-vuejs": "^3.0.2",
+    "lodash": "^4.17.21",
     "maska": "^2.1.11",
     "node": "^21.6.1",
     "primeflex": "^3.3.1",

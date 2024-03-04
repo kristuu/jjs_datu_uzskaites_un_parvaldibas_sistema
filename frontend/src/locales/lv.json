@@ -79,6 +79,12 @@
       "name": "Nosaukums",
       "guard_name": "Autentifikācijas aizsargs"
     },
+    "instructors": {
+      "job_start_date": "Darbu uzsāka",
+      "user_person_code": "Personas kods",
+      "certificate_id": "Sertifikāta ID",
+      "description": "Apraksts"
+    },
     "created_at": "Izveidots",
     "updated_at": "Atjaunināts"
   },

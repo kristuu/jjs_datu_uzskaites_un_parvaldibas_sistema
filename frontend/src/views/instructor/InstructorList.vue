@@ -6,7 +6,12 @@ import {FilterMatchMode, FilterOperator} from "primevue/api";
 
 const filterOptions = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  name: {
+  job_start_date: {
+    sortable: true, filterType: 'date', dataType: 'date',
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }]
+  },
+  "table.instructors.user.name": {
     sortable: true, filterType: 'text',
     operator: FilterOperator.AND,
     constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]

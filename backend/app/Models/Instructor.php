@@ -29,7 +29,7 @@ class Instructor extends Model
      * @var array
      */
     protected $casts = [
-        'job_start_date' => 'date',
+        'job_start_date' => 'date:d.m.Y',
     ];
 
     /**

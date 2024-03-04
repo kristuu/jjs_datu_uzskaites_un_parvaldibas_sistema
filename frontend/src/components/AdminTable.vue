@@ -5,6 +5,8 @@ import { useRoute } from 'vue-router';
 import router from "@/router/router";
 import { useStore } from 'vuex';
 
+import get from 'lodash/get';
+
 const store = useStore();
 const route = useRoute();
 
@@ -52,7 +54,7 @@ const fetchDatabaseData = async () => {
       tableColumns.value = Object.keys(flattenedInstances[0]);
     }
     console.log(flattenedInstances);
-    instances = flattenedInstances;
+    instances = response.data.instances;
     selectedColumns.value = tableColumns.value.slice(0, 5);
     globalFilterFields.value = response.data.globalFilterFields;
     instances.value = response.data.instances;
@@ -76,9 +78,9 @@ const deleteInstance = async (instanceId) => {
   }
 };
 
-const formatDate = (value) => {
-  return value
-};
+const truncateText = (text, maxLength) => {
+  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+}
 
 const initFilters = () => {
   filters.value = props.filterOptions;
@@ -104,6 +106,10 @@ const flattenObject = (obj) => {
   }
   return toReturn;
 };
+
+const getDataValue = (data, path) => {
+  return get(data, path);
+}
 
 initFilters();
 
@@ -162,7 +168,7 @@ onUnmounted(() => {
         <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column]?.sortable" :key="column + '_' + index" :field="column" :header="globalTranslateColumns.includes(column) ? $t(`table.${column}`) : $t(`table.${props.databaseTable}.${column}`)"
                 :filterField="column" :dataType="props.filterOptions[column]?.dataType">
           <template #body="{ data }">
-            {{ props.filterOptions[column]?.dataType === 'date' ? formatDate(data[column]) : data[column] }}
+            {{ getDataValue(data, column) }}
           </template>
           <template #filter="{ filterModel }" v-if="filters[column]">
             <InputText
