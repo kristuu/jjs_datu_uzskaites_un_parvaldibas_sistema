@@ -18,82 +18,20 @@ const props = defineProps({
   shortDesc: String,
   databaseTable: String,
   modelName: String,
-  filterOptions: Object,
-  instanceIdColumn: String,
-  createIconClass: String,
-  initialColumnOrder: {
-    type: Array,
-    default: () => [],
-  }
 });
 
 const emit = defineEmits({
   'update:totalInstances': null,
 });
 
-let instances = ref([]);
-let tableColumns = ref([]);
-let globalFilterFields = ref([]);
-let filters = ref();
+// let globalTranslateColumns = ref(['id', 'created_at', 'updated_at']);
+// const selectedColumns = ref();
 
-let totalInstances = ref([]);
+// const onToggle = (val) => {
+//   selectedColumns.value = tableColumns.value.filter(col => val.includes(col));
+// }
 
-let globalTranslateColumns = ref(['id', 'created_at', 'updated_at']);
-const selectedColumns = ref();
-
-const onToggle = (val) => {
-  selectedColumns.value = tableColumns.value.filter(col => val.includes(col));
-}
-
-const fetchDatabaseData = async () => {
-  store.commit('setLoading', true);
-  let flattenedInstances = [];
-  try {
-    const response = await axios.get(`/${props.databaseTable}`);
-    console.log(response);
-    // const tempHeadings = await axios.get(`/${props.databaseTable}/columns`);
-    flattenedInstances = response.data.instances.map(instance => flattenObject(instance))
-
-    // dynamic column retrieval
-    if (flattenedInstances.length > 0) {
-      tableColumns.value = Object.keys(flattenedInstances[0]);
-    }
-    console.log(flattenedInstances);
-    selectedColumns.value = tableColumns.value.slice(0, 5);
-    globalFilterFields.value = response.data.globalFilterFields;
-    instances.value = response.data.instances;
-    selectedColumns.value = uniq([...props.initialColumnOrder, ...selectedColumns.value]);
-
-    totalInstances.value = response.data.total;
-    emit('update:totalInstances', totalInstances.value);
-  } catch (e) {
-    console.error(`Error fetching ${props.databaseTable}: `, e);
-  } finally {
-    store.commit('setLoading', false);
-  }
-};
-
-const deleteInstance = async (instanceId) => {
-  try {
-    const response = await axios.delete(`/${props.databaseTable}/${instanceId}`);
-    console.log(response);
-    await fetchDatabaseData();
-  } catch (e) {
-    console.error(`Error fetching ${props.databaseTable}: `, e);
-  }
-};
-
-const truncateText = (text, maxLength) => {
-  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
-}
-
-const initFilters = () => {
-  filters.value = props.filterOptions;
-};
-
-/**
- * Flatten a nested object into a single-level object.
- */
+/*
 const flattenObject = (obj) => {
   let toReturn = {};
 
@@ -110,33 +48,11 @@ const flattenObject = (obj) => {
     }
   }
   return toReturn;
-};
+};*/
 
-const getDataValue = (data, path) => {
+/*const getDataValue = (data, path) => {
   return get(data, path);
-}
-
-initFilters();
-
-watchEffect(async () => {
-  const {params} = route;
-
-  if (params?.databaseTable !== null) {
-    await fetchDatabaseData();
-
-    selectedColumns.value = uniq([...props.initialColumnOrder, ...selectedColumns.value]);
-  }
-});
-
-onMounted(() => {
-  fetchDatabaseData();
-
-
-});
-
-onUnmounted(() => {
-  fetchDatabaseData();
-});
+}*/
 </script>
 
 <template>
@@ -153,74 +69,7 @@ onUnmounted(() => {
       </Button>
     </div>
     <div class="container-fluid content-card bg-white shadow-lg">
-      <table id="listTable"></table>
-      <DataTable :value="instances" size="small" stripedRows removableSort
-                 :columns="tableColumns"
-                 paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
-                 v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields">
-        <template #header>
-          <div class="flex justify-content-between flex-wrap mb-2 mt-2">
-            <div style="text-align:left">
-              <MultiSelect :maxSelectedLabels="1" :modelValue="selectedColumns" :options="tableColumns" :optionLabel="option => globalTranslateColumns.includes(option) ? $t(`table.${option}`) : $t(`table.${props.databaseTable}.${option}`)" @update:modelValue="onToggle"
-                           display="chip" placeholder="Select Columns" />
-            </div>
-            <IconField iconPosition="left">
-              <InputIcon>
-                <i class="pi pi-search" />
-              </InputIcon>
-              <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
-            </IconField>
-          </div>
-        </template>
-        <Column v-for="(column, index) in selectedColumns" :value="instances" :sortable="props.filterOptions[column]?.sortable" :key="column + '_' + index" :field="column" :header="globalTranslateColumns.includes(column) ? $t(`table.${column}`) : $t(`table.${props.databaseTable}.${column}`)"
-                :filterField="column" :dataType="props.filterOptions[column]?.dataType">
-          <template #body="{ data }">
-            {{ getDataValue(data, column) }}
-          </template>
-          <template #filter="{ filterModel }" v-if="filters[column]">
-            <InputText
-                v-if="props.filterOptions[column].filterType === 'personCode'"
-                v-model="filterModel.value"
-                :type="props.filterOptions[column].filterType"
-                :placeholder="'search' + column"/>
-
-            <div v-if="props.filterOptions[column].filterType === 'text'">
-              <InputText
-                  v-model="filterModel.value"
-                  :type="props.filterOptions[column].filterType"
-                  :placeholder="'Meklēt pēc ' + column"/>
-            </div>
-
-            <div v-if="props.filterOptions[column].filterType === 'select'">
-              <Dropdown
-                  :options="column.options"
-                  v-model="filterModel.value"/>
-            </div>
-
-            <div v-if="props.filterOptions[column].filterType === 'multiSelect'">
-              <MultiSelect
-                  :options="column.options"
-                  v-model="filterModel.value"/>
-            </div>
-
-            <Calendar
-                v-if="props.filterOptions[column].filterType === 'date'"
-                type="date"
-                v-model="filterModel.value"
-                dateFormat="dd.mm.yy"
-                :maxDate="new Date()"/>
-
-              <!-- Add more `v-else-if` statements as needed for other filter types -->
-          </template>
-        </Column>
-        <Column :exportable="false">
-          <template #body="{ data }">
-            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
-                    @click="router.push({ name: 'Edit' + modelName, params: { id: data[props.instanceIdColumn] } })"/>
-            <Button icon="bi bi-trash-fill" @click="deleteInstance(data[instanceIdColumn])" outlined rounded />
-          </template>
-        </Column>
-      </DataTable>
+      <slot></slot>
     </div>
   </div>
 </template>

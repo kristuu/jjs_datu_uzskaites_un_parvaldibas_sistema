@@ -79,6 +79,25 @@
       "name": "Name",
       "guard_name": "Auth guard"
     },
+    "users": {
+      "person_code": "Person code",
+      "name": "Name (-s)",
+      "surname": "Surname (-s)",
+      "phone": "Phone",
+      "iban_code": "Bank account"
+    },
+    "instructors": {
+      "job_start_date": "Work start date",
+      "user_person_code": "Person code",
+      "certificate_id": "Certificate ID",
+      "description": "Description",
+      "certificates": {
+        "expiration_date": "Valid until"
+      },
+      "categories": {
+        "name": "Category"
+      }
+    },
     "created_at": "Created",
     "updated_at": "Updated"
   }

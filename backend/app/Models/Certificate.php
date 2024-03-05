@@ -26,7 +26,7 @@ class Certificate extends Model
      * @var array
      */
     protected $casts = [
-        'expiration_date' => 'date',
+        'expiration_date' => 'date:d.m.Y',
     ];
 
     protected $with = ['category'];

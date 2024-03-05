@@ -79,11 +79,24 @@
       "name": "Nosaukums",
       "guard_name": "Autentifikācijas aizsargs"
     },
+    "users": {
+      "person_code": "Personas kods",
+      "name": "Vārds (-i)",
+      "surname": "Uzvārds (-i)",
+      "phone": "Tel. nr.",
+      "iban_code": "Bankas konts"
+    },
     "instructors": {
       "job_start_date": "Darbu uzsāka",
       "user_person_code": "Personas kods",
       "certificate_id": "Sertifikāta ID",
-      "description": "Apraksts"
+      "description": "Apraksts",
+      "certificates": {
+        "expiration_date": "Derīgs līdz"
+      },
+      "categories": {
+        "name": "Kategorija"
+      }
     },
     "created_at": "Izveidots",
     "updated_at": "Atjaunināts"

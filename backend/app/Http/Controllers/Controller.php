@@ -24,22 +24,13 @@ class Controller extends BaseController
         // add your more messages here
     ];
 
-    protected function responseInstances($instances = null, array $globalFilterFields = [])
+    protected function sendResponse($data = null, int $status = 200, array $headers = [])
     {
-        if (!$instances->isEmpty()) {
-            $total = $instances->count();
-            return response()->json([
-                'instances' => $instances,
-                'total' => $total,
-                'globalFilterFields' => $globalFilterFields
-            ]);
-        } else {
-            return $this->sendResponse([
-                'message' => __('validation.instance.none_found', [
-                    'model' => __('validation.models.' . class_basename($className))
-                ])
-            ], 404);
+        if (!is_null($data)) {
+            $response = $data;
         }
+
+        return response()->json($response, $status, $headers);
     }
 
     /**
@@ -134,7 +125,20 @@ class Controller extends BaseController
             return $instance;
         });
 
-        return $instances;
+        if (!$instances->isEmpty()) {
+            $total = $instances->count();
+            return response()->json([
+                'instances' => $instances,
+                'total' => $total,
+                'globalFilterFields' => $globalFilterFields
+            ]);
+        } else {
+            return $this->sendResponse([
+                'message' => __('validation.instance.none_found', [
+                    'model' => __('validation.models.' . class_basename($className))
+                ])
+            ], 404);
+        }
     }
 
     /**

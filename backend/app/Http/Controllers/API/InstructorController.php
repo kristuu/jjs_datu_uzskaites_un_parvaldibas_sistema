@@ -4,8 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InstructorRequest;
-use App\Http\Resources\InstructorResource;
-use App\Http\Resources\InstructorResourceCollection;
 use App\Http\Traits\PaginationTrait;
 
 use App\Models\Instructor;
@@ -19,24 +17,22 @@ class InstructorController extends Controller
     private array $relationships = [];
 
     public function __construct() {
-        $this->relationships = ['user', 'reservation', 'certificate', 'certificate.category',
+        /*$this->relationships = ['user', 'reservation', 'certificate', 'certificate.category',
             'availability' => function ($query) {
                 $query->whereDoesntHave('reservation');
             }
-        ];
+        ];*/
+
+        $this->relationships = ['user', 'certificate', 'certificate.category'];
     }
 
     public function getAllInstructors()
     {
-        $instructors = $this->getAll(
+        return $this->getAll(
             Instructor::class,
             $this->globalFilterFields,
             $this->relationships,
         );
-
-        $instances = InstructorResourceCollection::collection($instructors)->toTable(request());
-
-        $this->responseInstances($instances, $this->globalFilterFields);
     }
 
     public function getPaginatedInstructors(Request $request)

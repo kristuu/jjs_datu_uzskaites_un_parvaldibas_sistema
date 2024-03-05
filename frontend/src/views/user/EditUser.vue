@@ -2,7 +2,6 @@
 import {computed, ref} from "vue";
 import { useStore } from 'vuex';
 
-import { format } from 'date-fns';
 import { vMaska } from 'maska';
 
 import AdminForm from "@/components/AdminForm.vue";
@@ -132,7 +131,7 @@ const handleErrorListUpdate = (updatedErrorList) => {
         <div class="row">
           <div class="col-12 col-md-4 d-flex align-items-center" v-for="(role, index) in formInstance.all_roles" :key="index">
             <ToggleButton v-model="role.userHas" class="w-full h-full"
-                         :invalid="errorList.name"
+                         :invalid="errorList.role.name"
                           :off-label="role.name" :on-label="role.name"
                          @update:modelValue="console.log(formInstance.roles)"/>
           </div>

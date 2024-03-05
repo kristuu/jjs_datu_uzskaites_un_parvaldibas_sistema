@@ -10,6 +10,8 @@ export default createStore({
         isLoading: false,
         errorStatus: null,
         errorMessage: '',
+        instances: null,
+        totalInstances: 0
     },
     // functions that directly mutate the state
     mutations: {
@@ -38,6 +40,12 @@ export default createStore({
         clearError(state) {
             state.errorStatus = null;
             state.errorMessage = '';
+        },
+        SET_INSTANCES(state, payload) {
+            state.instances = payload;
+        },
+        SET_TOTAL_INSTANCES(state, payload) {
+            state.totalInstances = payload;
         }
     },
     actions: {
@@ -75,7 +83,25 @@ export default createStore({
                 commit('setErrorMessage', error.response.data.message);
                 await router.push({name: 'ErrorView'});
             }
-        }
+        },
+        async fetchDatabaseData({commit}, databaseTable) {
+            try {
+                const response = await axios.get(`/${databaseTable}`);
+                let instances = response.data.instances;
+                commit('SET_INSTANCES', instances);
+                commit('SET_TOTAL_INSTANCES', response.data.total);
+            } catch (error) {
+                console.error(`Error fetching ${databaseTable}: `, error);
+            }
+        },
+        async deleteInstance({dispatch}, {databaseTable, instanceId}) {
+            try {
+                await axios.delete(`/${databaseTable}/${instanceId}`);
+                dispatch('fetchDatabaseData', databaseTable);
+            } catch (error) {
+                console.error(`Error fetching ${databaseTable}: `, error);
+            }
+        },
     },
     getters: {
         formInstance: state => state.formInstance,
