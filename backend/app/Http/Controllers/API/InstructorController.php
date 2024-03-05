@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InstructorRequest;
+use App\Http\Resources\InstructorResource;
+use App\Http\Resources\InstructorResourceCollection;
 use App\Http\Traits\PaginationTrait;
 
 use App\Models\Instructor;
@@ -26,7 +28,15 @@ class InstructorController extends Controller
 
     public function getAllInstructors()
     {
-        return $this->getAll(Instructor::class, $this->globalFilterFields, $this->relationships);
+        $instructors = $this->getAll(
+            Instructor::class,
+            $this->globalFilterFields,
+            $this->relationships,
+        );
+
+        $instances = InstructorResourceCollection::collection($instructors)->toTable(request());
+
+        $this->responseInstances($instances, $this->globalFilterFields);
     }
 
     public function getPaginatedInstructors(Request $request)

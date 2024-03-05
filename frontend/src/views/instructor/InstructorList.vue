@@ -17,6 +17,11 @@ const filterOptions = ref({
     constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
   },
 });
+
+const initialColumnOrder = [
+    'id', 'user_person_code', 'user.name', 'user.surname', 'job_start_date', 'certificate.category.name'
+];
+
 const items = ref([]);
 
 const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
@@ -33,6 +38,7 @@ const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
         :instance-id-column="'id'"
         :short-desc="$t(`pageHeadings.instructors.total`, {total: totalInstances})"
         :filterOptions="filterOptions"
+        :initialColumnOrder="initialColumnOrder"
         @updateItems="newItems => items.value = newItems"
         @update:totalInstances="handleTotalInstancesUpdate"
     />

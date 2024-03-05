@@ -24,13 +24,22 @@ class Controller extends BaseController
         // add your more messages here
     ];
 
-    protected function sendResponse($data = null, int $status = 200, array $headers = [])
+    protected function responseInstances($instances = null, array $globalFilterFields = [])
     {
-        if (!is_null($data)) {
-            $response = $data;
+        if (!$instances->isEmpty()) {
+            $total = $instances->count();
+            return response()->json([
+                'instances' => $instances,
+                'total' => $total,
+                'globalFilterFields' => $globalFilterFields
+            ]);
+        } else {
+            return $this->sendResponse([
+                'message' => __('validation.instance.none_found', [
+                    'model' => __('validation.models.' . class_basename($className))
+                ])
+            ], 404);
         }
-
-        return response()->json($response, $status, $headers);
     }
 
     /**
@@ -79,26 +88,53 @@ class Controller extends BaseController
     {
         $this->checkClassExistence($className);
 
-        $instances = is_array($relationships) && !empty($relationships) ? $className::with($relationships)->get()
-                                                                        : $className::all();
+        // create an instance to access the getKeyName() method
+        $model = new $className;
+
+        $query = $className::query();
+
+        if (!empty($relationships)) {
+            foreach($relationships as $relation => $fields) {
+                if(is_numeric($relation)) {
+                    $query->with($fields);
+                } elseif(is_array($fields)) {
+                    $query->with([
+                        $relation => function($query) use ($fields, $model, $relation){
+                            $relatedModel = $model->$relation()->getRelated();
+                            $primaryKey = $relatedModel->getKeyName();
+                            $query->select(array_merge([$primaryKey], $fields));
+                        }
+                    ]);
+                }
+            }
+        }
+
+        if (!empty($columnOrder)) {
+            $query->select($columnOrder);
+        }
+
+        $instances = $query->get();
 
         $instances = $instances->map(function ($instance) use ($fieldsToHide) {
-            foreach($fieldsToHide as $table => $fields) {
-                if ($instance->$table) {
-                    $instance->$table->makeHidden($fields);
-                };
+            foreach($fieldsToHide as $relation => $fields) {
+                if ($instance->$relation) {
+                    if (is_array($fields)) {
+                        foreach ($fields as $nestedrelation => $nestedfields) {
+                            if ($instance->$relation->$nestedrelation) {
+                                foreach ($nestedfields as $nestedfield) {
+                                    unset($instance->$relation->$nestedrelation->$nestedfield);
+                                }
+                            }
+                        }
+                    } else {
+                        $instance->$relation->makeHidden($fields);
+                    }
+                }
             }
             return $instance;
         });
 
-        if ($instances) {
-            $total = $instances->count();
-            return response()->json(['instances' => $instances, 'total' => $total, 'globalFilterFields' => $globalFilterFields]);
-        } else {
-            return $this->sendResponse(['message' => __('validation.instance.none_found', [
-                'model' => __('validation.models.' . class_basename($className))
-            ])], 404);
-        }
+        return $instances;
     }
 
     /**
@@ -146,11 +182,16 @@ class Controller extends BaseController
         }
     }
 
-    protected function findById(string $className, $instanceId, array $relationships = [])
+    protected function findById(string $className, $instanceId, array $relationships = [], array $columnOrder = [])
     {
         $this->checkClassExistence($className);
 
-        $instance = $className::with($relationships)->find($instanceId);
+        if (!empty($columnOrder)) {
+            $instance = $className::select($columnOrder)->with($relationships)->find($instanceId);
+        } else {
+            $instance = $className::with($relationships)->find($instanceId);
+        }
+
         if ($instance) {
             return $this->sendResponse($instance);
         } else {

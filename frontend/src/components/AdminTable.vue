@@ -6,6 +6,7 @@ import router from "@/router/router";
 import { useStore } from 'vuex';
 
 import get from 'lodash/get';
+import {uniq} from "lodash";
 
 const store = useStore();
 const route = useRoute();
@@ -20,6 +21,10 @@ const props = defineProps({
   filterOptions: Object,
   instanceIdColumn: String,
   createIconClass: String,
+  initialColumnOrder: {
+    type: Array,
+    default: () => [],
+  }
 });
 
 const emit = defineEmits({
@@ -54,10 +59,10 @@ const fetchDatabaseData = async () => {
       tableColumns.value = Object.keys(flattenedInstances[0]);
     }
     console.log(flattenedInstances);
-    instances = response.data.instances;
     selectedColumns.value = tableColumns.value.slice(0, 5);
     globalFilterFields.value = response.data.globalFilterFields;
     instances.value = response.data.instances;
+    selectedColumns.value = uniq([...props.initialColumnOrder, ...selectedColumns.value]);
 
     totalInstances.value = response.data.total;
     emit('update:totalInstances', totalInstances.value);
@@ -113,11 +118,13 @@ const getDataValue = (data, path) => {
 
 initFilters();
 
-watchEffect(() => {
-  const { params } = route;
+watchEffect(async () => {
+  const {params} = route;
 
-  if (params?.databaseTable != null) {
-    fetchDatabaseData();
+  if (params?.databaseTable !== null) {
+    await fetchDatabaseData();
+
+    selectedColumns.value = uniq([...props.initialColumnOrder, ...selectedColumns.value]);
   }
 });
 
