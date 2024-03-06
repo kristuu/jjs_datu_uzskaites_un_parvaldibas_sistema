@@ -23,8 +23,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
+
+Route::get('/get-permissions', function () {
+    return auth()->check() ? auth()->user()->jsPermissions() : [];
 });
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -33,11 +39,6 @@ Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logou
 Route::post('/setlocale', function (Request $request) { App::setLocale($request->getLocale()); });
 
 Route::middleware('auth:sanctum')->group(function() {
-
-    Route::get('/get-permissions', function () {
-        return auth()->check()?auth()->user()->jsPermissions():0;
-    });
-
     Route::group(['middleware' => ['can:manage users']], function () {
         Route::get('/users', [UserController::class, 'getAllUsers']);
         Route::get('/users/{id}', [UserController::class, 'findUserById']);

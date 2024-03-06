@@ -13,6 +13,10 @@ class Category extends Model
         'name',
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
     public function certificates() : HasMany
     {
         return $this->hasMany(Certificate::class);

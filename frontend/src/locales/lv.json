@@ -64,6 +64,8 @@
   },
   "table": {
     "actions": "Darbības",
+    "edit": "Rediģēt",
+    "delete": "Dzēst",
     "search": "Meklēšana",
     "id": "ID",
     "countries": {
@@ -83,7 +85,9 @@
       "person_code": "Personas kods",
       "name": "Vārds (-i)",
       "surname": "Uzvārds (-i)",
+      "birthdate": "Dzimšanas datums",
       "phone": "Tel. nr.",
+      "email": "E-pasts",
       "iban_code": "Bankas konts"
     },
     "instructors": {

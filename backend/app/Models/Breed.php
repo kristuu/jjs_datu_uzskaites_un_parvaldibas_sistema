@@ -13,6 +13,10 @@ class Breed extends Model
         'name',
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
     public function horses() : HasMany
     {
         return $this->hasMany(Horse::class);

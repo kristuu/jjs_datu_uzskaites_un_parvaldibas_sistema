@@ -67,15 +67,22 @@ app.use(router);
 app.use(PrimeVue);
 app.use(ToastService);
 
+app.directive('ripple', Ripple);
+app.directive('styleclass', StyleClass);
+
 import LaravelPermissionToVuejs from "laravel-permission-to-vuejs";
+import Ripple from "primevue/ripple";
+import StyleClass from "primevue/styleclass";
 
 async function fetchPermissions() {
+    await axios.get('http://localhost:8000/sanctum/csrf-cookie');
     await axios.get('/get-permissions').then(
         response => {
             window.Laravel.jsPermissions = response.data;
         }
     )
 }
+
 fetchPermissions().then(() => {
     app.use(i18n);
     app.use(LaravelPermissionToVuejs);

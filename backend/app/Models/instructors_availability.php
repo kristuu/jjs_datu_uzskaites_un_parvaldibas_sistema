@@ -21,6 +21,10 @@ class instructors_availability extends Model
         'end_time' => 'datetime',
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
     public function instructor() : BelongsTo
     {
         return $this->belongsTo(Instructor::class);

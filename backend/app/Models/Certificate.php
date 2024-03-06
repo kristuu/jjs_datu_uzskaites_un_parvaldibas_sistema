@@ -29,6 +29,10 @@ class Certificate extends Model
         'expiration_date' => 'date:d.m.Y',
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
     protected $with = ['category'];
 
     /**

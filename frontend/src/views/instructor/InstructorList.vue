@@ -11,7 +11,7 @@
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 :rowClass="rowClass">
+                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e); checkCertificateExpiry(); }">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <IconField iconPosition="left">
@@ -82,7 +82,6 @@
             <Calendar
                 v-model="filterModel.value"
                 type="date"
-                :maxDate="maxDate"
                 dateFormat="dd.mm.yy"/>
           </template>
         </Column>
@@ -95,6 +94,87 @@
         </Column>
       </DataTable>
     </AdminTable>
+
+    <Sidebar v-model:visible="visible" position="bottom" style="height:40rem; max-height: 90vh;">
+      <template #container="{ closeCallback }">
+        <div class="flex flex-column h-full container">
+          <div class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0">
+                        <span class="inline-flex align-items-center gap-2">
+                            <img src="@/assets/logo-red.svg" width="50" />
+                            <span class="font-semibold text-2xl text-primary">Trenera apskate</span>
+                        </span>
+            <span>
+                            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
+                        </span>
+          </div>
+          <div class="overflow-y-auto w-100">
+            <div class="row gap-3 container-fluid mx-auto">
+              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+                <label>ID</label>
+                <span>{{ instance.id }}</span>
+              </div>
+              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+                <label>{{ $t(`table.instructors.job_start_date`) }}</label>
+                <span>{{ instance.job_start_date }}</span>
+              </div>
+              <Fieldset legend="Sertifikāts">
+                <div class="row">
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.instructors.categories.name`) }}</label>
+                    <span>{{ instance.certificate.category.name }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.instructors.certificates.expiration_date`) }}</label>
+                    <span>{{ instance.certificate.expiration_date }}</span>
+                  </div>
+                  <div class="col-12">
+                    <Message v-for="msg in messages" :key="msg.id"
+                             :severity="msg.severity" :closable="false">{{ msg.content }}</Message>
+                  </div>
+                </div>
+              </Fieldset>
+              <Fieldset legend="Lietotājs">
+                <div class="row">
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.users.name`) }}</label>
+                    <span>{{ instance.user.name }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.users.surname`) }}</label>
+                    <span>{{ instance.user.surname }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.users.person_code`) }}</label>
+                    <span>{{ `${instance.user.person_code.slice(0,6)}-${instance.user.person_code.slice(6,12)}` }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.users.birthdate`) }}</label>
+                    <span>{{ instance.user.birthdate }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.users.phone`) }}</label>
+                    <span>{{ instance.user.phone }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
+                    <label>{{ $t(`table.users.email`) }}</label>
+                    <span>{{ instance.user.email }}</span>
+                  </div>
+                </div>
+              </Fieldset>
+            </div>
+          </div>
+          <div class="mt-auto">
+            <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
+            <div class="m-3 flex justify-content-between gap-3 text-primary">
+              <router-link :to="{ name: `EditInstructor`, params: { id: `03120421576` } }">
+                <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
+              </router-link>
+              <span class="font-bold cursor-pointer" @click="store.dispatch('deleteInstance', { databaseTable: 'instructors', instanceId: 3 })">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </Sidebar>
   </div>
 </template>
 
@@ -102,7 +182,6 @@
 import {computed, onMounted, ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
 import {FilterMatchMode, FilterOperator} from "primevue/api";
-import router from "@/router/router";
 
 import { useStore } from 'vuex';
 const store = useStore();
@@ -111,14 +190,9 @@ const fetchDatabaseData = async () => {
   await store.dispatch('fetchDatabaseData',  'instructors');
 }
 
+const instance = computed(() => store.state.formInstance);
 const instances = computed(() => store.state.instances);
 const totalInstances = computed(() => store.state.totalInstances);
-
-const maxDate = computed(() => {
-  let date = new Date();
-  date.setFullYear(date.getFullYear() - 1);
-  return date;
-})
 
 const globalFilterFields = ref([
   'id', 'user.person_code', 'user.name', 'user.surname',
@@ -153,14 +227,52 @@ const parseDate = (dateString) => {
   return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
 }
 
+const onRowSelect = (event) => {
+  store.commit('SET_FORM_DATA', event.data);
+  visible.value = true;
+}
+
+const msPerMonth = 1000 * 60 * 60 * 24 * 30;
+
 const rowClass = (data) => {
-  console.log(parseDate(data.certificate.expiration_date));
+  const currentDate = new Date();
+  const expDate = parseDate(data.certificate.expiration_date);
+
+  expDate.setHours(0, 0, 0, 0);
+  currentDate.setHours(0, 0, 0, 0);
+
+  const timeLeft = expDate.getTime() - currentDate.getTime();
   return [{
-    'bg-red-100': parseDate(data.certificate.expiration_date) < new Date(),
+    'bg-red-100 text-red': timeLeft < 0,
+    'bg-yellow-100 text-red': timeLeft <= (3 * msPerMonth) && timeLeft >= 0,
   }]
 };
 
 const items = ref([]);
+let visible = ref(false);
+
+const messages = ref({});
+const count = ref(0);
+
+const checkCertificateExpiry = () => {
+  messages.value = {};
+  let expirationDate = parseDate(instance.value.certificate.expiration_date);
+  let currentDate = new Date();
+
+  expirationDate.setHours(0, 0, 0, 0);
+  currentDate.setHours(0, 0, 0, 0);
+
+  let nextMonth = new Date();
+  nextMonth.setMonth(currentDate.getMonth() + 1);
+
+  if (expirationDate < currentDate) {
+    messages.value.push = { severity: 'error', content: 'Sertifikāta derīgums ir beidzies', id: count.value++ };
+  } else if (expirationDate <= nextMonth) {
+    const oneDayMiliseconds = 1000 * 60 * 60 * 24;
+    let diff = Math.floor(((expirationDate - currentDate) / oneDayMiliseconds) + 1);
+    messages.value.push = { severity: 'warn', content: `Sertifikāta derīgums beigsies pēc ${diff} dienām`, id: count.value++ };
+  }
+};
 
 onMounted(() => {
   fetchDatabaseData();

@@ -19,6 +19,10 @@ class Reservation extends Model
     protected $casts = [
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_person_code', 'person_code');

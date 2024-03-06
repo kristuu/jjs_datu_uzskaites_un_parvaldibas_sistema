@@ -64,6 +64,8 @@
   },
   "table": {
     "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
     "search": "Search",
     "id": "ID",
     "countries": {
@@ -83,7 +85,9 @@
       "person_code": "Person code",
       "name": "Name (-s)",
       "surname": "Surname (-s)",
+      "birthdate": "Date of birth",
       "phone": "Phone",
+      "email": "E-mail",
       "iban_code": "Bank account"
     },
     "instructors": {

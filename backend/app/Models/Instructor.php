@@ -32,6 +32,10 @@ class Instructor extends Model
         'job_start_date' => 'date:d.m.Y',
     ];
 
+    protected $hidden = [
+        'created_at', 'updated_at'
+    ];
+
     /**
      * Get the user that is the instructor.
      */
