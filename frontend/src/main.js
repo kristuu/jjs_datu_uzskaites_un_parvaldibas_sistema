@@ -75,12 +75,21 @@ import Ripple from "primevue/ripple";
 import StyleClass from "primevue/styleclass";
 
 async function fetchPermissions() {
-    await axios.get('http://localhost:8000/sanctum/csrf-cookie');
-    await axios.get('/get-permissions').then(
-        response => {
+    await axios.get('/user').then(response => {
+        // The user is authenticated
+        // Use the authenticated user object: response.data
+
+        // Now we can safely fetch permissions
+        axios.get('/get-permissions').then(response => {
             window.Laravel.jsPermissions = response.data;
+        });
+    }).catch(error => {
+        if (error.response.status === 401) {
+            console.error('Not authenticated.');
+        } else {
+            console.error(error)
         }
-    )
+    });
 }
 
 fetchPermissions().then(() => {

@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/get-permissions', function () {
-    return auth()->check() ? auth()->user()->jsPermissions() : [];
+    return auth('api')->check() ? auth('api')->user()->jsPermissions() : [];
 });
 
 Route::post('/register', [AuthController::class, 'register']);

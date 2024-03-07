@@ -248,7 +248,6 @@ const rowClass = (data) => {
   }]
 };
 
-const items = ref([]);
 let visible = ref(false);
 
 const messages = ref({});

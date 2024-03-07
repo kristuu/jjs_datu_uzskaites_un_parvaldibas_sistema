@@ -15,13 +15,6 @@ export default createStore({
     },
     // functions that directly mutate the state
     mutations: {
-        LOGIN(state) {
-            state.authorized = true;
-        },
-        // Move async operation from mutation to action
-        LOGOUT(state) {
-            state.authorized = false;
-        },
         SET_FORM_DATA(state, payload) {
             state.formInstance = {...state.formInstance, ...payload};
         },
@@ -49,16 +42,10 @@ export default createStore({
         }
     },
     actions: {
-        login({ commit }) {
-            commit('LOGIN');
-        },
         // Create async logout operation in action
         async logout({ commit }) {
             try {
                 await axios.get("/logout");
-
-                localStorage.removeItem('token');
-                commit('LOGOUT');
             } catch (e) {
                 console.error("Radusies kļūda: ", e);
             } finally {
@@ -68,14 +55,15 @@ export default createStore({
         setFormData({ commit }, payload) {
             commit('SET_FORM_DATA', payload);
         },
-        async fetchInstance({commit}, {tableName, id}) {
-            console.log(`Fetching data from /${tableName}/${id}`); // step 2
+        async fetchInstance({commit}, {databaseTable, instanceId}) {
+            console.log(`Fetching data from /${databaseTable}/${instanceId}`); // step 2
+            commit('setLoading', true);
             try {
-                const response = await axios.get(`/${tableName}/${id}`);
+                const response = await axios.get(`/${databaseTable}/${instanceId}`);
                 console.log('Server response', response); // step 3
                 commit('resetFormInstance');
                 commit('SET_FORM_DATA', response.data);
-                return id;
+                return instanceId;
             }
             catch (error) {
                 console.log(error);
@@ -83,8 +71,12 @@ export default createStore({
                 commit('setErrorMessage', error.response.data.message);
                 await router.push({name: 'ErrorView'});
             }
+            finally {
+                commit('setLoading', false);
+            }
         },
         async fetchDatabaseData({commit}, databaseTable) {
+            commit('setLoading', true);
             try {
                 const response = await axios.get(`/${databaseTable}`);
                 let instances = response.data.instances;
@@ -92,6 +84,8 @@ export default createStore({
                 commit('SET_TOTAL_INSTANCES', response.data.total);
             } catch (error) {
                 console.error(`Error fetching ${databaseTable}: `, error);
+            } finally {
+                commit('setLoading', false);
             }
         },
         async deleteInstance({dispatch}, {databaseTable, instanceId}) {
@@ -101,7 +95,7 @@ export default createStore({
             } catch (error) {
                 console.error(`Error fetching ${databaseTable}: `, error);
             }
-        },
+        }
     },
     getters: {
         formInstance: state => state.formInstance,

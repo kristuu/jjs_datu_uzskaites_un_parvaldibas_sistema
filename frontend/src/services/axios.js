@@ -13,10 +13,17 @@ const instance = axios.create({
 instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 instance.interceptors.request.use((config) => {
-   const CSRF_TOKEN = document.cookie.match(/XSRF-TOKEN=([^;]+)/)[1];
-   if (CSRF_TOKEN) {
-      config.headers['X-XSRF-TOKEN'] = decodeURIComponent(CSRF_TOKEN);
+   const CSRF_TOKEN_MATCH = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+   const token = localStorage.getItem('token');
+
+   if (CSRF_TOKEN_MATCH && CSRF_TOKEN_MATCH[1]) {
+      config.headers['X-XSRF-TOKEN'] = decodeURIComponent(CSRF_TOKEN_MATCH[1]);
    }
+
+   if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+   }
+
    return config;
 });
 

@@ -7,6 +7,7 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -36,19 +37,21 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => ['string', 'required', 'email'],
-            'password' => ['string', 'required'],
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $user = auth()->user();
-            $token = $user->createToken('authToken')->plainTextToken;
+        $user = User::where('email', $request->email)->first();
 
-            // return json response with the default 200 HTTP status code
-            return response()->json(['user' => $user, 'token' => $token]);
-        } else {
-            return response()->json(['message' => 'Neeksistējoša e-pasta adrese vai nesaderīga e-pasta un paroles kombinācija'], 401);
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Neeksistējoša e-pasta adrese vai nesaderīga e-pasta un paroles kombinācija'
+            ], 401);
         }
+
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        return response()->json(['user' => $user, 'token' => $token]);
 
 
     }

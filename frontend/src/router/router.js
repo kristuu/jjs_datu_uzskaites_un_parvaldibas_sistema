@@ -145,8 +145,17 @@ const router = createRouter({
     routes,
 });
 
+async function isUserAuthorized() {
+    try {
+        const response = await axios.get('/user');
+        return response.status === 200;
+    } catch (error) {
+        return false;
+    }
+}
+
 router.beforeEach((to, from, next) => {
-    const authorized = !!localStorage.getItem('token');
+    const authorized = isUserAuthorized();
 
     if (!to.meta.public && !authorized) {
         next({ name: 'LoginPage' });

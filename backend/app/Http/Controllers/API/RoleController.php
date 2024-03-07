@@ -46,7 +46,7 @@ class RoleController extends Controller
     {
         $role = Role::findById($id, 'web');
 
-        $data["name"] = $role->name;
+        $data = $role;
         $rolePermissions = $role->getAllPermissions()->pluck('name');
 
         $data["permissions"] = Permission::all()->each(function ($permission) use ($rolePermissions) {

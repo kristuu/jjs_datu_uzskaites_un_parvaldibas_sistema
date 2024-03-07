@@ -31,6 +31,7 @@ const isUpdateMode = !!route.params.id;
 console.log(isUpdateMode);
 
 let createInstance = async() => {
+  store.commit('setLoading', true);
   try {
     formatDates(formInstance);
     const response = await axios.post(`/${props.databaseTable}`, formInstance.value)
@@ -43,10 +44,13 @@ let createInstance = async() => {
     console.error(`Error creating ${props.modelName}: `, e);
     errorList.value = e.response.data;
     emit('update-error-list', errorList.value);
+  } finally {
+    store.commit('setLoading', false);
   }
 };
 
 let updateInstance = async (instanceId) => {
+  store.commit('setLoading', true);
   try {
     formatDates(formInstance);
     const response = await axios.put(`/${props.databaseTable}/${instanceId}`, formInstance.value);
@@ -59,6 +63,8 @@ let updateInstance = async (instanceId) => {
     console.error(`Error updating ${props.modelName}: `, e);
     errorList.value = e.response.data;
     emit('update-error-list', errorList.value);
+  } finally {
+    store.commit('setLoading', false);
   }
 };
 
@@ -82,6 +88,7 @@ const fetchInstance = async () => {
       store.commit('setLoading', false);
     }
   }
+  store.commit('setLoading', false);
 }
 
 /**

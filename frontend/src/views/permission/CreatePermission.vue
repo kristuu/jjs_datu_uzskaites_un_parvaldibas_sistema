@@ -2,12 +2,6 @@
 import {ref, computed} from "vue";
 import { useStore } from 'vuex';
 
-import Password from 'primevue/password';
-
-
-import { format } from 'date-fns';
-import { vMaska } from 'maska';
-
 import AdminForm from "@/components/AdminForm.vue";
 import InputError from "@/components/error/inputError.vue";
 
@@ -18,6 +12,8 @@ let errorList = ref({});
 const handleErrorListUpdate = (updatedErrorList) => {
   errorList.value = updatedErrorList;
 }
+
+console.log(store);
 </script>
 
 <template>
@@ -26,7 +22,7 @@ const handleErrorListUpdate = (updatedErrorList) => {
            :model-name="`Permission`"
            :database-table="`permissions`"
            @update-error-list="handleErrorListUpdate">
-  <form id="createUserForm" class="row gap-3 py-3 text-start needs-validation">
+  <form class="row gap-3 py-3 text-start needs-validation">
     <div class="col-12">
       <div class="flex flex-column gap-1">
         <label for="name">Nosaukums</label>
