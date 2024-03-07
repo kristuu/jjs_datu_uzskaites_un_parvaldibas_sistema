@@ -6,10 +6,6 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-/* Dependencies for IBAN bank account number and phone number validation */
-use Nembie\IbanRule\ValidIban;
-use libphonenumber\PhoneNumberFormat;
-
 class PermissionRequest extends FormRequest
 {
     /**

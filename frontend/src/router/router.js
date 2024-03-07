@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import axios from '@/services/axios.js';
 
 import HomePage from '../views/HomePage.vue';
 import UserList from '@/views/user/UserList.vue';
@@ -160,8 +161,10 @@ router.beforeEach((to, from, next) => {
     if (!to.meta.public && !authorized) {
         next({ name: 'LoginPage' });
     } else {
-        store.commit('resetFormInstance');
-        next();
+        axios.get('/get-permissions').then(response => {
+            window.Laravel.jsPermissions = response.data;
+            next();
+        });
     }
 });
 

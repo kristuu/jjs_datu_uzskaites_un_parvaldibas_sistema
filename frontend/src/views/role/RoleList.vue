@@ -1,7 +1,7 @@
 <template>
   <div>
     <AdminTable
-        v-show="can('manage roles')"
+        v-if="can('manage roles') && !store.state.isLoading"
         :page-name="$t(`pageHeadings.roles.manage roles`)"
         :database-table="'roles'"
         :model-name="'Role'"
@@ -88,14 +88,17 @@
               </div>
               <Fieldset legend="Tiesības">
                 <div class="row">
-                  <div class="d-flex flex-column col-lg-3 col-sm-4 col-12"
-                       v-for="permission in instance.permissions"
-                  >
-                    <Chip
-                        :label="permission.name"
-                        style="height: 100%;"
-                    />
-                  </div>
+                  <template v-for="permission in instance.permissions">
+                    <div
+                        class="d-flex flex-column col-lg-3 col-sm-4 col-12"
+                        v-if="permission.checked"
+                    >
+                      <Chip
+                          :label="permission.name"
+                          style="height: 100%;"
+                      />
+                    </div>
+                  </template>
                 </div>
               </Fieldset>
             </div>

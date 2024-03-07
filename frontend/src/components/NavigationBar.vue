@@ -105,12 +105,6 @@ const adminItems = ref([
     route: { name: 'InstructorList' }
   }
 ]);
-
-const navScroller = ref(null);
-
-const scrollX = (e) => {
-  navScroller.value.scrollLeft += e.deltaY;
-}
 </script>
 
 <template>
@@ -140,9 +134,9 @@ const scrollX = (e) => {
     </div>
   </div>
 
-  <div v-if="can('access admin dashboard') && path.startsWith('/admin')">
+  <div v-if="path.startsWith('/admin')">
     <div class="nav-scroller container-xl mt-2 mb-2" @wheel="scrollX">
-      <TabMenu :model="adminItems" class="nav p-2" aria-label="Admin navigation" ref="navScroller">
+      <TabMenu :model="adminItems" class="nav p-2" aria-label="Admin navigation">
         <template #item="{ item, props }">
           <router-link v-if="item.route && item.icon !== 'divider'" v-slot="{ href, navigate }" :to="item.route" custom>
             <a :href="href" v-bind="props.action" @click="navigate">

@@ -21,7 +21,8 @@ const handleErrorListUpdate = (updatedErrorList) => {
 </script>
 
 <template>
-<AdminForm :page-name="$t(`pageHeadings.roles.roles`)"
+<AdminForm v-if="can('manage roles')"
+           :page-name="$t(`pageHeadings.roles.roles`)"
            :short-desc="$t(`pageHeadings.roles.create role`)"
            :model-name="`Role`"
            :database-table="`roles`"
@@ -35,7 +36,8 @@ const handleErrorListUpdate = (updatedErrorList) => {
                    pattern="A:[A-ž\s\-]:multiple"
                    :invalid="errorList.name"
                    id="name"/>
-        <InputError :errors="errorList.name" />
+        {{ errorList }}
+        <InputError :errors="errorList" />
       </div>
     </div>
   </form>

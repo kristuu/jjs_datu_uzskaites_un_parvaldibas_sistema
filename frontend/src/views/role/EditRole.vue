@@ -45,7 +45,7 @@ const handleErrorListUpdate = (updatedErrorList) => {
               <label class="ms-2">{{ capitalize(permission.name) }}</label>
             </div>
           </div>
-          <InputError :errors="errorList.name" />
+          <InputError :errors="errorList" />
         </div>
       </div>
     </form>

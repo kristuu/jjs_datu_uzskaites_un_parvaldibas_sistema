@@ -1,7 +1,7 @@
 <template>
   <div>
     <AdminTable
-        v-show="can('manage instructors')"
+        v-if="can('manage instructors') && !store.state.isLoading"
         :page-name="$t(`pageHeadings.instructors.manage instructors`)"
         :database-table="'instructors'"
         :model-name="'Instructor'"
@@ -35,7 +35,7 @@
         </Column>
         <Column field="user.person_code" :header="$t('table.users.person_code')" sortable>
           <template #body="{ data }">
-            {{ `${data.user.person_code.slice(0, 6)}-${data.user.person_code.slice(6, 12)}` }}
+            {{ `${data.user?.person_code?.slice(0, 6)}-${data.user.person_code?.slice(6, 12)}` }}
           </template>
           <template #filter="{ filterModel }">
             <InputText
@@ -45,7 +45,7 @@
         </Column>
         <Column field="user.name" :header="$t('table.users.name')" sortable>
           <template #body="{ data }">
-            {{ data.user.name }}
+            {{ data.user?.name }}
           </template>
           <template #filter="{ filterModel }">
             <InputText
@@ -55,7 +55,7 @@
         </Column>
         <Column field="user.surname" :header="$t('table.users.surname')" sortable>
           <template #body="{ data }">
-            {{ data.user.surname }}
+            {{ data.user?.surname }}
           </template>
           <template #filter="{ filterModel }">
             <InputText
@@ -65,7 +65,7 @@
         </Column>
         <Column field="certificate.category.name" :header="$t('table.instructors.categories.name')" sortable>
           <template #body="{ data }">
-            {{ data.certificate.category.name }}
+            {{ data.certificate?.category?.name }}
           </template>
           <template #filter="{ filterModel }">
             <InputText
@@ -76,7 +76,7 @@
         <Column field="certificate.expiration_date" :header="$t('table.instructors.certificates.expiration_date')"
                 filterType="date" dataType="date" sortable>
           <template #body="{ data }">
-            {{ data.certificate.expiration_date }}
+            {{ data.certificate?.expiration_date }}
           </template>
           <template #filter="{ filterModel }">
             <Calendar
@@ -121,11 +121,11 @@
                 <div class="row">
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.instructors.categories.name`) }}</label>
-                    <span>{{ instance.certificate.category.name }}</span>
+                    <span>{{ instance.certificate?.category?.name }}</span>
                   </div>
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.instructors.certificates.expiration_date`) }}</label>
-                    <span>{{ instance.certificate.expiration_date }}</span>
+                    <span>{{ instance.certificate?.expiration_date }}</span>
                   </div>
                   <div class="col-12">
                     <Message v-for="msg in messages" :key="msg.id"
@@ -137,27 +137,27 @@
                 <div class="row">
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.name`) }}</label>
-                    <span>{{ instance.user.name }}</span>
+                    <span>{{ instance.user?.name }}</span>
                   </div>
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.surname`) }}</label>
-                    <span>{{ instance.user.surname }}</span>
+                    <span>{{ instance.user?.surname }}</span>
                   </div>
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.person_code`) }}</label>
-                    <span>{{ `${instance.user.person_code.slice(0,6)}-${instance.user.person_code.slice(6,12)}` }}</span>
+                    <span>{{ `${instance.user?.person_code?.slice(0,6)}-${instance.user.person_code?.slice(6,12)}` }}</span>
                   </div>
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.birthdate`) }}</label>
-                    <span>{{ instance.user.birthdate }}</span>
+                    <span>{{ instance.user?.birthdate }}</span>
                   </div>
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.phone`) }}</label>
-                    <span>{{ instance.user.phone }}</span>
+                    <span>{{ instance.user?.phone }}</span>
                   </div>
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.email`) }}</label>
-                    <span>{{ instance.user.email }}</span>
+                    <span>{{ instance.user?.email }}</span>
                   </div>
                 </div>
               </Fieldset>
@@ -179,7 +179,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onBeforeMount, onMounted, ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
 import {FilterMatchMode, FilterOperator} from "primevue/api";
 
@@ -235,17 +235,19 @@ const onRowSelect = (event) => {
 const msPerMonth = 1000 * 60 * 60 * 24 * 30;
 
 const rowClass = (data) => {
-  const currentDate = new Date();
-  const expDate = parseDate(data.certificate.expiration_date);
+  if (!store.state.isLoading) {
+    const currentDate = new Date();
+    const expDate = parseDate(data.certificate?.expiration_date);
 
-  expDate.setHours(0, 0, 0, 0);
-  currentDate.setHours(0, 0, 0, 0);
+    expDate.setHours(0, 0, 0, 0);
+    currentDate.setHours(0, 0, 0, 0);
 
-  const timeLeft = expDate.getTime() - currentDate.getTime();
-  return [{
-    'bg-red-100 text-red': timeLeft < 0,
-    'bg-yellow-100 text-red': timeLeft <= (3 * msPerMonth) && timeLeft >= 0,
-  }]
+    const timeLeft = expDate.getTime() - currentDate.getTime();
+    return [{
+      'bg-red-100 text-red': timeLeft < 0,
+      'bg-yellow-100 text-red': timeLeft <= (3 * msPerMonth) && timeLeft >= 0,
+    }]
+  }
 };
 
 let visible = ref(false);
@@ -254,26 +256,28 @@ const messages = ref({});
 const count = ref(0);
 
 const checkCertificateExpiry = () => {
-  messages.value = {};
-  let expirationDate = parseDate(instance.value.certificate.expiration_date);
-  let currentDate = new Date();
+  if (!store.state.isLoading) {
+    messages.value = {};
+    let expirationDate = parseDate(instance.value.certificate?.expiration_date);
+    let currentDate = new Date();
 
-  expirationDate.setHours(0, 0, 0, 0);
-  currentDate.setHours(0, 0, 0, 0);
+    expirationDate.setHours(0, 0, 0, 0);
+    currentDate.setHours(0, 0, 0, 0);
 
-  let nextMonth = new Date();
-  nextMonth.setMonth(currentDate.getMonth() + 1);
+    let nextMonth = new Date();
+    nextMonth.setMonth(currentDate.getMonth() + 1);
 
-  if (expirationDate < currentDate) {
-    messages.value.push = { severity: 'error', content: 'Sertifikāta derīgums ir beidzies', id: count.value++ };
-  } else if (expirationDate <= nextMonth) {
-    const oneDayMiliseconds = 1000 * 60 * 60 * 24;
-    let diff = Math.floor(((expirationDate - currentDate) / oneDayMiliseconds) + 1);
-    messages.value.push = { severity: 'warn', content: `Sertifikāta derīgums beigsies pēc ${diff} dienām`, id: count.value++ };
+    if (expirationDate < currentDate) {
+      messages.value.push = { severity: 'error', content: 'Sertifikāta derīgums ir beidzies', id: count.value++ };
+    } else if (expirationDate <= nextMonth) {
+      const oneDayMiliseconds = 1000 * 60 * 60 * 24;
+      let diff = Math.floor(((expirationDate - currentDate) / oneDayMiliseconds) + 1);
+      messages.value.push = { severity: 'warn', content: `Sertifikāta derīgums beigsies pēc ${diff} dienām`, id: count.value++ };
+    }
   }
 };
 
-onMounted(() => {
+onBeforeMount(() => {
   fetchDatabaseData();
   console.log(instances.value);
 });

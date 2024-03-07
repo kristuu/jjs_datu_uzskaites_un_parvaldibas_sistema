@@ -36,6 +36,7 @@ class RoleController extends Controller
     public function storeRole(RoleRequest $request)
     {
         $request["guard_name"] = 'web';
+        return $request->validated();
         return $this->store($request, Role::class);
     }
 
@@ -49,6 +50,7 @@ class RoleController extends Controller
         $data = $role;
         $rolePermissions = $role->getAllPermissions()->pluck('name');
 
+        unset($data["permissions"]);
         $data["permissions"] = Permission::all()->each(function ($permission) use ($rolePermissions) {
             $permission->checked = $rolePermissions->contains($permission->name);
         });

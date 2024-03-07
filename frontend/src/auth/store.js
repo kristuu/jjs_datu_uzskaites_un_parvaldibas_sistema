@@ -18,6 +18,9 @@ export default createStore({
         SET_FORM_DATA(state, payload) {
             state.formInstance = {...state.formInstance, ...payload};
         },
+        resetInstances(state) {
+            state.instances = {};
+        },
         resetFormInstance(state) {
             state.formInstance = {};
         },
@@ -59,9 +62,9 @@ export default createStore({
             console.log(`Fetching data from /${databaseTable}/${instanceId}`); // step 2
             commit('setLoading', true);
             try {
+                commit('resetFormInstance');
                 const response = await axios.get(`/${databaseTable}/${instanceId}`);
                 console.log('Server response', response); // step 3
-                commit('resetFormInstance');
                 commit('SET_FORM_DATA', response.data);
                 return instanceId;
             }
@@ -76,6 +79,7 @@ export default createStore({
             }
         },
         async fetchDatabaseData({commit}, databaseTable) {
+            commit('resetInstances');
             commit('setLoading', true);
             try {
                 const response = await axios.get(`/${databaseTable}`);
@@ -99,5 +103,6 @@ export default createStore({
     },
     getters: {
         formInstance: state => state.formInstance,
+        instances: state => state.instances,
     },
 });

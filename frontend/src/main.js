@@ -70,6 +70,12 @@ app.use(ToastService);
 app.directive('ripple', Ripple);
 app.directive('styleclass', StyleClass);
 
+app.config.errorHandler = function (err, vm, info) {
+    console.error('Error detected:', err);
+    console.error('Component that caused error:', vm);
+    console.error('Additional webpack-specific information:', info);
+};
+
 import LaravelPermissionToVuejs from "laravel-permission-to-vuejs";
 import Ripple from "primevue/ripple";
 import StyleClass from "primevue/styleclass";

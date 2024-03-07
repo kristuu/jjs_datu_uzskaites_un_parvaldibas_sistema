@@ -78,7 +78,7 @@ const fetchInstance = async () => {
   if (isUpdateMode) {
     try {
       await store.dispatch('fetchInstance', {
-        tableName: props.databaseTable, id
+        databaseTable: props.databaseTable, instanceId: id
       });
     } catch (error) {
       store.commit('setErrorStatus', error.status);
