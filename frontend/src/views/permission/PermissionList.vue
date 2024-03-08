@@ -55,7 +55,7 @@
           <template #body="{ data }">
             <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
                                 @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
-            <Button icon="bi bi-trash-fill" @click="store.dispatch('deleteInstance', { databaseTable: 'permissions', instanceId: data.id })" outlined rounded />
+            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`permissions`, instance.id)" outlined rounded />
           </template>
         </Column>
       </DataTable>
@@ -67,7 +67,7 @@
           <div class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0">
                         <span class="inline-flex align-items-center gap-2">
                             <img src="@/assets/logo-red.svg" width="50" />
-                            <span class="font-semibold text-2xl text-primary">Piekļuves tiesības apskate</span>
+                            <span class="font-semibold text-2xl text-primary ml-3">Piekļuves tiesības apskate</span>
                         </span>
             <span>
                             <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
@@ -91,7 +91,7 @@
               <router-link v-if="instance.id" :to="{ name: `EditPermission`, params: { id: instance.id } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="() => { store.dispatch('deleteInstance', { databaseTable: 'permissions', instanceId: instance.id }); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`permissions`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>
@@ -101,20 +101,16 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onBeforeMount, ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
 import {FilterMatchMode, FilterOperator} from "primevue/api";
 
-import { useStore } from 'vuex';
-const store = useStore();
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+const fetchDataStore = useFetchDataStore();
 
-const fetchDatabaseData = async () => {
-  await store.dispatch('fetchDatabaseData',  'permissions');
-}
-
-const instance = computed(() => store.state.formInstance);
-const instances = computed(() => store.state.instances);
-const totalInstances = computed(() => store.state.totalInstances);
+const instance = computed(() => fetchDataStore.instance);
+const instances = computed(() => fetchDataStore.allInstances);
+const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
 
 const globalFilterFields = ref([
   'id', 'name',
@@ -136,15 +132,15 @@ const initFilters = () => {
 
 initFilters();
 
-const onRowSelect = (event) => {
-  store.commit('SET_FORM_DATA', event.data);
+const onRowSelect = async (event) => {
+  await fetchDataStore.fetchInstance("permissions", event.data.id);
   visible.value = true;
 }
 
 let visible = ref(false);
 
-onMounted(() => {
-  fetchDatabaseData();
+onBeforeMount(async () => {
+  await fetchDataStore.fetchDatabaseData("permissions");
 });
 </script>
 

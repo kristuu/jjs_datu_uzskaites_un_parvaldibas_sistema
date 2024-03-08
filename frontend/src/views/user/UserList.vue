@@ -1,11 +1,160 @@
+<template>
+  <div>
+    <AdminTable
+        v-show="can('manage users')"
+        :page-name="$t(`pageHeadings.users.manage users`)"
+        :database-table="'users'"
+        :model-name="'User'"
+        :instance-id-column="'person_code'"
+        :short-desc="$t(`pageHeadings.users.in total x users`, {total: totalInstances})"
+        :filterOptions="filterOptions"
+        @updateItems="newItems => items.value = newItems"
+        @update:totalInstances="handleTotalInstancesUpdate"
+    >
+      <DataTable :value="instances" size="small" stripedRows removableSort
+                 paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
+                 v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
+                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e); checkCertificateExpiry(); }">
+        <template #header>
+          <div class="flex justify-content-between flex-wrap mb-2 mt-2">
+            <IconField iconPosition="left">
+              <InputIcon>
+                <i class="pi pi-search" />
+              </InputIcon>
+              <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
+            </IconField>
+          </div>
+        </template>
+        <template #empty>NAV IERAKSTU</template>
+        <Column field="person_code" :header="$t('table.users.person_code')" sortable>
+          <template #body="{ data }">
+            {{ `${data.person_code?.slice(0, 6)}-${data.person_code?.slice(6, 12)}` }}
+          </template>
+          <template #filter="{ filterModel }">
+            <InputText
+                type="text"
+                v-model="filterModel.value"/>
+          </template>
+        </Column>
+        <Column field="name" :header="$t('table.users.name')" sortable>
+          <template #body="{ data }">
+            {{ data.name }}
+          </template>
+          <template #filter="{ filterModel }">
+            <InputText
+                type="text"
+                v-model="filterModel.value"/>
+          </template>
+        </Column>
+        <Column field="surname" :header="$t('table.users.surname')" sortable>
+          <template #body="{ data }">
+            {{ data.surname }}
+          </template>
+          <template #filter="{ filterModel }">
+            <InputText
+                type="text"
+                v-model="filterModel.value"/>
+          </template>
+        </Column>
+        <Column field="email" :header="$t(`table.users.email`)" sortable>
+          <template #body="{ data }">
+            {{ data.email }}
+          </template>
+          <template #filter="{ filterModel }">
+            <InputText
+                type="text"
+                v-model="filterModel.value"/>
+          </template>
+        </Column>
+        <Column :exportable="false">
+          <template #body>
+            <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
+                                @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
+            <Button icon="bi bi-trash-fill" @click="" outlined rounded />
+          </template>
+        </Column>
+      </DataTable>
+    </AdminTable>
+
+    <Sidebar v-model:visible="visible" position="bottom" style="height:40rem; max-height: 90vh;">
+      <template #container="{ closeCallback }">
+        <div class="flex flex-column h-full container">
+          <div class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0">
+                        <span class="inline-flex align-items-center gap-2">
+                            <img src="@/assets/logo-red.svg" width="50" />
+                            <span class="font-semibold text-2xl text-primary">Lietotāja apskate</span>
+                        </span>
+            <span>
+                            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
+                        </span>
+          </div>
+          <div class="overflow-y-auto w-100">
+            <div class="row g-3 container-fluid mx-auto">
+              <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                <label>{{ $t(`table.users.person_code`) }}</label>
+                <span>{{ `${instance.person_code?.slice(0, 6)}-${instance.person_code?.slice(6, 12)}` }}</span>
+              </div>
+              <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                <label>{{ $t(`table.users.name`) }}</label>
+                <span>{{ instance.name }}</span>
+              </div>
+              <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                <label>{{ $t(`table.users.surname`) }}</label>
+                <span>{{ instance.surname }}</span>
+              </div>
+              <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                <label>{{ $t(`table.users.birthdate`) }}</label>
+                <span>{{ instance.birthdate }}</span>
+              </div>
+              <Fieldset legend="Kontaktinformācija">
+                <div class="row g-3">
+                  <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                    <label>{{ $t(`table.users.email`) }}</label>
+                    <span>{{ instance.email }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                    <label>{{ $t(`table.users.phone`) }}</label>
+                    <span>{{ instance.phone }}</span>
+                  </div>
+                </div>
+              </Fieldset>
+              <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                <label>{{ $t(`table.users.iban_code`) }}</label>
+                <span>{{ instance.iban_code }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-auto">
+            <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
+            <div class="m-3 flex justify-content-between gap-3 text-primary">
+              <router-link :to="{ name: `EditInstructor`, params: { id: `03120421576` } }">
+                <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
+              </router-link>
+              <span class="font-bold cursor-pointer" @click="fetchDataStore.dispatch('deleteInstance', { databaseTable: 'instructors', instanceId: 3 })">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </Sidebar>
+  </div>
+</template>
+
 <script setup>
-import {ref} from 'vue';
+import {computed, onBeforeMount, ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
-import { useTotalInstances } from "@/hooks/useTotalInstances.js";
 import {FilterMatchMode, FilterOperator} from "primevue/api";
 
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 const fetchDataStore = useFetchDataStore();
+
+const instance = computed(() => fetchDataStore.instance);
+const instances = computed(() => fetchDataStore.allInstances);
+const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
+
+const globalFilterFields = ref([
+    "name", "surname", "person_code", "birth_date",
+    "phone", "email", "iban_code"
+]);
 
 const filters = ref();
 
@@ -33,27 +182,17 @@ const initfilters = () => {
 
 initfilters();
 
-const items = ref([]);
+const onRowSelect = async (event) => {
+  await fetchDataStore.fetchInstance(`users`, event.data.person_code);
+  visible.value = true;
+}
+let visible = ref(false);
 
-const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
+onBeforeMount(async () => {
+  await fetchDataStore.fetchDatabaseData("users");
+});
 
 </script>
-
-<template>
-  <div>
-    <AdminTable
-        v-show="can('manage users')"
-        :page-name="$t(`pageHeadings.users.manage users`)"
-        :database-table="'users'"
-        :model-name="'User'"
-        :instance-id-column="'person_code'"
-        :short-desc="$t(`pageHeadings.users.in total x users`, {total: totalInstances})"
-        :filterOptions="filterOptions"
-        @updateItems="newItems => items.value = newItems"
-        @update:totalInstances="handleTotalInstancesUpdate"
-    />
-  </div>
-</template>
 
 <style scoped>
 p {

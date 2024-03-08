@@ -126,10 +126,6 @@ import {FilterMatchMode, FilterOperator} from "primevue/api";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 const fetchDataStore = useFetchDataStore();
 
-const fetchDatabaseData = async () => {
-  await fetchDataStore.fetchDatabaseData("roles");
-}
-
 const instance = computed(() => fetchDataStore.instance);
 const instances = computed(() => fetchDataStore.allInstances);
 const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
@@ -155,14 +151,15 @@ const initFilters = () => {
 initFilters();
 
 const onRowSelect = async (event) => {
+  console.log(event);
   await fetchDataStore.fetchInstance("roles", event.id);
   visible.value = true;
 }
 
 let visible = ref(false);
 
-onMounted(() => {
-  fetchDatabaseData();
+onMounted(async () => {
+  await fetchDataStore.fetchDatabaseData("roles");
 });
 </script>
 

@@ -188,10 +188,6 @@ import { useDateStore } from "@/stores/dateStore";
 const fetchDataStore = useFetchDataStore();
 const dateStore = useDateStore();
 
-const fetchDatabaseData = async () => {
-  await fetchDataStore.fetchDatabaseData("instructors");
-}
-
 const instance = computed(() => fetchDataStore.instance);
 const instances = computed(() => fetchDataStore.allInstances);
 const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
@@ -226,6 +222,7 @@ initFilters();
 
 const onRowSelect = async (event) => {
   await fetchDataStore.fetchInstance(`instructors`, event.data.id);
+  checkCertificateExpiry();
   visible.value = true;
 }
 
@@ -254,18 +251,19 @@ const count = ref(0);
 
 const checkCertificateExpiry = () => {
   if (!fetchDataStore.isLoading) {
+    console.log("test after loading")
     messages.value = {};
     let expirationDate = dateStore.parseLVstringDate(instance.value.certificate?.expiration_date);
     let currentDate = new Date();
 
     expirationDate.setHours(0, 0, 0, 0);
     currentDate.setHours(0, 0, 0, 0);
-
     let threeMonths = new Date();
     threeMonths.setMonth(currentDate.getMonth() + 3);
 
     if (expirationDate < currentDate) {
       messages.value.push = { severity: 'error', content: 'Sertifikāta derīgums ir beidzies', id: count.value++ };
+      console.log(messages.value);
     } else if (expirationDate <= threeMonths) {
       const oneDayMiliseconds = 1000 * 60 * 60 * 24;
       let diff = Math.floor(((expirationDate - currentDate) / oneDayMiliseconds) + 1);
@@ -274,9 +272,8 @@ const checkCertificateExpiry = () => {
   }
 };
 
-onBeforeMount(() => {
-  fetchDatabaseData();
-  console.log(instances.value);
+onBeforeMount(async () => {
+  await fetchDataStore.fetchDatabaseData("instructors");
 });
 </script>
 
