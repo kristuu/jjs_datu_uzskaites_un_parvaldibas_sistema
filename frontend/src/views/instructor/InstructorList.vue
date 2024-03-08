@@ -1,7 +1,7 @@
 <template>
   <div>
     <AdminTable
-        v-if="can('manage instructors') && !store.state.isLoading"
+        v-if="can('manage instructors') && !fetchDataStore.isLoading"
         :page-name="$t(`pageHeadings.instructors.manage instructors`)"
         :database-table="'instructors'"
         :model-name="'Instructor'"
@@ -169,7 +169,7 @@
               <router-link :to="{ name: `EditInstructor`, params: { id: `03120421576` } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="store.dispatch('deleteInstance', { databaseTable: 'instructors', instanceId: 3 })">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="fetchDataStore.dispatch('deleteInstance', { databaseTable: 'instructors', instanceId: 3 })">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>
@@ -183,16 +183,18 @@ import {computed, onBeforeMount, onMounted, ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
 import {FilterMatchMode, FilterOperator} from "primevue/api";
 
-import { useStore } from 'vuex';
-const store = useStore();
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+import { useDateStore } from "@/stores/dateStore";
+const fetchDataStore = useFetchDataStore();
+const dateStore = useDateStore();
 
 const fetchDatabaseData = async () => {
-  await store.dispatch('fetchDatabaseData',  'instructors');
+  await fetchDataStore.fetchDatabaseData("instructors");
 }
 
-const instance = computed(() => store.state.formInstance);
-const instances = computed(() => store.state.instances);
-const totalInstances = computed(() => store.state.totalInstances);
+const instance = computed(() => fetchDataStore.instance);
+const instances = computed(() => fetchDataStore.allInstances);
+const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
 
 const globalFilterFields = ref([
   'id', 'user.person_code', 'user.name', 'user.surname',
@@ -222,22 +224,17 @@ const initFilters = () => {
 
 initFilters();
 
-const parseDate = (dateString) => {
-  const [day, month, year] = dateString.split('.');
-  return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
-}
-
-const onRowSelect = (event) => {
-  store.commit('SET_FORM_DATA', event.data);
+const onRowSelect = async (event) => {
+  await fetchDataStore.fetchInstance(`instructors`, event.data.id);
   visible.value = true;
 }
 
 const msPerMonth = 1000 * 60 * 60 * 24 * 30;
 
 const rowClass = (data) => {
-  if (!store.state.isLoading) {
+  if (!fetchDataStore.isLoading) {
     const currentDate = new Date();
-    const expDate = parseDate(data.certificate?.expiration_date);
+    const expDate = dateStore.parseLVstringDate(data.certificate?.expiration_date);
 
     expDate.setHours(0, 0, 0, 0);
     currentDate.setHours(0, 0, 0, 0);
@@ -256,20 +253,20 @@ const messages = ref({});
 const count = ref(0);
 
 const checkCertificateExpiry = () => {
-  if (!store.state.isLoading) {
+  if (!fetchDataStore.isLoading) {
     messages.value = {};
-    let expirationDate = parseDate(instance.value.certificate?.expiration_date);
+    let expirationDate = dateStore.parseLVstringDate(instance.value.certificate?.expiration_date);
     let currentDate = new Date();
 
     expirationDate.setHours(0, 0, 0, 0);
     currentDate.setHours(0, 0, 0, 0);
 
-    let nextMonth = new Date();
-    nextMonth.setMonth(currentDate.getMonth() + 1);
+    let threeMonths = new Date();
+    threeMonths.setMonth(currentDate.getMonth() + 3);
 
     if (expirationDate < currentDate) {
       messages.value.push = { severity: 'error', content: 'Sertifikāta derīgums ir beidzies', id: count.value++ };
-    } else if (expirationDate <= nextMonth) {
+    } else if (expirationDate <= threeMonths) {
       const oneDayMiliseconds = 1000 * 60 * 60 * 24;
       let diff = Math.floor(((expirationDate - currentDate) / oneDayMiliseconds) + 1);
       messages.value.push = { severity: 'warn', content: `Sertifikāta derīgums beigsies pēc ${diff} dienām`, id: count.value++ };

@@ -1,6 +1,9 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import store from './auth/store.js';
+import { createPinia } from 'pinia';
+
+const pinia = createPinia();
+
 import router from './router/router.js';
 import axios from '@/services/axios.js';
 
@@ -62,7 +65,7 @@ app.component("Toast", Toast);
 app.component("IconField", IconField);
 app.component("InputIcon", InputIcon);
 
-app.use(store);
+app.use(pinia);
 app.use(router);
 app.use(PrimeVue);
 app.use(ToastService);
@@ -80,28 +83,8 @@ import LaravelPermissionToVuejs from "laravel-permission-to-vuejs";
 import Ripple from "primevue/ripple";
 import StyleClass from "primevue/styleclass";
 
-async function fetchPermissions() {
-    await axios.get('/user').then(response => {
-        // The user is authenticated
-        // Use the authenticated user object: response.data
+app.use(i18n);
+app.use(LaravelPermissionToVuejs);
+app.use(VueTelInput, globalOptions);
 
-        // Now we can safely fetch permissions
-        axios.get('/get-permissions').then(response => {
-            window.Laravel.jsPermissions = response.data;
-        });
-    }).catch(error => {
-        if (error.response.status === 401) {
-            console.error('Not authenticated.');
-        } else {
-            console.error(error)
-        }
-    });
-}
-
-fetchPermissions().then(() => {
-    app.use(i18n);
-    app.use(LaravelPermissionToVuejs);
-    app.use(VueTelInput, globalOptions);
-
-    app.mount('#app');
-});
+app.mount('#app');

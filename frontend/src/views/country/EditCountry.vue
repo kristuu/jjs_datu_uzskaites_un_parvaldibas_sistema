@@ -1,6 +1,6 @@
 <script setup>
 import {computed, ref} from "vue";
-import { useStore } from 'vuex';
+import { useFetchDataStore } from "@/stores/fetchDataStore";
 
 import { format } from 'date-fns';
 import { vMaska } from 'maska';
@@ -8,8 +8,8 @@ import { vMaska } from 'maska';
 import AdminForm from "@/components/AdminForm.vue";
 import InputError from "@/components/error/inputError.vue";
 
-const store = useStore();
-let formInstance = computed(() => store.state.formInstance);
+const fetchDataStore = useFetchDataStore();
+let formInstance = computed(() => store.formInstance);
 let errorList = ref({});
 
 const handleErrorListUpdate = (updatedErrorList) => {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <AdminTable
-        v-if="can('manage roles') && !store.state.isLoading"
+        v-if="can('manage roles') && !fetchDataStore.isLoading"
         :page-name="$t(`pageHeadings.roles.manage roles`)"
         :database-table="'roles'"
         :model-name="'Role'"
@@ -58,7 +58,7 @@
           <template #body="{ data }">
             <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
                                 @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
-            <Button icon="bi bi-trash-fill" @click="store.dispatch('deleteInstance', { databaseTable: 'roles', instanceId: data.id })" outlined rounded />
+            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`roles`, data.id)" outlined rounded />
           </template>
         </Column>
       </DataTable>
@@ -109,7 +109,7 @@
               <router-link v-if="instance.id" :to="{ name: `EditRole`, params: { id: instance.id } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="() => { store.dispatch('deleteInstance', { databaseTable: 'roles', instanceId: instance.id }); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`roles`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>
@@ -123,16 +123,16 @@ import {computed, onMounted, ref} from 'vue';
 import AdminTable from '@/components/AdminTable.vue';
 import {FilterMatchMode, FilterOperator} from "primevue/api";
 
-import { useStore } from 'vuex';
-const store = useStore();
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+const fetchDataStore = useFetchDataStore();
 
 const fetchDatabaseData = async () => {
-  await store.dispatch('fetchDatabaseData',  'roles');
+  await fetchDataStore.fetchDatabaseData("roles");
 }
 
-const instance = computed(() => store.state.formInstance);
-const instances = computed(() => store.state.instances);
-const totalInstances = computed(() => store.state.totalInstances);
+const instance = computed(() => fetchDataStore.instance);
+const instances = computed(() => fetchDataStore.allInstances);
+const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
 
 const globalFilterFields = ref([
   'id', 'name',
@@ -155,7 +155,7 @@ const initFilters = () => {
 initFilters();
 
 const onRowSelect = async (event) => {
-  await store.dispatch('fetchInstance', {databaseTable: 'roles', instanceId: event.id});
+  await fetchDataStore.fetchInstance("roles", event.id);
   visible.value = true;
 }
 

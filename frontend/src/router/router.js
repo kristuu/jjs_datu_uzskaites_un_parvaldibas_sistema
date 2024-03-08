@@ -12,7 +12,6 @@ import InstructorsList from "@/views/booking/InstructorsList.vue";
 import AdminDashboard from "@/views/admin/AdminDashboard.vue";
 
 import MaugloCompute from '@/views/calculateReportDiapazone.vue'
-import store from "@/auth/store";
 import ErrorView from "@/views/error/ErrorView.vue";
 import PermissionList from "@/views/permission/PermissionList.vue";
 import CreatePermission from "@/views/permission/CreatePermission.vue";
@@ -146,25 +145,18 @@ const router = createRouter({
     routes,
 });
 
-async function isUserAuthorized() {
-    try {
-        const response = await axios.get('/user');
-        return response.status === 200;
-    } catch (error) {
-        return false;
-    }
-}
-
-router.beforeEach((to, from, next) => {
-    const authorized = isUserAuthorized();
-
-    if (!to.meta.public && !authorized) {
-        next({ name: 'LoginPage' });
+router.beforeEach(async (to, from, next) => {
+    if (to.meta.public) {
+        next();
     } else {
-        axios.get('/get-permissions').then(response => {
-            window.Laravel.jsPermissions = response.data;
+        const store = await import ("@/stores/authStore.js")
+            .then(module => module.useAuthStore());
+        await store.checkAuth();
+        if (store.authorized) {
             next();
-        });
+        } else {
+            next({ name: "LoginPage" });
+        }
     }
 });
 

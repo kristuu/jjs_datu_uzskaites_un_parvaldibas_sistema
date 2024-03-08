@@ -1,9 +1,9 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import router from "@/router/router";
-import { useStore } from 'vuex';
+import { useFetchDataStore } from "@/stores/fetchDataStore";
 
-const store = useStore();
+const store = useFetchDataStore();
 const route = useRoute();
 
 const props = defineProps({
@@ -19,7 +19,7 @@ const emit = defineEmits({
 </script>
 
 <template>
-  <div v-if="!store.state.isLoading">
+  <div v-if="!store.isLoading">
     <div v-if="can('list instances')">
       <div class="flex justify-content-between text-white mb-3">
         <div class="flex align-items-baseline">

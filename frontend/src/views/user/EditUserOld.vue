@@ -1,89 +1,89 @@
-<script>
-import VueGoogleAutocomplete from 'vue-google-autocomplete';
-import axios from '@/services/axios';
+<script setup>
+import {ref} from 'vue';
+import AdminTable from '@/components/AdminTable.vue';
+import { useTotalInstances } from "@/hooks/useTotalInstances.js";
+import {FilterMatchMode, FilterOperator} from "primevue/api";
 
-export default {
-  data() {
-    return {
-      errorList: '',
-      user: {
-        name: '',
-        surname: '',
-        person_code: '',
-        birthdate: '',
-        email: '',
-        password: '',
-        phone: '',
-        googleplaces_address_code: '',
-        iban_code: ''
-      },
-    };
-  },
-  components: {
-    VueGoogleAutocomplete,
-  },
-  methods: {
-    async fetchUser() {
-      try {
-        const response = await axios.get(`/user/${this.$route.params.person_code}`);
-        this.user = response.data.message;
-        console.log(this.user);
-      } catch (e) {
-        console.log(e);
-      }
+const filters = ref();
+
+const initfilters = () => {
+  const defaultTextContainsFilter = () => ({
+    operator: FilterOperator.AND,
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+  });
+
+  filters.value = {
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: {
+      sortable: true, filterType: 'text',
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
     },
-    async updateUser() {
-      try {
-        await axios.put(`/user/${this.$route.params.person_code}`, this.user);
-        this.$router.push({ name: 'UserList' });
-      } catch (e) {
-        this.errorList = e.response.data.errors;
-      }
+    surname: {
+      sortable: true, filterType: 'text', dataType: 'text',
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
     },
-    getAddressData(addressData, placeResultData) {
-      this.user.googleplaces_address_code = placeResultData.place_id;
+    person_code: {
+      sortable: true, filterType: 'personCode', dataType: 'text',
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
     },
-  },
-  mounted() {
-    this.fetchUser().catch(error => console.error(error));
+    birthdate: {
+      sortable: true, filterType: 'date', dataType: 'date',
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }]
+    },
+    email: {
+      sortable: true, filterType: 'text', dataType: 'text',
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+    },
+    phone: {
+      sortable: true, filterType: 'text', dataType: 'text',
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+    },
+    iban_code: {
+      sortable: true, filterType: 'text', dataType: 'text',
+      operator: FilterOperator.AND,
+      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+    },
   }
 };
+const items = ref([]);
+
+const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();
+
 </script>
 
 <template>
-  <div class="container-fluid">
-    <form @submit.prevent="updateUser" class="card">
-      <div class="mb-3">
-        <label for="name" class="form-label">Vārds (-i)</label>
-        <input v-model="user.name" type="text" class="form-control" id="name">
-      </div>
-      <div class="mb-3">
-        <label for="surname" class="form-label">Uzvārds (-i)</label>
-        <input v-model="user.surname" type="text" class="form-control" id="surname">
-      </div>
-      <div class="mb-3">
-        <label for="person_code" class="form-label">Personas kods</label>
-        <input v-model="user.person_code" type="text" class="form-control" id="person_code">
-      </div>
-      <div class="mb-3">
-        <label for="birthdate" class="form-label">Dzimšanas datums</label>
-        <input v-model="user.birthdate" type="date" class="form-control" id="birthdate">
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">E-pasta adrese</label>
-        <input v-model="user.email" type="email" class="form-control" id="email">
-      </div>
-      <div class="mb-3">
-        <label for="googleplaces_address_code" class="form-label">Address</label>
-        <vue-google-autocomplete
-            id="googleplaces_address_code"
-            classname="form-control"
-            placeholder="Sāciet rakstīt adresi..."
-            v-on:placechanged="getAddressData"
-            autocomplete="off">
-        </vue-google-autocomplete>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+  <div>
+    <AdminTable
+        v-show="can('manage users')"
+        :page-name="$t(`pageHeadings.users.manage users`)"
+        :database-table="'users'"
+        :model-name="'User'"
+        :instance-id-column="'person_code'"
+        :short-desc="$t(`pageHeadings.users.in total x users`, {total: totalInstances})"
+        :filterOptions="filterOptions"
+        @updateItems="newItems => items.value = newItems"
+        @update:totalInstances="handleTotalInstancesUpdate"
+    />
   </div>
 </template>
+
+<style scoped>
+p {
+  margin: 0;
+}
+
+th, h5 {
+  font-weight: bold;
+}
+
+nav ul {
+  margin-bottom: 0 !important;
+}
+</style>
+

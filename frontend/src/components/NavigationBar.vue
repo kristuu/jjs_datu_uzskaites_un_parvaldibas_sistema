@@ -1,25 +1,29 @@
 <script setup>
-import axios from '@/services/axios';
-import { computed, onMounted, ref } from 'vue';
-import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import axios from "@/services/axios";
+import {computed, inject, onMounted, ref} from "vue";
+import { useAuthStore } from "@/stores/authStore";
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+import { useErrorStore } from "@/stores/errorStore";
+import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import router from "@/router/router";
 
-const store = useStore();
+const authStore = useAuthStore();
+const fetchDataStore = useFetchDataStore();
+const errorStore = useErrorStore();
 const route = useRoute();
 const locale = useI18n();
 
 const path = computed(() => route.path);
-const authorized = computed(() => store.state.authorized);
-// const logout = () => store.dispatch('logout');
+const authorized = computed(() => authStore.authorized);
+const user = computed(() => authStore.user);
 
 const items = ref([
   {
     label: locale.t("navigation.home"),
     icon: "bi bi-house",
     command: () => {
-      router.push({ name: 'HomePage' });
+      router.push({ name: "HomePage" });
     }
   }
 ]);
@@ -31,80 +35,86 @@ const changeLocale = async (newLocale) => {
     await axios.post('/setlocale', { locale: newLocale })
     console.log(`success`)
   } catch (error) {
-    store.commit('setErrorStatus', error.status);
-    store.commit('setErrorMessage', error.data.message);
-    await router.push({ name: 'ErrorView' });
+    await errorStore.displayError(error);
   }
 }
 
-let user = ref(null);
-
-onMounted(async () => {
-  store.commit('setLoading', true);
-  if(authorized.value) {
-    try {
-      const response = await axios.get('/user')
-      user.value = response.data
-    } catch (error) {
-      if (error.response.status === 401) {
-        user.value = null
-      } else {
-        console.error(error.response.status)
-      }
+const adminItems = computed(() => {
+  const dividerGroupedItems = [
+    {
+      label: locale.t('navigation.dashboard'),
+      icon: 'bi bi-speedometer',
+      route: {name: 'AdminDashboard'},
+      permission: "access admin dashboard",
+    },
+    {
+      icon: 'divider'
+    },
+    {
+      label: locale.t('navigation.userList'),
+      icon: 'bi bi-person-fill',
+      route: {name: 'UserList'},
+      permission: "manage users"
+    },
+    {
+      icon: 'divider',
+      permission: ""
+    },
+    {
+      label: locale.t('navigation.permissionList'),
+      icon: 'bi bi-key-fill',
+      route: {name: 'PermissionList'},
+      permission: "manage permissions"
+    },
+    {
+      label: locale.t('navigation.roleList'),
+      icon: 'bi bi-person-check-fill',
+      route: {name: 'RoleList'},
+      permission: "manage roles"
+    },
+    {
+      icon: 'divider'
+    },
+    {
+      label: locale.t('navigation.countryList'),
+      icon: 'bi bi-flag-fill',
+      route: {name: 'CountryList'},
+      permission: "manage countries"
+    },
+    {
+      label: locale.t('navigation.regionList'),
+      icon: 'bi bi-compass',
+      route: {name: 'RegionList'},
+      permission: "manage regions"
+    },
+    {
+      icon: 'divider'
+    },
+    {
+      label: locale.t('navigation.instructorList'),
+      icon: 'bi bi-mortarboard-fill',
+      route: {name: 'InstructorList'},
+      permission: "manage instructors"
     }
-  }
-  store.commit('setLoading', false);
-});
+  ];
 
-const adminItems = ref([
-  {
-    label: locale.t('navigation.dashboard'),
-    icon: 'bi bi-speedometer',
-    route: { name: 'AdminDashboard' }
-  },
-  {
-    icon: 'divider'
-  },
-  {
-    label: locale.t('navigation.userList'),
-    icon: 'bi bi-person-fill',
-    route: { name: 'UserList' }
-  },
-  {
-    icon: 'divider'
-  },
-  {
-    label: locale.t('navigation.permissionList'),
-    icon: 'bi bi-key-fill',
-    route: { name: 'PermissionList' }
-  },
-  {
-    label: locale.t('navigation.roleList'),
-    icon: 'bi bi-person-check-fill',
-    route: { name: 'RoleList' }
-  },
-  {
-    icon: 'divider'
-  },
-  {
-    label: locale.t('navigation.countryList'),
-    icon: 'bi bi-flag-fill',
-    route: { name: 'CountryList' }
-  },
-  {
-    label: locale.t('navigation.regionList'),
-    icon: 'bi bi-compass',
-    route: { name: 'RegionList' }
-  },
-  {
-    icon: 'divider'
-  },
-  {
-    label: locale.t('navigation.instructorList'),
-    icon: 'bi bi-mortarboard-fill',
-    route: { name: 'InstructorList' }
-  }
-]);
+  let outputItems = [];
+  let dividerPending = false;
+
+  // Add a divider before the next item if item is visible
+  dividerGroupedItems.forEach(item => {
+    if (item.icon === "divider") {
+      dividerPending = true;
+    } else if (authStore.permissions.includes(item.permission)) {
+      if (dividerPending) {
+        outputItems.push({ icon: "divider" });
+        dividerPending = false;
+      }
+      outputItems.push(item);
+    }
+  });
+  return outputItems;
+});
 </script>
 
 <template>
@@ -134,7 +144,7 @@ const adminItems = ref([
     </div>
   </div>
 
-  <div v-if="path.startsWith('/admin')">
+  <div v-if="path.startsWith('/admin') && authorized">
     <div class="nav-scroller container-xl mt-2 mb-2" @wheel="scrollX">
       <TabMenu :model="adminItems" class="nav p-2" aria-label="Admin navigation">
         <template #item="{ item, props }">

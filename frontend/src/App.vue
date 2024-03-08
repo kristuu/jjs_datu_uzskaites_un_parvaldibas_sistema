@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from 'vuex';
+import { useFetchDataStore } from "@/stores/fetchDataStore";
 import { useI18n } from 'vue-i18n';
 
 import NavigationBar from './components/NavigationBar.vue';
@@ -12,9 +12,9 @@ import 'vue-loading-overlay/dist/css/index.css';
 
 const router = useRouter();
 const route = useRoute();
-const store = useStore();
+const fetchDataStore = useFetchDataStore();
 const locale = useI18n();
-const isLoading = computed(() => store.state.isLoading);
+const isLoading = computed(() => fetchDataStore.isLoading);
 
 let routeTranslations = ref(routeTranslationsLV);
 

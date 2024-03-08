@@ -4,6 +4,9 @@ import AdminTable from '@/components/AdminTable.vue';
 import { useTotalInstances } from "@/hooks/useTotalInstances.js";
 import {FilterMatchMode, FilterOperator} from "primevue/api";
 
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+const fetchDataStore = useFetchDataStore();
+
 const filters = ref();
 
 const initfilters = () => {
@@ -14,43 +17,22 @@ const initfilters = () => {
 
   filters.value = {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    name: {
-      sortable: true, filterType: 'text',
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
-    },
-    surname: {
-      sortable: true, filterType: 'text', dataType: 'text',
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
-    },
-    person_code: {
-      sortable: true, filterType: 'personCode', dataType: 'text',
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
-    },
+    name: defaultTextContainsFilter(),
+    surname: defaultTextContainsFilter(),
+    person_code: defaultTextContainsFilter(),
     birthdate: {
       sortable: true, filterType: 'date', dataType: 'date',
       operator: FilterOperator.AND,
       constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }]
     },
-    email: {
-      sortable: true, filterType: 'text', dataType: 'text',
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
-    },
-    phone: {
-      sortable: true, filterType: 'text', dataType: 'text',
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
-    },
-    iban_code: {
-      sortable: true, filterType: 'text', dataType: 'text',
-      operator: FilterOperator.AND,
-      constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
-    },
+    email: defaultTextContainsFilter(),
+    phone: defaultTextContainsFilter(),
+    iban_code: defaultTextContainsFilter(),
   }
 };
+
+initfilters();
+
 const items = ref([]);
 
 const { totalInstances, handleTotalInstancesUpdate } = useTotalInstances();

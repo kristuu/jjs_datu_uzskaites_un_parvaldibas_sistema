@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import router from '../router/router.js';
+import router from '@/router/router.js';
 import axios from "@/services/axios";
 // import response from "core-js/internals/is-forced";
 
