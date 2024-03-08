@@ -1,5 +1,6 @@
 import axios from "@/services/axios.js";
 import {defineStore} from "pinia";
+import {useDateStore} from "@/stores/dateStore";
 
 export const useFetchDataStore = defineStore({
     id: "fetchData",
@@ -55,6 +56,18 @@ export const useFetchDataStore = defineStore({
             } finally {
                 this.setLoading(false);
             }
+        },
+        async createInstance(databaseTable, instance) {
+          const dateStore = useDateStore();
+          this.setLoading(true);
+          try {
+              dateStore.formatDatesOnInstance(instance);
+              await axios.post(`/${databaseTable}`, instance);
+              this.resetInstance();
+              await router.push(`/admin/${databaseTable}`);
+          } catch (error) {
+              toast.add()
+          }
         },
         async deleteInstance(databaseTable, instanceId) {
             try {

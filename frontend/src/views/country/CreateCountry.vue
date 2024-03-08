@@ -1,12 +1,12 @@
 <script setup>
 import {ref, computed} from "vue";
-import { useStore } from 'vuex';
+import { useFetchDataStore } from "@/stores/fetchDataStore";
 
 import AdminForm from "@/components/AdminForm.vue";
 import InputError from "@/components/error/inputError.vue";
 
-const store = useStore();
-let formInstance = computed(() => store.state.formInstance);
+const fetchDataStore = useFetchDataStore();
+let instance = computed(() => fetchDataStore.instance);
 let errorList = ref({});
 
 const handleErrorListUpdate = (updatedErrorList) => {
@@ -24,7 +24,7 @@ const handleErrorListUpdate = (updatedErrorList) => {
     <div class="col-12">
       <div class="flex flex-column gap-1">
         <label for="name">Nosaukums</label>
-        <InputText v-model="formInstance.name"
+        <InputText v-model="instance.name"
                    maxlength="60"
                    pattern="A:[A-ž\s\-]:multiple"
                    :invalid="errorList.name"

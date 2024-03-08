@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onBeforeMount, onMounted, ref} from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
@@ -67,58 +67,6 @@ let updateInstance = async (instanceId) => {
     store.commit('setLoading', false);
   }
 };
-
-/**
- * Fetch an instance from the database based on the instance ID.
- * If in update mode, dispatch the 'fetchInstance' action with the provided tableName and ID.
- */
-const fetchInstance = async () => {
-  store.commit('setLoading', true);
-  const id = route.params.id;
-  if (isUpdateMode) {
-    try {
-      await store.dispatch('fetchInstance', {
-        databaseTable: props.databaseTable, instanceId: id
-      });
-    } catch (error) {
-      store.commit('setErrorStatus', error.status);
-      store.commit('setErrorMessage', error.data.message);
-      await router.push({ name: 'ErrorView' });
-    } finally {
-      store.commit('setLoading', false);
-    }
-  }
-  store.commit('setLoading', false);
-}
-
-/**
- * Format the specified date fields (for example, not supposed to contain time) in the given instance object.
- */
-const formatDates = (instance) => {
-  Object.keys(instance.value).forEach((key) => {
-    if (key === 'birthdate') {
-      let date;
-
-      if (instance.value[key] instanceof Date) {
-        date = instance.value[key];
-      } else {
-        // Parse time in the 'dd.mm.yyyy' format
-        let parts = instance.value[key].split(".");
-        date = new Date(parts[2], parts[1] - 1, parts[0]);
-      }
-
-      let year = date.getFullYear();
-      let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Ensure month is 2 digits
-      let day = date.getDate().toString().padStart(2, '0'); // Ensure day is 2 digits
-
-      instance.value[key] = `${year}-${month}-${day}`;
-    }
-  });
-}
-
-onMounted(() => {
-  fetchInstance();
-});
 </script>
 
 <template>
