@@ -17,8 +17,7 @@ let errorList = computed(() => errorStore.errorList);
 <AdminForm :page-name="$t(`pageHeadings.permissions.permissions`)"
            :short-desc="$t(`pageHeadings.permissions.create permission`)"
            :model-name="`Permission`"
-           :database-table="`permissions`"
-           @update-error-list="handleErrorListUpdate">
+           :database-table="`permissions`">
   <form class="row gap-3 py-3 text-start needs-validation">
     <div class="col-12">
       <div class="flex flex-column gap-1">

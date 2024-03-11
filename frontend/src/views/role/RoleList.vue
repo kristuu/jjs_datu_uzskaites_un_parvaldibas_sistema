@@ -7,9 +7,6 @@
         :model-name="'Role'"
         :instance-id-column="'id'"
         :short-desc="$t(`pageHeadings.roles.in total x roles`, {total: totalInstances})"
-        :filterOptions="filterOptions"
-        @updateItems="newItems => items.value = newItems"
-        @update:totalInstances="handleTotalInstancesUpdate"
     >
       <div class="p-1">
         <Message
@@ -22,7 +19,7 @@
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e.data) }">
+                 selectionMode="single" @rowSelect="(e) => { onRowSelect(e.data) }">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <IconField iconPosition="left">
@@ -56,8 +53,6 @@
         </Column>
         <Column :exportable="false">
           <template #body="{ data }">
-            <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
-                                @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
             <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`roles`, data.id)" outlined rounded />
           </template>
         </Column>
@@ -67,15 +62,12 @@
     <Sidebar v-model:visible="visible" position="bottom" style="height:40rem; max-height: 90vh;">
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full container">
-          <div class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0">
-                        <span class="inline-flex align-items-center gap-2">
-                            <img src="@/assets/logo-red.svg" width="50" />
-                            <span class="font-semibold text-2xl text-primary">Lomas apskate</span>
-                        </span>
-            <span>
-                            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
-                        </span>
+          <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+            <img src="@/assets/logo-red.svg" width="50" />
+            <span class="font-semibold text-2xl text-primary">Lomas apskate</span>
+            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
           </div>
+          <Divider />
           <div class="overflow-y-auto w-100">
             <div class="row gap-3 container-fluid mx-auto">
               <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
@@ -151,7 +143,6 @@ const initFilters = () => {
 initFilters();
 
 const onRowSelect = async (event) => {
-  console.log(event);
   await fetchDataStore.fetchInstance("roles", event.id);
   visible.value = true;
 }

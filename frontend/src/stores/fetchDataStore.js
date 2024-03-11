@@ -16,6 +16,9 @@ export const useFetchDataStore = defineStore({
         setLoading(payload) {
             this.isLoading = payload;
         },
+        setProperty(propertyName, value) {
+          this.instance[propertyName] = value;
+        },
         setAllInstances(payload) {
             this.allInstances = payload;
         },

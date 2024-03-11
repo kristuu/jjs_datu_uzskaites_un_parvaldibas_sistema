@@ -19,7 +19,7 @@
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
+                 selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <IconField iconPosition="left">

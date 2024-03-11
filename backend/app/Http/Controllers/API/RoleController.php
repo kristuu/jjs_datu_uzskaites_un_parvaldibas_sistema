@@ -36,8 +36,13 @@ class RoleController extends Controller
     public function storeRole(RoleRequest $request)
     {
         $request["guard_name"] = 'web';
-        return $request->validated();
-        return $this->store($request, Role::class);
+        $response = $this->store($request, Role::class);
+        $role = Role::findByName($request->name, 'web');
+        $permissions = array_map(function ($permission) {
+            return $permission['checked'] ? $permission['id'] : null;
+        }, $request->permissions);
+        $role->syncPermissions($permissions);
+        return $response;
     }
 
     /**
@@ -64,6 +69,7 @@ class RoleController extends Controller
         $permissions = array_map(function ($permission) {
             return $permission['checked'] ? $permission['id'] : null;
         }, $request->permissions);
+        $this->update($request, $id, Role::class);
         return $role->syncPermissions($permissions);
     }
 
