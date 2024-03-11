@@ -1,20 +1,16 @@
 <script setup>
-import {computed, ref} from "vue";
-import { useStore } from 'vuex';
-
-import { format } from 'date-fns';
-import { vMaska } from 'maska';
+import {computed} from "vue";
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+import { useErrorStore } from "@/stores/errorStore";
 
 import AdminForm from "@/components/AdminForm.vue";
 import InputError from "@/components/error/inputError.vue";
 
-const store = useStore();
-let formInstance = computed(() => store.state.formInstance);
-let errorList = ref({});
+const fetchDataStore = useFetchDataStore();
+let instance = computed(() => fetchDataStore.instance);
+const errorStore = useErrorStore();
 
-const handleErrorListUpdate = (updatedErrorList) => {
-  errorList.value = updatedErrorList;
-}
+let errorList = computed(() => errorStore.errorList);
 </script>
 
 <template>
@@ -28,7 +24,7 @@ const handleErrorListUpdate = (updatedErrorList) => {
       <div class="col-12">
         <div class="flex flex-column gap-1">
           <label for="name">Nosaukums</label>
-          <InputText v-model="formInstance.name"
+          <InputText v-model="instance.name"
                      :invalid="errorList.name"
                      id="name"/>
           <InputError :errors="errorList.name" />
