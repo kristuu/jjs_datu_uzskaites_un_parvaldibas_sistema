@@ -7,9 +7,6 @@
         :model-name="'Region'"
         :instance-id-column="'id'"
         :short-desc="$t(`pageHeadings.regions.in total x regions`, {total: totalInstances})"
-        :filterOptions="filterOptions"
-        @updateItems="newItems => items.value = newItems"
-        @update:totalInstances="handleTotalInstancesUpdate"
     >
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
@@ -58,8 +55,6 @@
         </Column>
         <Column :exportable="false">
           <template #body="{ data }">
-            <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
-                                @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
             <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`regions`, data.id)" outlined rounded />
           </template>
         </Column>

@@ -7,14 +7,11 @@
         :model-name="'User'"
         :instance-id-column="'person_code'"
         :short-desc="$t(`pageHeadings.users.in total x users`, {total: totalInstances})"
-        :filterOptions="filterOptions"
-        @updateItems="newItems => items.value = newItems"
-        @update:totalInstances="handleTotalInstancesUpdate"
     >
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e); checkCertificateExpiry(); }">
+                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <IconField iconPosition="left">
@@ -67,27 +64,23 @@
           </template>
         </Column>
         <Column :exportable="false">
-          <template #body>
-            <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
-                                @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
-            <Button icon="bi bi-trash-fill" @click="" outlined rounded />
+          <template #body="{ data }">
+            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`users`, data.person_code)" outlined rounded />
           </template>
         </Column>
       </DataTable>
     </AdminTable>
 
-    <Sidebar v-model:visible="visible" position="bottom" style="height:40rem; max-height: 90vh;">
+    <Sidebar v-model:visible="visible" position="bottom" style="height:40rem; max-height: 90vh;"
+             blockScroll="true">
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full container">
-          <div class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0">
-                        <span class="inline-flex align-items-center gap-2">
-                            <img src="@/assets/logo-red.svg" width="50" />
-                            <span class="font-semibold text-2xl text-primary">Lietotāja apskate</span>
-                        </span>
-            <span>
-                            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
-                        </span>
+          <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+            <img src="@/assets/logo-red.svg" width="50" />
+            <span class="font-semibold text-2xl text-primary">Lietotāja apskate</span>
+            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
           </div>
+          <Divider />
           <div class="overflow-y-auto w-100">
             <div class="row g-3 container-fluid mx-auto">
               <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
@@ -120,17 +113,32 @@
               </Fieldset>
               <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
                 <label>{{ $t(`table.users.iban_code`) }}</label>
-                <span>{{ instance.iban_code }}</span>
+                <span>{{ instance.iban_code ?? `-` }}</span>
               </div>
+              <Fieldset legend="Lomas">
+                <div class="row">
+                  <template v-for="role in instance.all_roles">
+                    <div
+                        class="d-flex flex-column col-lg-3 col-sm-4 col-12"
+                        v-if="role.userHas"
+                    >
+                      <Chip
+                          :label="role.name"
+                          style="height: 100%;"
+                      />
+                    </div>
+                  </template>
+                </div>
+              </Fieldset>
             </div>
           </div>
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link :to="{ name: `EditInstructor`, params: { id: `03120421576` } }">
+              <router-link :to="{ name: `EditUser`, params: { id: instance.person_code } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="fetchDataStore.dispatch('deleteInstance', { databaseTable: 'instructors', instanceId: 3 })">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`users`, instance.person_code); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>
@@ -191,7 +199,6 @@ let visible = ref(false);
 onBeforeMount(async () => {
   await fetchDataStore.fetchDatabaseData("users");
 });
-
 </script>
 
 <style scoped>
