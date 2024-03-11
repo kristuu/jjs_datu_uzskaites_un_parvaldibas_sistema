@@ -15,11 +15,6 @@ class RegionController extends Controller
     private array $globalFilterFields = ['name', 'country.name'];
     private array $relationships = ['country'];
 
-    public function getRegionsColumnNames() {
-        $model = new Region;
-        return $this->sendResponse($this->getColumnNames($model));
-    }
-
     public function getAllRegions()
     {
         $relationships = ['country'];

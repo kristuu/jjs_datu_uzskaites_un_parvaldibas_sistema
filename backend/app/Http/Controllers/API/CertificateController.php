@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Certificate;
+use App\Http\Requests\CertificateRequest;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Http\Traits\PaginationTrait;
+
+class CertificateController extends Controller
+{
+    use PaginationTrait;
+
+    private array $globalFilterFields = ['name'];
+
+    public function getAllCertificates()
+    {
+        return $this->getAll(
+            Certificate::class,
+            $this->globalFilterFields,
+            [
+                "categories"
+            ]);
+    }
+
+    public function getPaginatedCertificates(CertificateRequest $request)
+    {
+        return $this->getPaginated($request,
+                          Certificate::class,
+                                   [],
+                                   $request->perPage,
+                                   $this->globalFilterFields);
+    }
+
+    public function getUnusedCertificates()
+    {
+        $certificates = Certificate::doesntHave("instructors")->get();
+        return $this->sendResponse([$this->globalFilterFields, $certificates]);
+    }
+
+    public function storeCertificate(CertificateRequest $request)
+    {
+        return $this->store($request, Certificate::class);
+    }
+
+    public function findCertificateById(string $id)
+    {
+        return $this->findById(Certificate::class, $id, ["categories"]);
+    }
+
+    public function updateCertificate(CertificateRequest $request, string $id)
+    {
+        return $this->update($request, $id, Certificate::class);
+    }
+
+    public function destroyCertificate(string $id)
+    {
+        return $this->destroy($id, Certificate::class);
+    }
+
+    private function getResponseWithMessage(string $message, int $status)
+    {
+        return response()->json(['status' => $status, 'message' => $message], $status);
+    }
+}

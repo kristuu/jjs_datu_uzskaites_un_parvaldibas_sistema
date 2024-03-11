@@ -23,7 +23,6 @@ const props = defineProps({
   databaseTable: String,
   modelName: String,
   personCode: String,
-  instance: Array,
   headers: Array,
 });
 
@@ -33,6 +32,7 @@ console.log(isUpdateMode);
 onBeforeMount(() => {
   if (!isUpdateMode) {
     fetchDataStore.resetInstance();
+    console.log(`Instance reset`)
   } else {
     fetchDataStore.fetchInstance(props.databaseTable, route.params.id);
   }

@@ -1,31 +1,3 @@
-<script setup>
-import {capitalize, computed, onBeforeMount, ref} from "vue";
-import { useFetchDataStore } from "@/stores/fetchDataStore";
-import { useErrorStore } from "@/stores/errorStore";
-
-import AdminForm from "@/components/AdminForm.vue";
-import InputError from "@/components/error/inputError.vue";
-import axios from "@/services/axios";
-
-const fetchDataStore = useFetchDataStore();
-let instance = computed(() => fetchDataStore.instance);
-const errorStore = useErrorStore();
-
-let permissions = ref([]);
-
-let errorList = computed(() => errorStore.errorList);
-
-onBeforeMount(async () => {
-  const { data } =  await axios.get(`/permissions`);
-  const permissions = data.instances.map(permission => ({
-    ...permission, checked: false
-  }));
-
-
-  fetchDataStore.setProperty(`permissions`, permissions);
-});
-</script>
-
 <template>
 <AdminForm v-if="can('manage roles')"
            :page-name="$t(`pageHeadings.roles.roles`)"
@@ -61,6 +33,34 @@ onBeforeMount(async () => {
   </form>
 </AdminForm>
 </template>
+
+<script setup>
+import {capitalize, computed, onBeforeMount, ref} from "vue";
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+import { useErrorStore } from "@/stores/errorStore";
+
+import AdminForm from "@/components/AdminForm.vue";
+import InputError from "@/components/error/inputError.vue";
+import axios from "@/services/axios";
+
+const fetchDataStore = useFetchDataStore();
+let instance = computed(() => fetchDataStore.instance);
+const errorStore = useErrorStore();
+
+let permissions = ref([]);
+
+let errorList = computed(() => errorStore.errorList);
+
+onBeforeMount(async () => {
+  const { data } =  await axios.get(`/permissions`);
+  const permissions = data.instances.map(permission => ({
+    ...permission, checked: false
+  }));
+
+
+  fetchDataStore.setProperty(`permissions`, permissions);
+});
+</script>
 
 <style scoped>
 

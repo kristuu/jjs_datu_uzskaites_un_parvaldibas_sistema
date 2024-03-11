@@ -35,8 +35,7 @@ let errorList = computed(() => errorStore.errorList);
           <div class="row">
             <div class="col-12 col-sm-6 d-flex align-items-center" v-for="(permission, index) in instance.permissions" :key="index">
               <InputSwitch v-model="instance.permissions[index].checked"
-                           :invalid="errorList.permissions"
-                           @update:modelValue="console.log(instance.permissions)"/>
+                           :invalid="errorList.permissions"/>
               <label class="ms-2">{{ capitalize(permission.name) }}</label>
             </div>
           </div>

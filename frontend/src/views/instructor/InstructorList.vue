@@ -166,10 +166,10 @@
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link :to="{ name: `EditInstructor`, params: { id: `03120421576` } }">
+              <router-link :to="{ name: `EditInstructor`, params: { id: instance.id } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="fetchDataStore.dispatch('deleteInstance', { databaseTable: 'instructors', instanceId: 3 })">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`instructors`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>

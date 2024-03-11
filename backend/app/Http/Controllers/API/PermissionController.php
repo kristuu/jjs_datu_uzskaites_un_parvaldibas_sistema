@@ -14,11 +14,6 @@ class PermissionController extends Controller
 
     private array $globalFilterFields = ['name', 'guard_name'];
 
-    public function getPermissionsColumnNames() {
-        $model = new Permission;
-        return $this->sendResponse($this->getColumnNames($model));
-    }
-
     public function getAllPermissions()
     {
         return $this->getAll(Permission::class, $this->globalFilterFields);
