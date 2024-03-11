@@ -8,13 +8,11 @@
         :instance-id-column="'id'"
         :short-desc="$t(`pageHeadings.countries.in total x countries`, {total: totalInstances})"
         :filterOptions="filterOptions"
-        @updateItems="newItems => items.value = newItems"
-        @update:totalInstances="handleTotalInstancesUpdate"
     >
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
+                 selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
         <template #header>
           <div class="flex justify-content-between flex-wrap mb-2 mt-2">
             <IconField iconPosition="left">
@@ -50,7 +48,7 @@
           <template #body="{ data }">
             <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
                                 @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
-            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`permissions`, instance.id)" outlined rounded />
+            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`countries`, data.id)" outlined rounded />
           </template>
         </Column>
       </DataTable>
@@ -83,10 +81,10 @@
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link v-if="instance.id" :to="{ name: `EditPermission`, params: { id: instance.id } }">
+              <router-link v-if="instance.id" :to="{ name: `EditCountry`, params: { id: instance.id } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`permissions`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`countries`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>

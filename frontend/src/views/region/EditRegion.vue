@@ -1,15 +1,17 @@
 <script setup>
 import {computed, ref, watch} from "vue";
-import { useStore } from 'vuex';
+import {useFetchDataStore} from "@/stores/fetchDataStore";
+import {useErrorStore} from "@/stores/errorStore";
 import axios from '@/services/axios';
 
 import AdminForm from "@/components/AdminForm.vue";
 import InputError from "@/components/error/inputError.vue";
 
-const store = useStore();
-let formInstance = computed(() => store.state.formInstance);
+const fetchDataStore = useFetchDataStore();
+let instance = computed(() => fetchDataStore.instance);
+const errorStore = useErrorStore();
 
-let selectedCountry = ref(null);
+let selectedCountry = ref(instance.country);
 let countryList = ref([]);
 axios.get(`/countries`)
     .then(response => {
@@ -19,13 +21,9 @@ axios.get(`/countries`)
       console.error(e);
     })
 
-let errorList = ref({});
+let errorList = computed(() => errorStore.errorList);
 
-const handleErrorListUpdate = (updatedErrorList) => {
-  errorList.value = updatedErrorList;
-}
-
-watch(formInstance, (newValue) => {
+watch(instance, (newValue) => {
   if (newValue) {
     selectedCountry.value = newValue.country;
   }
@@ -43,7 +41,7 @@ watch(formInstance, (newValue) => {
       <div class="col-12">
         <div class="flex flex-column gap-1">
           <label for="name">Nosaukums</label>
-          <InputText v-model="formInstance.name"
+          <InputText v-model="instance.name"
                      :invalid="errorList.name"
                      id="name"/>
           <InputError :errors="errorList.name" />
@@ -53,12 +51,12 @@ watch(formInstance, (newValue) => {
         <div class="d-flex flex-column gap-1">
           <label for="country">Piederīgā valsts</label>
           <Dropdown v-model="selectedCountry"
-                    @update:modelValue="formInstance.country_id = selectedCountry.id"
+                    @update:modelValue="instance.country_id = selectedCountry.id"
                     :options="countryList"
                     optionLabel="name"
-                    :invalid="errorList.name"
+                    :invalid="errorList.country_id"
                     id="country" filter/>
-          <InputError :errors="errorList.name" />
+          <InputError :errors="errorList.country_id" />
         </div>
       </div>
     </form>

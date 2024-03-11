@@ -60,7 +60,7 @@
           <template #body="{ data }">
             <!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
                                 @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
-            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`permissions`, instance.id)" outlined rounded />
+            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`regions`, data.id)" outlined rounded />
           </template>
         </Column>
       </DataTable>
@@ -98,10 +98,10 @@
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link v-if="instance.id" :to="{ name: `EditPermission`, params: { id: instance.id } }">
+              <router-link v-if="instance.id" :to="{ name: `EditRegion`, params: { id: instance.id } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`permissions`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`regions`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>

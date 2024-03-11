@@ -6,6 +6,7 @@ export const useErrorStore = defineStore({
     state: () => ({
         errorStatus: null,
         errorMessage: "",
+        errorList: {},
     }),
     actions: {
         setErrorStatus(payload) {
@@ -14,9 +15,15 @@ export const useErrorStore = defineStore({
         setErrorMessage(payload) {
             this.errorMessage = payload;
         },
+        setErrorList(payload) {
+            this.errorList = payload;
+        },
         resetError() {
             this.errorStatus = null;
             this.errorMessage = "";
+        },
+        resetErrorList() {
+            this.errorList = {};
         },
         async displayError(error) {
             this.resetError();

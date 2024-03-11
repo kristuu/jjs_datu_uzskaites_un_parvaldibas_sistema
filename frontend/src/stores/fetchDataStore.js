@@ -1,12 +1,14 @@
 import axios from "@/services/axios.js";
 import {defineStore} from "pinia";
 import {useDateStore} from "@/stores/dateStore";
+import {useErrorStore} from "@/stores/errorStore";
+import router from "@/router/router";
 
 export const useFetchDataStore = defineStore({
     id: "fetchData",
     state: () => ({
-        instance: null,
-        allInstances: null,
+        instance: {},
+        allInstances: [],
         totalInstanceCount: 0,
         isLoading: false,
     }),
@@ -24,10 +26,10 @@ export const useFetchDataStore = defineStore({
             this.instance = payload;
         },
         resetAllInstances() {
-            this.allInstances = null;
+            this.allInstances = [];
         },
         resetInstance() {
-            this.instance = null;
+            this.instance = {};
         },
         async fetchDatabaseData(databaseTable) {
             this.resetAllInstances();
@@ -57,17 +59,36 @@ export const useFetchDataStore = defineStore({
                 this.setLoading(false);
             }
         },
-        async createInstance(databaseTable, instance) {
-          const dateStore = useDateStore();
-          this.setLoading(true);
-          try {
-              dateStore.formatDatesOnInstance(instance);
-              await axios.post(`/${databaseTable}`, instance);
-              this.resetInstance();
-              await router.push(`/admin/${databaseTable}`);
-          } catch (error) {
-              toast.add()
-          }
+        async createInstance(databaseTable) {
+            console.log(this.instance);
+            useErrorStore().resetErrorList();
+            this.setLoading(true);
+            try {
+                useDateStore().formatDatesOnInstance(this.instance);
+                await axios.post(`/${databaseTable}`, this.instance);
+                this.resetInstance();
+                await router.push(`/admin/${databaseTable}`);
+            } catch (error) {
+                useErrorStore().setErrorList(error.response.data);
+            } finally {
+                this.setLoading(false);
+            }
+        },
+        async updateInstance(databaseTable, instanceId) {
+            console.log(this.instance);
+            useErrorStore().resetErrorList();
+            this.setLoading(true);
+            try {
+                useDateStore().formatDatesOnInstance(this.instance);
+                const response = await axios.put(`/${databaseTable}/${instanceId}`, this.instance);
+                console.log(`After update response:` + response);
+                this.resetInstance();
+                await router.push(`/admin/${databaseTable}`);
+            } catch (error) {
+                useErrorStore().setErrorList(error.response.data);
+            } finally {
+                this.setLoading(false);
+            }
         },
         async deleteInstance(databaseTable, instanceId) {
             try {

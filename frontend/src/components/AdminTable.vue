@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router';
 import router from "@/router/router";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 
-const store = useFetchDataStore();
+const fetchDataStore = useFetchDataStore();
 const route = useRoute();
 
 const props = defineProps({
@@ -12,14 +12,10 @@ const props = defineProps({
   databaseTable: String,
   modelName: String,
 });
-
-const emit = defineEmits({
-  'update:totalInstances': null,
-});
 </script>
 
 <template>
-  <div v-if="!store.isLoading">
+  <div v-if="!fetchDataStore.isLoading">
     <div v-if="can('list instances')">
       <div class="flex justify-content-between text-white mb-3">
         <div class="flex align-items-baseline">

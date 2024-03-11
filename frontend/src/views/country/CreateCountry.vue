@@ -1,13 +1,16 @@
 <script setup>
-import {ref, computed} from "vue";
+import {ref, computed, onBeforeMount} from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
+import { useErrorStore } from "@/stores/errorStore";
 
 import AdminForm from "@/components/AdminForm.vue";
 import InputError from "@/components/error/inputError.vue";
 
 const fetchDataStore = useFetchDataStore();
+const errorStore = useErrorStore();
+
 let instance = computed(() => fetchDataStore.instance);
-let errorList = ref({});
+let errorList = computed(() => errorStore.errorList);
 
 const handleErrorListUpdate = (updatedErrorList) => {
   errorList.value = updatedErrorList;
