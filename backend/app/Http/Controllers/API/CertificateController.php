@@ -34,10 +34,17 @@ class CertificateController extends Controller
                                    $this->globalFilterFields);
     }
 
-    public function getUnusedCertificates()
+    public function getUnusedCertificates($instructorId)
     {
-        $certificates = Certificate::doesntHave("instructors")->get();
-        return $this->sendResponse([$this->globalFilterFields, $certificates]);
+        $certificates = Certificate::where(function ($query) use ($instructorId) {
+            $query->doesntHave("instructor");
+            if (!is_null($instructorId)) {
+                $query->orWhereHas("instructor", function ($query) use ($instructorId) {
+                    $query->where("id", "=", $instructorId);
+                });
+            }
+        })->get();
+        return $this->sendResponse($certificates);
     }
 
     public function storeCertificate(CertificateRequest $request)

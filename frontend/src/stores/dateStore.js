@@ -14,7 +14,8 @@ export const useDateStore = defineStore({
         formatDatesOnInstance(instance) {
             if (instance) {
                 Object.keys(instance).forEach((key) => {
-                    if (key === 'birthdate') {
+                    if (key === 'birthdate' ||
+                        key === 'job_start_date') {
                         let date;
 
                         if (instance[key] instanceof Date) {

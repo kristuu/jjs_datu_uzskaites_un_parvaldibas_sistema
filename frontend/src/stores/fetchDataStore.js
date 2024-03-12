@@ -84,11 +84,11 @@ export const useFetchDataStore = defineStore({
             try {
                 useDateStore().formatDatesOnInstance(this.instance);
                 const response = await axios.put(`/${databaseTable}/${instanceId}`, this.instance);
-                console.log(`After update response:` + response);
+                console.log(response);
                 this.resetInstance();
                 await router.push(`/admin/${databaseTable}`);
             } catch (error) {
-                useErrorStore().setErrorList(error.response.data);
+                useErrorStore().setErrorList(error.response.data.errors);
             } finally {
                 this.setLoading(false);
             }

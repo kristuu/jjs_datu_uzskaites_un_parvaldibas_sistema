@@ -86,10 +86,8 @@
           </template>
         </Column>
         <Column :exportable="false">
-          <template #body>
-<!--            <Button icon="bi bi-pencil-fill" outlined rounded class="mr-2"
-                    @click="router.push({ name: 'EditInstructor', params: { id: 0 } })"/>-->
-            <Button icon="bi bi-trash-fill" @click="" outlined rounded />
+          <template #body="{ data }">
+            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`instructors`, data.id)" outlined rounded />
           </template>
         </Column>
       </DataTable>
@@ -98,26 +96,31 @@
     <Sidebar v-model:visible="visible" position="bottom" style="height:40rem; max-height: 90vh;">
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full container">
-          <div class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0">
-                        <span class="inline-flex align-items-center gap-2">
-                            <img src="@/assets/logo-red.svg" width="50" />
-                            <span class="font-semibold text-2xl text-primary">Trenera apskate</span>
-                        </span>
-            <span>
-                            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
-                        </span>
+          <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+            <img src="@/assets/logo-red.svg" width="50" />
+            <span class="font-semibold text-2xl text-primary ms-1">{{ $t(`details_sidebar.user`) }}</span>
+            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
           </div>
+          <Divider />
           <div class="overflow-y-auto w-100">
-            <div class="row gap-3 container-fluid mx-auto">
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+            <div class="row g-3 container-fluid mx-auto">
+              <div class="d-flex flex-column col-sm-6 col-12">
                 <label>ID</label>
                 <span>{{ instance.id }}</span>
               </div>
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+              <div class="d-flex flex-column col-sm-6 col-12">
                 <label>{{ $t(`table.instructors.job_start_date`) }}</label>
                 <span>{{ instance.job_start_date }}</span>
               </div>
-              <Fieldset legend="Sertifikāts">
+              <div class="d-flex flex-column col-12">
+                <label>{{ $t(`table.instructors.short_description`) }}</label>
+                <span>{{ instance.short_description }}</span>
+              </div>
+              <div class="d-flex flex-column col-12">
+                <label>{{ $t(`table.instructors.description`) }}</label>
+                <span>{{ instance.description }}</span>
+              </div>
+              <Fieldset :legend="$t(`table.instructors.certificate`)">
                 <div class="row">
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.instructors.categories.name`) }}</label>
@@ -133,7 +136,7 @@
                   </div>
                 </div>
               </Fieldset>
-              <Fieldset legend="Lietotājs">
+              <Fieldset :legend="$t(`table.instructors.user`)">
                 <div class="row">
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.name`) }}</label>

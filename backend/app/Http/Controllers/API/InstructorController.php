@@ -52,9 +52,7 @@ class InstructorController extends Controller
 
     public function updateInstructor(InstructorRequest $request, string $id)
     {
-        $instructor = Instructor::find($id);
-
-
+        return $this->update($request, $id, Instructor::class);
     }
 
     public function destroyInstructor(string $id)

@@ -100,9 +100,25 @@
       },
       "categories": {
         "name": "Category"
-      }
+      },
+      "certificate": "Certificate",
+      "user": "User",
+      "choose_user": "Choose a user"
     },
     "created_at": "Created",
-    "updated_at": "Updated"
-  }
+    "updated_at": "Updated",
+    "info": {
+      "max_characters": "Max {total} characters"
+    }
+  },
+  "details_sidebar": {
+    "user": "User details",
+    "instructor": "Instructor details",
+    "role": "Role details",
+    "permission": "Permission details",
+    "country": "Country details",
+    "region": "Region details"
+  },
+  "This action is unauthorized.": "This action is unauthorized.",
+  "user_details_not_editable": "User details cannot be edited in this view."
 }

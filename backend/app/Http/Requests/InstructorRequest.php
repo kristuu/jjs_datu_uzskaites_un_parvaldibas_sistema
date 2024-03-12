@@ -10,8 +10,10 @@ class InstructorRequest extends FormRequest
     {
         return [
             'job_start_date' => ['required', 'date'],
-            'user_person_code' => ['required', 'integer'],
+            'user_person_code' => ['required', ''],
             'certificate_id' => ['required', 'integer'],
+            'short_description' => ['nullable', 'max:100'],
+            'description' => ['nullable', 'max:65535']
         ];
     }
 

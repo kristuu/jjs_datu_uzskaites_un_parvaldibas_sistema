@@ -21,6 +21,8 @@ class Instructor extends Model
         'job_start_date',
         'user_person_code',
         'certificate_id',
+        'short_description',
+        'description'
     ];
 
     /**

@@ -55,7 +55,7 @@
           <template #footer>
             <div class="d-flex align-items-center justify-content-center gap-1">
               <i class="bi bi-exclamation-circle-fill" />
-              <small class="secondary"> Lietotāju šajā skatā rediģēt nav iespējams</small>
+              <small class="secondary"> {{ $t(`user_details_not_editable`) }}</small>
             </div>
           </template>
         </Panel>
@@ -70,16 +70,53 @@
         </div>
       </div>
       <div class="col-12">
+        <label>{{ $t(`table.instructors.short_description`) }}</label>
+        <Textarea
+            v-model="instance.short_description"
+            rows="3" autoResize
+            style="width: 100%; max-width: 100%;"
+            :invalid="errorList.short_description" />
+        <InputError :errors="errorList.short_description" />
+      </div>
+      <div class="col-12">
+        <label>{{ $t(`table.instructors.description`) }}</label>
+        <Textarea
+            v-model="instance.description"
+            rows="6" autoResize
+            style="width: 100%; max-width: 100%;"
+            :invalid="errorList.description" />
+        <InputError :errors="errorList.description" />
+      </div>
+      <div class="col-12" v-if="instance.certificate">
         <Panel header="Sertifikāts">
           <div class="row">
-            <div class="col-12" v-if="instance.certificate">
+            <div class="col-12">
               <div class="flex flex-column gap-1">
-                <label>{{ $t(`table.id`) }}</label>
                 <Dropdown v-model="instance.certificate"
-                          :options="certificateList"
-                           :invalid="errorList.certificate?.id"/>
+                          @update:modelValue="value => { instance.certificate_id = value.id }"
+                          :options="certificateList" filter resetFilterOnHide
+                          :optionLabel="displayCertificate"
+                          :invalid="errorList.certificate?.id"/>
                 <InputError :errors="errorList.certificate?.id" />
               </div>
+            </div>
+            <div class="col-12">
+              <Fieldset legend="Izvēlēts">
+                <div class="row">
+                  <div class="d-flex flex-column col-md-4 col-12">
+                    <label>{{ $t(`table.id`) }}</label>
+                    <span>{{ instance.certificate.id }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-md-4 col-12">
+                    <label>{{ $t(`table.instructors.categories.name`) }}</label>
+                    <span>{{ instance.certificate.category.name }}</span>
+                  </div>
+                  <div class="d-flex flex-column col-md-4 col-12">
+                    <label>{{ $t(`table.instructors.certificates.expiration_date`) }}</label>
+                    <span>{{ instance.certificate.expiration_date }}</span>
+                  </div>
+                </div>
+              </Fieldset>
             </div>
           </div>
         </Panel>
@@ -89,10 +126,13 @@
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import axios from "@/services/axios";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import { useErrorStore } from "@/stores/errorStore";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 import AdminForm from "@/components/AdminForm.vue";
 import InputError from "@/components/error/inputError.vue";
@@ -106,21 +146,17 @@ let errorList = computed(() => errorStore.errorList);
 let categoryList = ref();
 let certificateList = ref();
 
-axios.get(`/categories`)
+axios.get(`/unused_certificates/${route.params.id}`)
     .then(response => {
-      categoryList.value = response.data.instances;
+      certificateList.value = response.data;
+      console.log(`INSTANCE ID: ${route.params.id}`)
+      console.log(certificateList.value);
     })
     .catch(error => {
       console.error(error);
-    })
+    });
 
-axios.get(`/unused_certificates`)
-    .then(response => {
-      certificateList.value = response.data.instances;
-    })
-    .catch(error => {
-      console.error(error);
-    })
+const displayCertificate = (certificate) => `${certificate.id} - ${certificate.category.name}`;
 </script>
 
 <style scoped>

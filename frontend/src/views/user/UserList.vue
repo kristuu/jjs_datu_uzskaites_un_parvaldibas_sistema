@@ -77,7 +77,7 @@
         <div class="flex flex-column h-full container">
           <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
             <img src="@/assets/logo-red.svg" width="50" />
-            <span class="font-semibold text-2xl text-primary">Lietotāja apskate</span>
+            <span class="font-semibold text-2xl text-primary ms-1">{{ $t(`details_sidebar.user`) }}</span>
             <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
           </div>
           <Divider />

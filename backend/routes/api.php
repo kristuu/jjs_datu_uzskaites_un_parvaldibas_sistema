@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod) {
-    Route::middleware(['auth:sanctum', 'can:manage ' . $base])->group(function () use ($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod) {
+    Route::group(['middleware' => ['auth:sanctum', 'can:manage ' . $base]], function () use ($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod) {
         Route::get("/{$base}", [$controller, $getAllMethod]);
         Route::get("/{$base}/{id}", [$controller, $getMethod]);
         Route::middleware('can:create instances')->post("/{$base}", [$controller, $storeMethod]);
@@ -44,8 +44,8 @@ Route::middleware('auth:sanctum')->group(function () {
     registerResourceRoutes('certificates', CertificateController::class, 'getAllCertificates', 'findCertificateById', 'storeCertificate', 'updateCertificate', 'destroyCertificate');
     registerResourceRoutes('categories', CategoryController::class, 'getAllCategories', 'findCategoryById', 'storeCategory', 'updateCategory', 'destroyCategory');
 
-    Route::middleware(["can:manage certificates|manage instructors"])->group(function() {
-        Route::get("/unused_certificates", [CertificateController::class, "getUnusedCertificates"]);
+    Route::group(['middleware' => ['permission:manage instructors|manage certificates']], function () {
+        Route::get("/unused_certificates/{instructorId}", [CertificateController::class, "getUnusedCertificates"]);
     });
 });
 

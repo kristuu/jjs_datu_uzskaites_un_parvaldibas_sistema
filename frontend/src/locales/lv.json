@@ -95,15 +95,31 @@
       "user_person_code": "Personas kods",
       "certificate_id": "Sertifikāta ID",
       "description": "Apraksts",
+      "short_description": "Īss apraksts",
       "certificates": {
         "expiration_date": "Derīgs līdz"
       },
       "categories": {
         "name": "Kategorija"
-      }
+      },
+      "certificate": "Sertifikāts",
+      "user": "Lietotājs",
+      "choose_user": "Izvēlēties lietotāju"
     },
     "created_at": "Izveidots",
-    "updated_at": "Atjaunināts"
+    "updated_at": "Atjaunināts",
+    "info": {
+      "max_characters": "Maksimums {total} rakstzīmju"
+    }
   },
-  "This action is unauthorized.": "Jums nav tiesību veikt šo darbību."
+  "details_sidebar": {
+    "user": "Lietotāja pārskats",
+    "instructor": "Trenera pārskats",
+    "role": "Lomas pārskats",
+    "permission": "Tiesības pārskats",
+    "country": "Valsts pārskats",
+    "region": "Reģiona pārskats"
+  },
+  "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
+  "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams."
 }
