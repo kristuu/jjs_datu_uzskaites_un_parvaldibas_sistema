@@ -22,21 +22,14 @@ class AuthController extends Controller
             'password' => ['string', 'required', 'min:8', 'confirmed'],
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'surname' => $validated['surname'],
-            'person_code' => $validated['person_code'],
-            'birthdate' => $validated['birthdate'],
-            'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
-        ]);
+        $user = User::create($validated);
 
         return response()->json(['user' => $user], 201);
     }
 
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
@@ -47,18 +40,22 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Neeksistējoša e-pasta adrese vai nesaderīga e-pasta un paroles kombinācija'
             ], 401);
+        } else {
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+
+                return response()->json(['user' => $user]);
+            }
         }
-
-        $token = $user->createToken('authToken')->plainTextToken;
-
-        return response()->json(['user' => $user, 'token' => $token]);
 
 
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        auth()->user()->tokens()->delete();
+        Auth::guard("web")->logout();
+
+        $request->session()->invalidate();
 
         // return json response with the default 200 HTTP status code
         return response()->json(['message' => 'Autentifikācijas sesija beigta']);

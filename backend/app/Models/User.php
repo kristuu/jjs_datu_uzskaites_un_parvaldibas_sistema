@@ -65,6 +65,11 @@ class User extends Authenticatable
         'phone' => E164PhoneNumberCast::class,
     ];
 
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes["password"] = bcrypt($value);
+    }
+
     public function address() : BelongsTo
     {
         return $this->belongsTo(Address::class);
