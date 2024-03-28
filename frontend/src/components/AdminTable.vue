@@ -17,16 +17,11 @@ const props = defineProps({
 <template>
   <div v-if="!fetchDataStore.isLoading">
     <div v-if="can('list instances')">
-      <div class="flex justify-content-between text-white mb-3">
-        <div class="flex align-items-baseline">
-          <h1 class="fw-bold">{{ props.pageName }}</h1>
+      <div class="flex flex-column lg:flex-row sm:justify-content-between text-primary lg:text-white mb-3">
+        <div class="flex flex-column lg:flex-row align-items-baseline">
+          <h1 class="fw-bold mb-0">{{ props.pageName }}</h1>
           <span class="ml-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
         </div>
-        <Button v-if="can('create instances')"
-                icon="bi bi-plus-lg"
-                rounded raised
-                @click="router.push({ name: 'Create' + modelName})">
-        </Button>
       </div>
       <div class="container-fluid content-card bg-white shadow-lg">
         <slot></slot>

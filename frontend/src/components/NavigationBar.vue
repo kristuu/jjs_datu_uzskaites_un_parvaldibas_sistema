@@ -66,67 +66,9 @@ const changeLocale = async (newLocale) => {
       </Menubar>
     </div>
   </div>
-
-  <div v-if="path.startsWith('/admin') && authorized">
-    <div class="nav-scroller container-xl mt-2 mb-2" @wheel="scrollX">
-      <TabMenu :model="adminItems" class="nav p-2" aria-label="Admin navigation">
-        <template #item="{ item, props }">
-          <router-link v-if="item.route && item.icon !== 'divider'" v-slot="{ href, navigate }" :to="item.route" custom>
-            <a :href="href" v-bind="props.action" @click="navigate">
-              <span :class="item.icon" />
-              <span class="ml-2">{{ item.label }}</span>
-            </a>
-          </router-link>
-          <Divider v-else-if="item.icon === 'divider'" layout="vertical" />
-          <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-            <span :class="item.icon" />
-            <span class="ml-2">{{ item.label }}</span>
-          </a>
-        </template>
-      </TabMenu>
-    </div>
-  </div>
 </template>
 
 <style scoped>
-.navbar .dropdown-menu {
-  z-index: 1050;
-  position: absolute;
-}
-
-.navbar {
-  position: relative;
-}
-
-.navbar-overlap:after {
-  height: 13rem;
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: inherit;
-  z-index: -1;
-  box-shadow: inherit;
-}
-
-.nav-scroller {
-  position: relative;
-  z-index: 2;
-  height: 2.75rem;
-  overflow-y: hidden;
-}
-
-.nav-scroller .nav {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  text-align: center;
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-  background-color: rgba(255, 255, 255, .75);
-}
-
 .avatar {
   display: inline-flex;
   align-items: center;

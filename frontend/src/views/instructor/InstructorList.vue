@@ -13,7 +13,7 @@
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
                  :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e); checkCertificateExpiry(); }">
         <template #header>
-          <div class="flex justify-content-between flex-wrap mb-2 mt-2">
+          <div class="justify-content-between flex-wrap mb-2 mt-2 hidden sm:flex">
             <IconField iconPosition="left">
               <InputIcon>
                 <i class="pi pi-search" />

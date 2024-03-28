@@ -126,8 +126,30 @@ label {
     font-weight: bold;
 }
 
+.navbar .dropdown-menu {
+    z-index: 1050;
+    position: absolute;
+}
+
+.navbar {
+    position: relative;
+}
+
 .navbar-overlap, .p-menubar {
     background-color: var(--yrs-primary-shaded-10) !important;
+}
+
+/* lg sized screen breakpoint 992px (starting from 992) */
+@media only screen and (max-width: 991px) {
+    .navbar-overlap:after {
+        height: 0 !important;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .navbar-overlap:after {
+        height: 13rem !important;
+    }
 }
 
 .navbar-brand:hover {

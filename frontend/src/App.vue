@@ -2,7 +2,7 @@
   <NavigationBar />
   <div id="app">
     <main class="container-xl">
-      <div class="flex justify-content-end mt-2 mb-3">
+      <div class="hidden lg:flex justify-content-end mt-2 mb-3">
         <Breadcrumb :home="home" :model="crumbs" class="text-white">
           <template #item="{ item, props }">
             <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
