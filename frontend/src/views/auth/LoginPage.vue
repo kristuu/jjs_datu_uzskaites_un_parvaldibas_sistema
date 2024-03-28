@@ -1,59 +1,71 @@
-<script>
-import axios from '@/services/axios'
-
-export default {
-  data() {
-    return {
-      email: "",
-      password: ""
-    };
-  },
-  methods: {
-    async login() {
-      try {
-        const response = await axios.post("/login", {
-          email: this.email,
-          password: this.password
-        });
-
-        // if response delivers a token, it gets stored in local storage
-        if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
-          axios.defaults.headers.authorization = `Bearer ${response.data.token}`;
-
-          console.log(response.data.user);
-          // redirecting to home page
-          this.$router.push('/');
-        }
-      } catch (e) {
-        console.error("Radusies kļūda: ", e);
-      }
-    }
-  }
-};
-</script>
-
 <template>
-  <div class="main-frame w-100 m-auto text-start">
-    <form @submit.prevent="login">
-      <img class="mb-4" src="../../assets/logo-red.svg" alt width="72"/>
-      <h1 class="h3 mb-3 fw-normal">Autorizācija</h1>
-      <div class="form-floating">
-        <input type="email" class="form-control" id="email" v-model="email" placeholder="E-pasta adrese" required />
-        <label for="email" class="fw-normal">E-pasta adrese</label>
+  <Transition name="fade" mode="out-in">
+    <div v-if="show">
+      <div class="mt-4 container-xl text-black" style="max-width: 480px;">
+        <div class="bg-white shadow rounded-2 p-3">
+          <div class="row">
+            <h1 :class="errorStore.mainLoginError ? `mb-0` : `mb-4`" style="font-weight:900">AUTORIZĀCIJA</h1>
+            <div class="col-12 flex flex-column gap-1">
+              <Message severity="error" v-if="errorStore.mainLoginError" :closable="false">
+                <span>{{ errorStore.mainLoginError }}</span>
+              </Message>
+              <label>E-pasta adrese</label>
+              <InputText
+                  v-model="instance.email"
+                  class="w-100"
+                  :invalid="errorList.email"
+                  :disabled="fetchDataStore.isProcessing"
+              />
+              <InputError :errors="errorList.email" />
+            </div>
+            <div class="col-12 flex flex-column gap-1">
+              <label>Parole</label>
+              <Password
+                  class="d-flex flex-column"
+                  v-model="instance.password"
+                  :feedback="false"
+                  :invalid="errorList.password"
+                  :disabled="fetchDataStore.isProcessing"
+              />
+              <InputError :errors="errorList.password" />
+            </div>
+          </div>
+          <div class="mt-3 col-12 text-center">
+            <router-link :to="{ name: `RegisterPage` }" class="text-decoration-none text-black">
+              <Button text>Nepieciešams reģistrēties?</Button>
+            </router-link>
+          </div>
+        </div>
+        <div class="mt-2">
+          <Button severity="primary" label="IENĀKT" raised @click="useAuthStore().login"/>
+        </div>
       </div>
-      <div class="form-floating">
-        <input type="password" class="form-control" id="password" v-model="password" placeholder="Parole" required />
-        <label for="password" class="fw-normal">Parole</label>
-      </div>
-      <button type="submit" class="btn btn-primary w-100 py-2 mt-5">Ienākt</button>
-    </form>
-  </div>
+    </div>
+  </Transition>
 </template>
 
+<script setup>
+import { useFetchDataStore } from "@/stores/fetchDataStore";
+import {computed, onMounted} from "vue";
+
+import FloatLabel from "primevue/floatlabel";
+
+import {useErrorStore} from "@/stores/errorStore";
+import {useAuthStore} from "@/stores/authStore";
+
+const fetchDataStore = useFetchDataStore();
+const errorStore = useErrorStore();
+
+let show = computed(() => fetchDataStore.show);
+
+let instance = computed(() => fetchDataStore.instance);
+let errorList = computed(() => errorStore.errorList);
+
+onMounted(() => {
+  fetchDataStore.showComponents();
+});
+</script>
+
 <style scoped>
-  .main-frame {
-    max-width: 330px;
-    padding: 1rem;
-  }
+
 </style>

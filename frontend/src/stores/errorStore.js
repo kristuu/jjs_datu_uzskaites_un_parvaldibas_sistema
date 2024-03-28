@@ -7,8 +7,12 @@ export const useErrorStore = defineStore({
         errorStatus: null,
         errorMessage: "",
         errorList: {},
+        mainLoginError: ""
     }),
     actions: {
+        setMainLoginError(payload) {
+            this.mainLoginError = payload;
+        },
         setErrorStatus(payload) {
             this.errorStatus = payload;
         },
@@ -17,6 +21,9 @@ export const useErrorStore = defineStore({
         },
         setErrorList(payload) {
             this.errorList = payload;
+        },
+        resetMainLoginError() {
+            this.mainLoginError = "";
         },
         resetError() {
             this.errorStatus = null;
@@ -28,7 +35,7 @@ export const useErrorStore = defineStore({
         async displayError(error) {
             this.resetError();
             this.setErrorStatus(error.status);
-            this.setErrorMessage(error.data.message);
+            this.setErrorMessage(error);
             try {
                 await router.push({ name: "ErrorView" });
             } catch (routerError) {

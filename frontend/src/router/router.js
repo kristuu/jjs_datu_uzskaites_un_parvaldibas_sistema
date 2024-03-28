@@ -29,6 +29,10 @@ import InstructorList from "@/views/instructor/InstructorList.vue";
 import CreateInstructor from "@/views/instructor/CreateInstructor.vue";
 import EditInstructor from "@/views/instructor/EditInstructor.vue";
 
+import {useFetchDataStore} from "@/stores/fetchDataStore";
+import {useErrorStore} from "@/stores/errorStore";
+import {useAuthStore} from "@/stores/authStore";
+
 const routes = [
     {
         path: '/',
@@ -141,23 +145,37 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
+    history: createWebHistory(process.env.BASE_URL),
+    routes
 });
 
-router.beforeEach(async (to, from, next) => {
-    if (to.meta.public) {
-        next();
-    } else {
-        const store = await import ("@/stores/authStore.js")
-            .then(module => module.useAuthStore());
-        await store.checkAuth();
-        if (store.authorized) {
+router.beforeEach((to, from, next) => {
+    const fetchDataStore = useFetchDataStore();
+    fetchDataStore.hideComponents()
+        .then(() => {
+            if (to.meta.public) {
+                next();
+            } else {
+                const authStore = useAuthStore();
+                authStore.checkAuth()
+                    .then(() => {
+                        if (authStore.authorized) {
+                            next();
+                        } else {
+                            next({ name: "LoginView" });
+                        }
+                    })
+                    .catch(err => { // this catch will handle any error occurred in the checkAuth promise
+                        console.error(err);
+                        next({ name: "LoginView" });
+                    });
+            }
+        })
+        .catch(err => { // this catch will handle any error occured in hideComponents promise
+            console.error(err);
             next();
-        } else {
-            next({ name: "LoginPage" });
-        }
-    }
+        });
 });
 
-export default router;
+
+export default router

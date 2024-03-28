@@ -1,9 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 const instance = axios.create({
-   baseURL: 'http://localhost:8000/api',
+   baseURL: process.env.VUE_APP_LARAVEL_BASE_URL,
    withCredentials: true,
-   gPlacesApiUrl: 'https://places.googleapis.com/v1/places',
-   gPlacesApiKey: 'AIzaSyCjR1lqBeojrHcLe6hTL4wlxItz78q-XN8',
+   withXSRFToken: true,
    headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

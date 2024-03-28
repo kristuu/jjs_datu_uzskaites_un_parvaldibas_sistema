@@ -1,3 +1,27 @@
+<template>
+  <NavigationBar />
+  <div id="app">
+    <main class="container-xl">
+      <div class="flex justify-content-end mt-2 mb-3">
+        <Breadcrumb :home="home" :model="crumbs" class="text-white">
+          <template #item="{ item, props }">
+            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+              <a :href="href" v-bind="props.action" @click="navigate">
+                <span :class="item.icon" />
+                <span class="font-semibold">{{ item.label }}</span>
+              </a>
+            </router-link>
+            <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+              <span>{{ item.label }}</span>
+            </a>
+          </template>
+        </Breadcrumb>
+      </div>
+      <router-view />
+    </main>
+  </div>
+</template>
+
 <script setup>
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from "vue-router";
@@ -7,22 +31,18 @@ import { useI18n } from 'vue-i18n';
 import NavigationBar from './components/NavigationBar.vue';
 import routeTranslationsLV from '@/locales/lv/routes.json';
 import routeTranslationsEN from '@/locales/en/routes.json';
-import Loading from "vue-loading-overlay";
 import 'vue-loading-overlay/dist/css/index.css';
 
 const router = useRouter();
 const route = useRoute();
 const fetchDataStore = useFetchDataStore();
 const locale = useI18n();
-const isLoading = computed(() => fetchDataStore.isLoading);
+const isFetching = computed(() => fetchDataStore.isFetching);
 
 let routeTranslations = ref(routeTranslationsLV);
 
 /**
- * Resolves the breadcrumb based on the given name.
- *
- * @param {string} name - The name to lookup the breadcrumb.
- * @return {Array<Object>} - The resolved breadcrumb.
+ * Resolve the breadcrumb based on the given name.
  */
 const resolveBreadcrumb = (name) => {
   routeTranslations.value = locale.locale.value === 'lv' ? routeTranslationsLV : routeTranslationsEN;
@@ -31,9 +51,7 @@ const resolveBreadcrumb = (name) => {
 }
 
 /**
- * Returns an array of breadcrumb objects based on the current route.
- *
- * @returns {Array} An array of breadcrumb objects.
+ * Return an array of breadcrumb objects based on the current route.
  */
 const crumbs = computed(() => {
   const matchedRoutes = router.resolve({ path: route.fullPath }).matched;
@@ -71,51 +89,20 @@ const home = ref({
 });
 </script>
 
-<template>
-  <transition name="fade" mode="out-in">
-    <div class="vl-parent" v-if="isLoading">
-      <Loading v-model:active="isLoading"
-               :loader="`bars`"
-               :can-cancel="false"
-               :is-full-page="true"
-               :color="`#9A2E26FF`"
-               :opacity="1"
-               :width="Number(96)"
-               :height="Number(96)" />
-    </div>
-  </transition>
-  <NavigationBar />
-  <div id="app">
-    <main class="container-xl">
-      <div class="flex justify-content-end mt-2 mb-3">
-        <Breadcrumb :home="home" :model="crumbs" class="text-white">
-          <template #item="{ item, props }">
-            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-              <a :href="href" v-bind="props.action" @click="navigate">
-                <span :class="item.icon" />
-                <span class="font-semibold">{{ item.label }}</span>
-              </a>
-            </router-link>
-            <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-              <span>{{ item.label }}</span>
-            </a>
-          </template>
-        </Breadcrumb>
-      </div>
-      <router-view />
-    </main>
-  </div>
-</template>
-
 <style>
-.fade-enter,
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.75s;
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 
 .vl-parent {

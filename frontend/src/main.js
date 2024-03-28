@@ -2,24 +2,29 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import { createPinia } from 'pinia';
 
-const pinia = createPinia();
-
 import router from './router/router.js';
 import axios from '@/services/axios.js';
 
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import Toast from "primevue/toast";
+
+import "bootstrap/dist/css/bootstrap-utilities.min.css";
+import "bootstrap/dist/css/bootstrap-grid.min.css";
+import "bootstrap-icons/font/bootstrap-icons.min.css";
+
 import "@/assets/css/theme.css";
 import '@/assets/css/main.css';
+import "@/assets/fonts/open_sans/stylesheet.css";
+import "@/assets/fonts/ubuntu/stylesheet.css";
 import "/node_modules/primeflex/primeflex.css";
+
+const pinia = createPinia();
+const app = createApp(App);
 
 import IconField from "primevue/iconfield";
 import InputIcon from "primevue/inputicon";
 import "primeicons/primeicons.css";
-
-import "bootstrap/dist/css/bootstrap-grid.min.css";
-import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
@@ -57,8 +62,6 @@ const globalOptions = {
         placeholder: null,
     }
 };
-
-const app = createApp(App);
 
 app.component('VueDatePicker', VueDatePicker);
 app.component("Toast", Toast);
