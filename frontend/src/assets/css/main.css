@@ -13,9 +13,27 @@ body {
     line-height: normal !important;
 }
 
-.p-sidebar a {
+a {
     text-decoration: none;
     color: inherit;
+}
+
+.d-mobile {
+    display: none;
+}
+
+@media screen and (min-width: 961px) {
+    .d-mobile {
+        display: block;
+    }
+}
+
+.hover-black {
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        background-color: black !important;
+        color: white !important;
+    }
 }
 
 .pac-container {
@@ -52,6 +70,10 @@ body {
 
 .nav-scroller .nav {
     --bs-nav-link-color: rgba(255, 255, 255, 0.55) !important;
+}
+
+button, .p-button-label {
+    font-weight: 900;
 }
 
 .content-card {
@@ -139,16 +161,28 @@ label {
     background-color: var(--yrs-primary-shaded-10) !important;
 }
 
+.navbar .p-menuitem-content {
+    border-radius: 0;
+}
+
 /* lg sized screen breakpoint 992px (starting from 992) */
 @media only screen and (max-width: 991px) {
-    .navbar-overlap:after {
+    navbar-overlap:after {
         height: 0 !important;
     }
 }
 
 @media only screen and (min-width: 992px) {
     .navbar-overlap:after {
+        content: "" !important;
         height: 13rem !important;
+        background: inherit;
+        z-index: -1;
+        box-shadow: inherit;
+        top: 100%;
+        left: 0;
+        right: 0;
+        position: absolute;
     }
 }
 
@@ -177,4 +211,8 @@ label {
         box-shadow: inset 0 -100px 0 0 white;
         color: var(--yrs-primary) !important;
     }
+}
+
+.p-icon-field > .p-input-icon {
+    margin-top: -0.7rem;
 }

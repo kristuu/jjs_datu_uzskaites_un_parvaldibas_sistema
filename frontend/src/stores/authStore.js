@@ -91,13 +91,13 @@ export const useAuthStore = defineStore({
         },
         async logout() {
             try {
-                await axios.post("/api/logout");
+                await axios.get("/api/logout");
                 this.authorized = false;
                 this.user = null;
             } catch (error) {
                 console.error("Error occurred on logging out: ", error);
             } finally {
-                await router.push({ name: "LoginView" });
+                await router.push({ name: "LoginPage" });
             }
         }
     }

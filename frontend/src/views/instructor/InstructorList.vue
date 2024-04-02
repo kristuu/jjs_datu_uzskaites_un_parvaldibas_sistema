@@ -278,6 +278,10 @@ const checkCertificateExpiry = () => {
 onBeforeMount(async () => {
   await fetchDataStore.fetchDatabaseData("instructors");
 });
+
+onMounted(() => {
+  fetchDataStore.showComponents();
+});
 </script>
 
 <style scoped>

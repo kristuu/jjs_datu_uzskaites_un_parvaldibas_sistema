@@ -8,7 +8,10 @@
     "roleList": "Lomas",
     "countryList": "Valstis",
     "regionList": "Reģioni",
-    "instructorList": "Treneri"
+    "instructorList": "Treneri",
+    "login": "AUTORIZĀCIJA",
+    "register": "REĢISTRĀCIJA",
+    "logout": "IZIET"
   },
   "breadcrumbs": {
     "home": "Sākums",
