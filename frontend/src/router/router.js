@@ -32,6 +32,9 @@ import EditInstructor from "@/views/instructor/EditInstructor.vue";
 import {useFetchDataStore} from "@/stores/fetchDataStore";
 import {useErrorStore} from "@/stores/errorStore";
 import {useAuthStore} from "@/stores/authStore";
+import CertificateList from "@/views/certificate/CertificateList.vue";
+import CreateCertificate from "@/views/certificate/CreateCertificate.vue";
+import EditCertificate from "@/views/certificate/EditCertificate.vue";
 
 const routes = [
     {
@@ -136,6 +139,16 @@ const routes = [
           },
           {
               path: 'instructors/:id/edit', name: 'EditInstructor', component: EditInstructor, meta: { public: false },
+          },
+
+          {
+              path: 'certificates', name: 'CertificateList', component: CertificateList, meta: { public: false },
+          },
+          {
+              path: 'certificates/create', name: 'CreateCertificate', component: CreateCertificate, meta: { public: false },
+          },
+          {
+              path: 'certificates/:id/edit', name: 'EditCertificate', component: EditCertificate, meta: { public: false },
           },
       ],
     },

@@ -312,6 +312,35 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
+                <li>
+                  <div
+                      v-styleclass="{
+                                selector: '@next',
+                                enterClass: 'hidden',
+                                enterActiveClass: 'slidedown',
+                                leaveToClass: 'hidden',
+                                leaveActiveClass: 'slideup'
+                            }"
+                      class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
+                  >
+                    <span class="font-medium">SERTIFIKĀTI</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </div>
+                  <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
+                    <li>
+                      <router-link :to="{ name: `CertificateList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
+                        <i class="bi bi-search mr-2" />
+                        <span>Saraksts</span>
+                      </router-link>
+                    </li>
+                    <li>
+                      <router-link :to="{ name: `CreateCertificate` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
+                        <i class="bi bi-plus-lg mr-2" />
+                        <span>Pievienošana</span>
+                      </router-link>
+                    </li>
+                  </ul>
+                </li>
               </ul>
             </li>
           </ul>
