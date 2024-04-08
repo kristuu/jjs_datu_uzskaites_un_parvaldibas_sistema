@@ -38,23 +38,35 @@ onBeforeMount(() => {
   }
   errorStore.resetErrorList();
 });
+
+onMounted(() => {
+  fetchDataStore.showComponents();
+})
 </script>
 
 <template>
   <Toast />
-  <div class="mb-3" v-if="isUpdateMode ? can('edit instances') : can('create instances')">
-    <div class="d-flex align-items-baseline text-white mb-4">
-      <h2 class="fw-bold">{{ props.pageName }}</h2>
-      <span class="ms-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
+  <Transition name="fade" mode="out-in">
+    <div v-if="fetchDataStore.show">
+      <div class="mb-3" v-if="isUpdateMode ? can('edit instances') : can('create instances')">
+        <div class="d-flex align-items-baseline text-primary lg:text-white mb-4">
+          <div class="flex flex-column lg:flex-row align-items-baseline">
+            <h1 class="fw-bold mb-0">{{ props.pageName }}</h1>
+            <span class="ml-2"><i class="bi bi-caret-right-fill" /> {{ props.shortDesc }} </span>
+          </div>
+        </div>
+        <div class="container-fluid content-card bg-white shadow-lg mb-2">
+          <div class="p-2">
+            <slot></slot>
+          </div>
+        </div>
+        <Button label="Saglabāt" icon="bi bi-check-lg" class="mr-2" raised
+                @click="isUpdateMode ? fetchDataStore.updateInstance(props.databaseTable, route.params.id) : fetchDataStore.createInstance(databaseTable)" />
+        <Button severity="secondary" label="Atcelt" icon="bi bi-x-lg" text
+                @click="router.go(-1);" />
+      </div>
     </div>
-    <div class="container-fluid content-card bg-white shadow-lg mb-2">
-      <slot></slot>
-    </div>
-    <Button label="Saglabāt" icon="bi bi-check-lg" class="mr-2" raised
-            @click="isUpdateMode ? fetchDataStore.updateInstance(props.databaseTable, route.params.id) : fetchDataStore.createInstance(databaseTable)" />
-    <Button severity="secondary" label="Atcelt" icon="bi bi-x-lg" text outlined
-            @click="router.go(-1);" />
-  </div>
+  </Transition>
 </template>
 
 <style scoped>

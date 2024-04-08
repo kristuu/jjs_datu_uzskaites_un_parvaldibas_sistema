@@ -120,8 +120,8 @@
                 <label>{{ $t(`table.instructors.description`) }}</label>
                 <span>{{ instance.description }}</span>
               </div>
-              <Fieldset :legend="$t(`table.instructors.certificate`)">
-                <div class="row">
+              <Fieldset :legend="$t(`table.instructors.certificate`)" toggleable>
+                <div class="row mx-1">
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.instructors.categories.name`) }}</label>
                     <span>{{ instance.certificate?.category?.name }}</span>
@@ -136,8 +136,8 @@
                   </div>
                 </div>
               </Fieldset>
-              <Fieldset :legend="$t(`table.instructors.user`)">
-                <div class="row">
+              <Fieldset :legend="$t(`table.instructors.user`)" toggleable>
+                <div class="row mx-1">
                   <div class="d-flex flex-column col-lg-3 col-sm-4 col-12">
                     <label>{{ $t(`table.users.name`) }}</label>
                     <span>{{ instance.user?.name }}</span>

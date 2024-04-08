@@ -4,9 +4,9 @@
              :short-desc="$t(`pageHeadings.instructors.edit instructor`)"
              :model-name="`Instructor`"
              :database-table="`instructors`">
-    <form id="editUserForm" class="row gap-1 py-1 text-start needs-validation">
+    <form id="editUserForm" class="row gap-1 text-start needs-validation">
       <div class="col-12">
-        <Panel header="Lietotājs" toggleable>
+        <Panel header="Lietotājs">
           <div class="row">
             <div class="col-12">
               <div class="flex flex-column gap-1">
@@ -20,47 +20,53 @@
               </div>
             </div>
             <div class="col-12">
-              <div class="flex flex-column gap-1">
-                <label for="name">{{ $t(`table.users.name`) }}</label>
-                <InputText :modelValue="instance.user?.name"
-                           disabled/>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="flex flex-column gap-1">
-                <label for="name">{{ $t(`table.users.surname`) }}</label>
-                <InputText :modelValue="instance.user?.surname"
-                           disabled/>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="flex flex-column gap-1">
-                <label for="name">{{ $t(`table.users.person_code`) }}</label>
-                <InputMask :modelValue="instance.user?.person_code"
-                           mask="999999-99999"
-                           disabled/>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="flex flex-column gap-1">
-                <label for="name">{{ $t(`table.users.birthdate`) }}</label>
-                <Calendar :modelValue="instance.user?.birthdate"
-                          disabled/>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="flex flex-column gap-1">
-                <label for="name">{{ $t(`table.users.phone`) }}</label>
-                <InputText :modelValue="instance.user?.phone"
-                           disabled/>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="flex flex-column gap-1">
-                <label for="name">{{ $t(`table.users.email`) }}</label>
-                <InputText :modelValue="instance.user?.email"
-                           disabled/>
-              </div>
+              <Panel header="Izvēlēts:" toggleable>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="flex flex-column gap-1">
+                      <label for="name">{{ $t(`table.users.name`) }}</label>
+                      <InputText :modelValue="instance.user?.name"
+                                 disabled/>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="flex flex-column gap-1">
+                      <label for="name">{{ $t(`table.users.surname`) }}</label>
+                      <InputText :modelValue="instance.user?.surname"
+                                 disabled/>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="flex flex-column gap-1">
+                      <label for="name">{{ $t(`table.users.person_code`) }}</label>
+                      <InputMask :modelValue="instance.user?.person_code"
+                                 mask="999999-99999"
+                                 disabled/>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="flex flex-column gap-1">
+                      <label for="name">{{ $t(`table.users.birthdate`) }}</label>
+                      <Calendar :modelValue="instance.user?.birthdate"
+                                disabled/>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="flex flex-column gap-1">
+                      <label for="name">{{ $t(`table.users.phone`) }}</label>
+                      <InputText :modelValue="instance.user?.phone"
+                                 disabled/>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="flex flex-column gap-1">
+                      <label for="name">{{ $t(`table.users.email`) }}</label>
+                      <InputText :modelValue="instance.user?.email"
+                                 disabled/>
+                    </div>
+                  </div>
+                </div>
+              </Panel>
             </div>
           </div>
           <template #footer>
@@ -113,22 +119,22 @@
               </div>
             </div>
             <div class="col-12">
-              <Fieldset legend="Izvēlēts">
+              <Panel header="Izvēlēts:" toggleable>
                 <div class="row">
-                  <div class="d-flex flex-column col-md-4 col-12">
+                  <div class="d-flex flex-column md:col-4 col-12">
                     <label>{{ $t(`table.id`) }}</label>
                     <span>{{ instance.certificate?.id ?? `-` }}</span>
                   </div>
-                  <div class="d-flex flex-column col-md-4 col-12">
+                  <div class="d-flex flex-column md:col-4 col-12">
                     <label>{{ $t(`table.instructors.categories.name`) }}</label>
                     <span>{{ instance.certificate?.category.name ?? `-` }}</span>
                   </div>
-                  <div class="d-flex flex-column col-md-4 col-12">
+                  <div class="d-flex flex-column md:col-4 col-12">
                     <label>{{ $t(`table.instructors.certificates.expiration_date`) }}</label>
                     <span>{{ instance.certificate?.expiration_date ?? `-` }}</span>
                   </div>
                 </div>
-              </Fieldset>
+              </Panel>
             </div>
           </div>
         </Panel>
@@ -158,16 +164,15 @@ let errorList = computed(() => errorStore.errorList);
 let userList = ref();
 let certificateList = ref();
 
-axios.get(`/users`)
+axios.get(`/api/users`)
     .then(response => {
       userList.value = response.data.instances;
-      console.log(`User list: `, userList.value);
     })
     .catch(error => {
       console.error(error);
     });
 
-axios.get(`/unused_certificates/${route.params.id}`)
+axios.get(`/api/unused_certificates/${route.params.id}`)
     .then(response => {
       certificateList.value = response.data;
       console.log(`INSTANCE ID: ${route.params.id}`)
@@ -177,8 +182,8 @@ axios.get(`/unused_certificates/${route.params.id}`)
       console.error(error);
     });
 
-const displayCertificate = (certificate) => `${certificate.id} - ${certificate.category.name}`;
-const displayUser = (user) => `${user.person_code.slice(0, 6)}-${user.person_code.slice(6, 11)} - ${user.name} ${user.surname}`
+const displayCertificate = (certificate) => `${certificate.id} | ${certificate.category.name}`;
+const displayUser = (user) => `${user.person_code.slice(0, 6)}-${user.person_code.slice(6, 11)} | ${user.name} ${user.surname}`
 </script>
 
 <style scoped>

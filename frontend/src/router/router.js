@@ -162,12 +162,12 @@ router.beforeEach((to, from, next) => {
                         if (authStore.authorized) {
                             next();
                         } else {
-                            next({ name: "LoginView" });
+                            next({ name: "LoginPage" });
                         }
                     })
                     .catch(err => { // this catch will handle any error occurred in the checkAuth promise
                         console.error(err);
-                        next({ name: "LoginView" });
+                        next({ name: "LoginPage" });
                     });
             }
         })

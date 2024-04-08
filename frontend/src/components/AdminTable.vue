@@ -2,6 +2,7 @@
 import { useRoute } from 'vue-router';
 import router from "@/router/router";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
+import {onMounted} from "vue";
 
 const fetchDataStore = useFetchDataStore();
 const route = useRoute();
@@ -12,6 +13,10 @@ const props = defineProps({
   databaseTable: String,
   modelName: String,
 });
+
+onMounted(() => {
+  fetchDataStore.showComponents();
+})
 </script>
 
 <template>

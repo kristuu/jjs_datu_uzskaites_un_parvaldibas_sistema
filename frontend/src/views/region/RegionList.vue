@@ -71,18 +71,18 @@
           </div>
           <Divider />
           <div class="overflow-y-auto w-100">
-            <div class="row gap-3 container-fluid mx-auto">
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+            <div class="row container-fluid mx-auto">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
                 <label>ID</label>
                 <span>{{ instance.id }}</span>
               </div>
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
                 <label>{{ $t(`table.regions.name`) }}</label>
                 <span>{{ instance.name }}</span>
               </div>
               <Fieldset legend="Atrašanās vieta">
-                <div class="row">
-                  <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+                <div class="row mx-1">
+                  <div class="d-flex flex-column col-12 sm:col-6 lg:col-4">
                     <label>{{ $t(`table.regions.country.name`) }}</label>
                     <span>{{ instance.country.name }}</span>
                   </div>

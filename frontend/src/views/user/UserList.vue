@@ -105,31 +105,32 @@
                 <span>{{ instance.birthdate }}</span>
               </div>
               <Fieldset legend="Kontaktinformācija">
-                <div class="row g-3">
-                  <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                <div class="row mx-1">
+                  <div class="d-flex flex-column col-12 sm:col-6 lg:col-4">
                     <label>{{ $t(`table.users.email`) }}</label>
                     <span>{{ instance.email }}</span>
                   </div>
-                  <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+                  <div class="d-flex flex-column col-12 sm:col-6 lg:col-4">
                     <label>{{ $t(`table.users.phone`) }}</label>
                     <span>{{ instance.phone }}</span>
                   </div>
                 </div>
               </Fieldset>
-              <div class="d-flex flex-column col-lg-4 col-sm-6 col-12">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-4">
                 <label>{{ $t(`table.users.iban_code`) }}</label>
                 <span>{{ instance.iban_code ?? `-` }}</span>
               </div>
-              <Fieldset legend="Lomas">
-                <div class="row">
+              <Fieldset legend="Lomas" toggleable>
+                <div class="row mx-1">
                   <template v-for="role in instance.all_roles">
                     <div
-                        class="d-flex flex-column col-lg-3 col-sm-4 col-12"
+                        class="d-flex flex-column col-12 md:col-6 lg:col-4"
                         v-if="role.userHas"
                     >
                       <Chip
                           :label="role.name"
                           style="height: 100%;"
+                          class="justify-content-center"
                       />
                     </div>
                   </template>

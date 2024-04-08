@@ -4,7 +4,7 @@
              :short-desc="$t(`pageHeadings.instructors.edit instructor`)"
              :model-name="`Instructor`"
              :database-table="`instructors`">
-    <form id="editUserForm" class="row gap-1 py-1 text-start needs-validation">
+    <form id="editUserForm" class="row gap-1 text-start needs-validation">
       <div class="col-12">
         <Panel header="Lietotājs" toggleable>
           <div class="row">
@@ -101,7 +101,7 @@
               </div>
             </div>
             <div class="col-12">
-              <Fieldset legend="Izvēlēts">
+              <Panel header="Izvēlēts:" toggleable>
                 <div class="row">
                   <div class="d-flex flex-column col-md-4 col-12">
                     <label>{{ $t(`table.id`) }}</label>
@@ -116,7 +116,7 @@
                     <span>{{ instance.certificate.expiration_date }}</span>
                   </div>
                 </div>
-              </Fieldset>
+              </Panel>
             </div>
           </div>
         </Panel>
@@ -146,7 +146,7 @@ let errorList = computed(() => errorStore.errorList);
 let categoryList = ref();
 let certificateList = ref();
 
-axios.get(`/unused_certificates/${route.params.id}`)
+axios.get(`/api/unused_certificates/${route.params.id}`)
     .then(response => {
       certificateList.value = response.data;
       console.log(`INSTANCE ID: ${route.params.id}`)
@@ -156,7 +156,7 @@ axios.get(`/unused_certificates/${route.params.id}`)
       console.error(error);
     });
 
-const displayCertificate = (certificate) => `${certificate.id} - ${certificate.category.name}`;
+const displayCertificate = (certificate) => `${certificate.id} | ${certificate.category.name}`;
 </script>
 
 <style scoped>

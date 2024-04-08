@@ -68,11 +68,11 @@
           </div>
           <div class="overflow-y-auto w-100">
             <div class="row gap-3 container-fluid mx-auto">
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
                 <label>ID</label>
                 <span>{{ instance.id }}</span>
               </div>
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
                 <label>{{ $t(`table.countries.name`) }}</label>
                 <span>{{ instance.name }}</span>
               </div>
@@ -80,7 +80,7 @@
           </div>
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
-            <div class="m-3 flex justify-content-between gap-3 text-primary">
+            <div class="m-3 flex justify-content-between text-primary">
               <router-link v-if="instance.id" :to="{ name: `EditCountry`, params: { id: instance.id } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>

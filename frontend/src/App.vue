@@ -1,7 +1,7 @@
 <template>
   <NavigationBar />
   <div id="app">
-    <main class="container-xl">
+    <main class="container-lg">
       <div class="hidden lg:flex justify-content-end mt-2 mb-3">
         <Breadcrumb :home="home" :model="crumbs" class="text-white">
           <template #item="{ item, props }">

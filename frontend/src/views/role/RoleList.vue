@@ -79,18 +79,52 @@
                 <span>{{ instance.name }}</span>
               </div>
               <Fieldset legend="Tiesības">
-                <div class="row">
-                  <template v-for="permission in instance.permissions">
-                    <div
-                        class="d-flex flex-column col-lg-3 col-sm-4 col-12"
-                        v-if="permission.checked"
-                    >
-                      <Chip
-                          :label="permission.name"
-                          style="height: 100%;"
-                      />
+                <div class="row mx-1 g-3">
+                  <Fieldset legend="General" toggleable>
+                    <div class="row mx-1">
+                      <template v-for="permission in instance.permissions">
+                        <div
+                            class="d-flex flex-column col-12 sm:col-6 md:col-4 lg:col-3"
+                            v-if="getGeneralPermissions(permission.name) && permission.checked"
+                        >
+                          <Chip
+                              :label="permission.name"
+                              style="height: 100%;"
+                          />
+                        </div>
+                      </template>
                     </div>
-                  </template>
+                  </Fieldset>
+                  <Fieldset legend="Manage" toggleable>
+                    <div class="row mx-1">
+                      <template v-for="permission in instance.permissions">
+                        <div
+                            class="d-flex flex-column col-12 sm:col-6 md:col-4 lg:col-3"
+                            v-if="getManagePermissions(permission.name) && permission.checked"
+                        >
+                          <Chip
+                              :label="permission.name"
+                              style="height: 100%;"
+                          />
+                        </div>
+                      </template>
+                    </div>
+                  </Fieldset>
+                  <Fieldset legend="Other" toggleable>
+                    <div class="row mx-1">
+                      <template v-for="permission in instance.permissions">
+                        <div
+                            class="d-flex flex-column col-12 sm:col-6 md:col-4 lg:col-3"
+                            v-if="getOtherPermissions(permission.name) && permission.checked"
+                        >
+                          <Chip
+                              :label="permission.name"
+                              style="height: 100%;"
+                          />
+                        </div>
+                      </template>
+                    </div>
+                  </Fieldset>
                 </div>
               </Fieldset>
             </div>
@@ -121,6 +155,20 @@ const fetchDataStore = useFetchDataStore();
 const instance = computed(() => fetchDataStore.instance);
 const instances = computed(() => fetchDataStore.allInstances);
 const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
+
+const getGeneralPermissions = (name) => {
+  const permissions = [`create`, `edit`, `list`, `delete`];
+  return permissions.some(permission => name.startsWith(permission));
+}
+
+const getManagePermissions = (name) => {
+  const permissions = [`manage`];
+  return permissions.some(permission => name.startsWith(permission));
+}
+
+const getOtherPermissions = (name) => {
+  return !(getGeneralPermissions(name) || getManagePermissions(name));
+}
 
 const globalFilterFields = ref([
   'id', 'name',
