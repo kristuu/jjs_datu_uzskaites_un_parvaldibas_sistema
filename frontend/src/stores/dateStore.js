@@ -2,6 +2,12 @@ import axios from "@/services/axios.js";
 import router from "@/router/router.js";
 import { defineStore } from "pinia";
 
+const keys = [
+  "birthdate",
+  "job_start_date",
+  "expiration_date"
+];
+
 export const useDateStore = defineStore({
     id: "date",
     state: () => ({
@@ -14,8 +20,7 @@ export const useDateStore = defineStore({
         formatDatesOnInstance(instance) {
             if (instance) {
                 Object.keys(instance).forEach((key) => {
-                    if (key === 'birthdate' ||
-                        key === 'job_start_date') {
+                    if (keys.includes(key)) {
                         let date;
 
                         if (instance[key] instanceof Date) {

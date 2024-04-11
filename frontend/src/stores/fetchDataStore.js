@@ -81,7 +81,7 @@ export const useFetchDataStore = defineStore({
                 this.resetInstance();
                 await router.push(`/admin/${databaseTable}`);
             } catch (error) {
-                useErrorStore().setErrorList(error.response.data);
+                useErrorStore().setErrorList(error.response.data.errors);
             } finally {
                 this.setIsProcessing(false);
             }

@@ -2,11 +2,11 @@
   <div>
     <AdminTable
         v-show="can('manage certificates')"
-        :page-name="$t(`pageHeadings.permissions.manage certificates`)"
+        :page-name="$t(`pageHeadings.certificates.manage certificates`)"
         :database-table="'certificates'"
         :model-name="'Certificate'"
         :instance-id-column="'id'"
-        :short-desc="$t(`pageHeadings.permissions.in total x certificates`, {total: totalInstances})"
+        :short-desc="$t(`pageHeadings.certificates.in total x certificates`, {total: totalInstances})"
     >
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
@@ -33,9 +33,19 @@
                 v-model="filterModel.value"/>
           </template>
         </Column>
-        <Column field="name" :header="$t('table.permissions.name')" sortable>
+        <Column field="expiration_date" :header="$t('table.certificates.expiration_date')" sortable>
           <template #body="{ data }">
-            {{ data.name }}
+            {{ data.expiration_date }}
+          </template>
+          <template #filter="{ filterModel }">
+            <InputText
+                type="text"
+                v-model="filterModel.value"/>
+          </template>
+        </Column>
+        <Column field="expiration_date" :header="$t('table.certificates.category')" sortable>
+          <template #body="{ data }">
+            {{ data.category.name }}
           </template>
           <template #filter="{ filterModel }">
             <InputText
@@ -62,20 +72,24 @@
           <Divider />
           <div class="overflow-y-auto w-100">
             <div class="row gap-3 container-fluid mx-auto">
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3 ">
                 <label>ID</label>
                 <span>{{ instance.id }}</span>
               </div>
-              <div class="d-flex flex-column col-lg-3 col-sm-6 col-12">
-                <label>{{ $t(`table.permissions.name`) }}</label>
-                <span>{{ instance.name }}</span>
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
+                <label>{{ $t(`table.certificates.expiration_date`) }}</label>
+                <span>{{ instance.expiration_date }}</span>
+              </div>
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
+                <label>{{ $t(`table.certificates.category`) }}</label>
+                <span>{{ instance.category.name }}</span>
               </div>
             </div>
           </div>
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link v-if="instance.id" :to="{ name: `EditPermission`, params: { id: instance.id } }">
+              <router-link v-if="instance.id" :to="{ name: `EditCertificate`, params: { id: instance.id } }">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
               <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`permissions`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
@@ -120,14 +134,14 @@ const initFilters = () => {
 initFilters();
 
 const onRowSelect = async (event) => {
-  await fetchDataStore.fetchInstance("permissions", event.data.id);
+  await fetchDataStore.fetchInstance("certificates", event.data.id);
   visible.value = true;
 }
 
 let visible = ref(false);
 
 onBeforeMount(async () => {
-  await fetchDataStore.fetchDatabaseData("permissions");
+  await fetchDataStore.fetchDatabaseData("certificates");
 });
 </script>
 

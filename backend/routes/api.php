@@ -47,6 +47,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['middleware' => ['permission:manage instructors|manage certificates']], function () {
         Route::get("/unused_certificates/{instructorId}", [CertificateController::class, "getUnusedCertificates"]);
     });
+
+    Route::group(['middleware' => ['permission:manage certificates']], function () {
+        Route::get("/certificates_categories", [CategoryController::class, "getAllCategories"]);
+    });
 });
 
 Route::middleware('auth:sanctum')->group(function () {

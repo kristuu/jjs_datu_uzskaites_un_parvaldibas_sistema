@@ -10,6 +10,7 @@ class CertificateRequest extends FormRequest
     {
         return [
             'expiration_date' => ['required', 'date'],
+            'category_id' => ['required']
         ];
     }
 

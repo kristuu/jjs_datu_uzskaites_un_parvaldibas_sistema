@@ -19,10 +19,7 @@ class CertificateController extends Controller
     {
         return $this->getAll(
             Certificate::class,
-            $this->globalFilterFields,
-            [
-                "categories"
-            ]);
+            $this->globalFilterFields);
     }
 
     public function getPaginatedCertificates(CertificateRequest $request)
@@ -54,7 +51,7 @@ class CertificateController extends Controller
 
     public function findCertificateById(string $id)
     {
-        return $this->findById(Certificate::class, $id, ["categories"]);
+        return $this->findById(Certificate::class, $id);
     }
 
     public function updateCertificate(CertificateRequest $request, string $id)
