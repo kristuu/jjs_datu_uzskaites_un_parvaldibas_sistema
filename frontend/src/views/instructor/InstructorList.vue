@@ -13,12 +13,17 @@
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
                  :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e); checkCertificateExpiry(); }">
         <template #header>
-          <div class="justify-content-between flex-wrap mb-2 mt-2 hidden sm:flex">
+          <div class="d-flex justify-content-between flex-wrap mb-2 mt-2">
+            <Button v-if="can('create instances')"
+                    icon="bi bi-plus-lg"
+                    rounded raised
+                    @click="router.push({ name: 'CreateInstructor' })">
+            </Button>
             <IconField iconPosition="left">
               <InputIcon>
-                <i class="pi pi-search" />
+                <i class="bi bi-search" />
               </InputIcon>
-              <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
+              <InputText v-model="filters['global'].value" :placeholder="$t(`table.search`)" />
             </IconField>
           </div>
         </template>
@@ -188,6 +193,7 @@ import {FilterMatchMode, FilterOperator} from "primevue/api";
 
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import { useDateStore } from "@/stores/dateStore";
+import router from "@/router/router";
 const fetchDataStore = useFetchDataStore();
 const dateStore = useDateStore();
 

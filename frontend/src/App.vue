@@ -1,21 +1,24 @@
 <template>
   <NavigationBar />
   <div id="app">
+    <Toast/>
     <main class="container-lg">
       <div class="hidden lg:flex justify-content-end mt-2 mb-3">
-        <Breadcrumb :home="home" :model="crumbs" class="text-white">
-          <template #item="{ item, props }">
-            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-              <a :href="href" v-bind="props.action" @click="navigate">
-                <span :class="item.icon" />
-                <span class="font-semibold">{{ item.label }}</span>
+        <Transition name="fade" mode="out-in">
+          <Breadcrumb :home="home" :model="crumbs" class="text-white" v-if="useFetchDataStore().show">
+            <template #item="{ item, props }">
+              <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                <a :href="href" v-bind="props.action" @click="navigate">
+                  <span :class="item.icon" />
+                  <span class="font-semibold">{{ item.label }}</span>
+                </a>
+              </router-link>
+              <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+                <span>{{ item.label }}</span>
               </a>
-            </router-link>
-            <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-              <span>{{ item.label }}</span>
-            </a>
-          </template>
-        </Breadcrumb>
+            </template>
+          </Breadcrumb>
+        </Transition>
       </div>
       <router-view />
     </main>

@@ -22,7 +22,7 @@ let errorList = computed(() => errorStore.errorList);
   <form id="createUserForm" class="row gap-3 py-3 text-start needs-validation">
     <div class="col-12">
       <div class="flex flex-column gap-1">
-        <label for="name">Vārds (-i)</label>
+        <label for="name">{{ $t(`table.users.name`) }}</label>
         <InputText v-model="instance.name"
                    maxlength="60"
                    pattern="A:[A-ž\s\-]:multiple"
@@ -33,7 +33,7 @@ let errorList = computed(() => errorStore.errorList);
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-1">
-        <label for="surname">Uzvārds (-i)</label>
+        <label for="surname">{{ $t(`table.users.surname`) }}</label>
         <InputText v-model="instance.surname"
                    maxlength="60"
                    v-maska data-maska="A A" data-maska-tokens="A:[A-ž\s\-]:multiple"
@@ -44,7 +44,7 @@ let errorList = computed(() => errorStore.errorList);
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-1">
-        <label for="person_code">Personas kods</label>
+        <label for="person_code">{{ $t(`table.users.person_code`) }}</label>
         <InputMask v-model="instance.person_code"
                    mask="999999-99999"
                    :invalid="errorList.person_code"
@@ -55,7 +55,7 @@ let errorList = computed(() => errorStore.errorList);
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-1">
-        <label for="birthdate">Dzimšanas datums</label>
+        <label for="birthdate">{{ $t(`table.users.birthdate`) }}</label>
         <Calendar v-model="instance.birthdate"
                   :invalid="errorList.birthdate"
                   id="birthdate"
@@ -67,7 +67,7 @@ let errorList = computed(() => errorStore.errorList);
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-1">
-        <label for="email">E-pasts</label>
+        <label for="email">{{ $t(`table.users.email`) }}</label>
         <InputText v-model="instance.email"
                   :invalid="errorList.email"
                   id="email"/>
@@ -76,7 +76,7 @@ let errorList = computed(() => errorStore.errorList);
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-1">
-        <label for="phone">Telefona nr.</label>
+        <label for="phone">{{ $t(`table.users.phone`) }}</label>
         <vue-tel-input v-model="instance.phone"
                        :auto-format="true"
                        autocomplete="off"
@@ -92,7 +92,7 @@ let errorList = computed(() => errorStore.errorList);
     </div>
     <div class="col-12">
       <div class="flex flex-column gap-1">
-        <label for="iban_code">Bankas konts</label>
+        <label for="iban_code">{{ $t(`table.users.bank`) }}</label>
         <InputMask v-model="instance.iban_code"
                    :invalid="errorList.iban_code?.length > 0"
                    id="iban_code"

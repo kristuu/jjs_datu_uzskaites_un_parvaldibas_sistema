@@ -1,5 +1,13 @@
 {
   "businessName": "Jauno Jātnieku skola",
+  "login": "Autorizācija",
+  "register": "Reģistrācija",
+  "need_to_register": "Nepieciešams reģistrēties?",
+  "have_account_already": "Jau ir izveidots konts?",
+  "actions": {
+    "login": "Ienākt",
+    "register": "Reģistrēties"
+  },
   "navigation": {
     "dashboard": "Panelis",
     "home": "Sākums",
@@ -21,6 +29,18 @@
     "create": "Pievienošana",
     "edit": "Rediģēšana"
   },
+  "field": {
+    "name": "Vārds (-i)",
+    "surname": "Uzvārds (-i)",
+    "birthdate": "Dzimšanas datums",
+    "person_code": "Personas kods",
+    "email": "E-pasta adrese",
+    "phone": "Telefona numurs",
+    "password": "Parole",
+    "password_confirmation": "Parole (atkārtoti)"
+  },
+  "check_email": "Lūdzu, pārliecinieties, ka ievadītā e-pasta adrese ir pareiza.",
+  "check_phone": "Lūdzu, pārliecinieties, ka ievadītais telefona numurs ir pareizs.",
   "pageHeadings": {
     "users": {
       "users": "Lietotāji",

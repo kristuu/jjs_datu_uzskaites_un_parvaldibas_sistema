@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
 
 class AuthController extends Controller
 {
@@ -19,6 +20,7 @@ class AuthController extends Controller
             'person_code' => ['string', 'required', 'min:11', 'max:11'],
             'birthdate' => ['date', 'required'],
             'email' => ['string', 'required', 'email', 'unique:users'],
+            'phone' => ['phone', 'required'],
             'password' => ['string', 'required', 'min:8', 'confirmed'],
         ]);
 
@@ -38,7 +40,7 @@ class AuthController extends Controller
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Neeksistējoša e-pasta adrese vai nesaderīga e-pasta un paroles kombinācija'
+                'message' => 'Ievadīta neeksistējoša e-pasta adrese vai nesaderīga e-pasta un paroles kombinācija'
             ], 401);
         } else {
             if (Auth::attempt($credentials)) {

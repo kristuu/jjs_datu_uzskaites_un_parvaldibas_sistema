@@ -63,6 +63,8 @@ const globalOptions = {
     }
 };
 
+import primevueLV from '@/locales/primevue/lv.json'
+
 app.component('VueDatePicker', VueDatePicker);
 app.component("Toast", Toast);
 app.component("IconField", IconField);
@@ -70,7 +72,10 @@ app.component("InputIcon", InputIcon);
 
 app.use(pinia);
 app.use(router);
-app.use(PrimeVue);
+app.use(PrimeVue, {
+    locale: primevueLV
+});
+
 app.use(ToastService);
 
 app.directive('ripple', Ripple);

@@ -1,17 +1,18 @@
 <template>
   <Transition name="fade" mode="out-in">
-    <div v-if="show">
-      <div class="mt-4 container-xl text-black" style="max-width: 480px;">
-        <div class="bg-white shadow rounded-2 p-3">
+        <div v-if="show">
+          <div class="mt-4 container-xl text-black" style="max-width: 480px;">
+            <div class="bg-white shadow rounded-2 p-3">
           <div class="row">
-            <h1 :class="errorStore.mainLoginError ? `mb-0` : `mb-4`" style="font-weight:900">AUTORIZĀCIJA</h1>
+            <h1 :class="errorStore.mainLoginError ? `mb-0` : `mb-4`" style="font-weight:900">{{ $t(`login`).toLocaleUpperCase() }}</h1>
             <div class="col-12 flex flex-column gap-1">
               <Message severity="error" v-if="errorStore.mainLoginError" :closable="false">
                 <span>{{ errorStore.mainLoginError }}</span>
               </Message>
-              <label>E-pasta adrese</label>
+              <label for="email">E-pasta adrese</label>
               <InputText
                   v-model="instance.email"
+                  id="email"
                   class="w-100"
                   :invalid="errorList.email"
                   :disabled="fetchDataStore.isProcessing"
@@ -19,10 +20,11 @@
               <InputError :errors="errorList.email" />
             </div>
             <div class="col-12 flex flex-column gap-1">
-              <label>Parole</label>
+              <label for="password">Parole</label>
               <Password
                   class="d-flex flex-column"
                   v-model="instance.password"
+                  id="password"
                   :feedback="false"
                   :invalid="errorList.password"
                   :disabled="fetchDataStore.isProcessing"
@@ -32,7 +34,7 @@
           </div>
           <div class="mt-3 col-12 text-center">
             <router-link :to="{ name: `RegisterPage` }" class="text-decoration-none text-black">
-              <Button text>Nepieciešams reģistrēties?</Button>
+              <Button text>{{ $t(`need_to_register`) }}</Button>
             </router-link>
           </div>
         </div>

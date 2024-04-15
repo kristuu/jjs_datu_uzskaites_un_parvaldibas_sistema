@@ -48,18 +48,23 @@ export const useAuthStore = defineStore({
             await this.fetchPermissions();
         },
         async register() {
+            useErrorStore().resetErrorList();
+            useErrorStore().resetMainLoginError();
+            useFetchDataStore().setIsProcessing(true);
             try {
                 await axios.get(`/sanctum/csrf-cookie`);
                 useDateStore().formatDatesOnInstance(useFetchDataStore().instance);
                 await axios.post("/api/register", useFetchDataStore().instance);
                 useFetchDataStore().resetInstance();
-                await router.push({name: "LoginView"});
+                await router.push({name: "LoginPage"});
             } catch (error) {
                 if (error.response.status === 422) {
                     useErrorStore().setErrorList(error.response?.data.errors);
                 } else {
                     await useErrorStore().displayError(error);
                 }
+            } finally {
+                useFetchDataStore().setIsProcessing(false);
             }
         },
         async login() {

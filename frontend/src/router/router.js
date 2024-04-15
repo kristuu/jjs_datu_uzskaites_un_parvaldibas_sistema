@@ -166,6 +166,8 @@ router.beforeEach((to, from, next) => {
     const fetchDataStore = useFetchDataStore();
     fetchDataStore.hideComponents()
         .then(() => {
+            useErrorStore().resetErrorList();
+            useErrorStore().resetError();
             if (to.meta.public) {
                 next();
             } else {

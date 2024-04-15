@@ -115,7 +115,7 @@ const showSidebar = () => {
               </ul>
             </li>
             <Divider type="dashed" />
-            <li>
+            <li v-if="can(`access admin dashboard`)">
               <div
                   v-styleclass="{
                                 selector: '@next',
@@ -135,8 +135,8 @@ const showSidebar = () => {
                     <span class="font-medium">SĀKUMS</span>
                   </router-link>
                 </li>
-                <Divider type="dotted" />
-                <li>
+                <Divider type="dotted" v-if="can(`access admin dashboard`)" />
+                <li v-if="can(`manage users`)">
                   <div
                       v-styleclass="{
                                 selector: '@next',
@@ -151,13 +151,13 @@ const showSidebar = () => {
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                    <li>
+                    <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `UserList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
                         <span>Saraksts</span>
                       </router-link>
                     </li>
-                    <li>
+                    <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateUser` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
                         <span>Pievienošana</span>
@@ -165,7 +165,7 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li v-if="can(`manage permissions`)">
                   <div
                       v-styleclass="{
                                 selector: '@next',
@@ -180,13 +180,13 @@ const showSidebar = () => {
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                    <li>
+                    <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `PermissionList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
                         <span>Saraksts</span>
                       </router-link>
                     </li>
-                    <li>
+                    <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreatePermission` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
                         <span>Pievienošana</span>
@@ -194,7 +194,7 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li v-if="can(`manage roles`)">
                   <div
                       v-styleclass="{
                                 selector: '@next',
@@ -209,13 +209,13 @@ const showSidebar = () => {
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                    <li>
+                    <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `RoleList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
                         <span>Saraksts</span>
                       </router-link>
                     </li>
-                    <li>
+                    <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateRole` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
                         <span>Pievienošana</span>
@@ -223,8 +223,8 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
-                <Divider type="dotted"/>
-                <li>
+                <Divider type="dotted" v-if="can(`manage users`) || can(`manage permissions`) || can(`manage roles`)"/>
+                <li v-if="can(`manage countries`)">
                   <div
                       v-styleclass="{
                                 selector: '@next',
@@ -239,13 +239,13 @@ const showSidebar = () => {
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                    <li>
+                    <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `CountryList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
                         <span>Saraksts</span>
                       </router-link>
                     </li>
-                    <li>
+                    <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateCountry` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
                         <span>Pievienošana</span>
@@ -253,7 +253,7 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li v-if="can(`manage regions`)">
                   <div
                       v-styleclass="{
                                 selector: '@next',
@@ -268,13 +268,13 @@ const showSidebar = () => {
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                    <li>
+                    <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `RegionList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
                         <span>Saraksts</span>
                       </router-link>
                     </li>
-                    <li>
+                    <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateRegion` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
                         <span>Pievienošana</span>
@@ -282,8 +282,8 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
-                <Divider type="dotted" />
-                <li>
+                <Divider type="dotted" v-if="can(`manage countries`) || can(`manage regions`)"/>
+                <li v-if="can(`manage instructors`)">
                   <div
                       v-styleclass="{
                                 selector: '@next',
@@ -298,13 +298,13 @@ const showSidebar = () => {
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                    <li>
+                    <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `InstructorList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
                         <span>Saraksts</span>
                       </router-link>
                     </li>
-                    <li>
+                    <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateInstructor` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
                         <span>Pievienošana</span>
@@ -312,7 +312,7 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
-                <li>
+                <li v-if="can(`manage certificates`)">
                   <div
                       v-styleclass="{
                                 selector: '@next',
@@ -327,13 +327,13 @@ const showSidebar = () => {
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
-                    <li>
+                    <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `CertificateList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
                         <span>Saraksts</span>
                       </router-link>
                     </li>
-                    <li>
+                    <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateCertificate` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
                         <span>Pievienošana</span>
@@ -341,6 +341,7 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
+                <Divider type="dotted" v-if="can(`manage instructors`) || can(`manage certificates`)" />
               </ul>
             </li>
           </ul>

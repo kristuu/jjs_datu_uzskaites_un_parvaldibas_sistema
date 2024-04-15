@@ -141,7 +141,7 @@
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link :to="{ name: `EditUser`, params: { id: instance.person_code } }">
+              <router-link :to="{ name: `EditUser`, params: { id: instance.person_code } }" @click="visible = false;">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
               <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`users`, instance.person_code); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>

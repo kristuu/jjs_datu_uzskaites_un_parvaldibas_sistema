@@ -1,5 +1,13 @@
 {
   "businessName": "Young Riders school",
+  "login": "Login",
+  "register": "Register",
+  "need_to_register": "Need to register?",
+  "have_account_already": "Have an account already?",
+  "actions": {
+    "login": "Login",
+    "register": "Register"
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "home": "Home",
@@ -21,6 +29,18 @@
     "create": "Create",
     "edit": "Edit"
   },
+  "field": {
+    "name": "Name (-s)",
+    "surname": "Surname (-s)",
+    "birthdate": "Date of birth",
+    "person_code": "Person code",
+    "email": "E-mail address",
+    "phone": "Phone",
+    "password": "Password",
+    "password_confirmation": "Password confirmation"
+  },
+  "check_email": "Please make sure that the entered e-mail address is correct.",
+  "check_phone": "Please make sure that the entered phone number is correct.",
   "pageHeadings": {
     "users": {
       "users": "Users",
