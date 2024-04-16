@@ -235,5 +235,9 @@ label {
 }
 
 .p-icon-field > .p-input-icon {
-    margin-top: -0.7rem;
+    margin-top: -0.7rem !important;
+}
+
+.p-password > .p-input-icon {
+    margin-top: -0.5rem !important;
 }

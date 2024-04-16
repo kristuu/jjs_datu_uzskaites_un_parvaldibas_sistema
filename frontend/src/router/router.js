@@ -9,8 +9,6 @@ import LoginPage from '../views/auth/LoginPage.vue';
 import RegisterPage from '../views/auth/RegisterPage.vue';
 import InstructorsList from "@/views/booking/InstructorsList.vue";
 
-import AdminDashboard from "@/views/admin/AdminDashboard.vue";
-
 import MaugloCompute from '@/views/calculateReportDiapazone.vue'
 import ErrorView from "@/views/error/ErrorView.vue";
 import PermissionList from "@/views/permission/PermissionList.vue";
@@ -35,6 +33,11 @@ import {useAuthStore} from "@/stores/authStore";
 import CertificateList from "@/views/certificate/CertificateList.vue";
 import CreateCertificate from "@/views/certificate/CreateCertificate.vue";
 import EditCertificate from "@/views/certificate/EditCertificate.vue";
+import CategoryList from "@/views/category/CategoryList.vue";
+import CreateCategory from "@/views/category/CreateCategory.vue";
+import EditCategory from "@/views/category/EditCategory.vue";
+import Container from "@/views/admin/Container.vue";
+import Dashboard from "@/views/admin/Dashboard.vue";
 
 const routes = [
     {
@@ -75,10 +78,10 @@ const routes = [
     },
     {
       path: '/admin',
-      component: AdminDashboard,
+      component: Container,
       children: [
           {
-              path: '', name: 'AdminDashboard', component: AdminDashboard, meta: { public: false },
+              path: '', name: 'AdminDashboard', component: Dashboard, meta: { public: false },
           },
 
           {
@@ -150,6 +153,16 @@ const routes = [
           {
               path: 'certificates/:id/edit', name: 'EditCertificate', component: EditCertificate, meta: { public: false },
           },
+
+          {
+              path: 'categories', name: 'CategoryList', component: CategoryList, meta: { public: false },
+          },
+          {
+              path: 'categories/create', name: 'CreateCategory', component: CreateCategory, meta: { public: false },
+          },
+          {
+              path: 'categories/:id/edit', name: 'EditCategory', component: EditCategory, meta: { public: false },
+          },
       ],
     },
     {
@@ -164,6 +177,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const fetchDataStore = useFetchDataStore();
+    fetchDataStore.resetAllInstances();
+    fetchDataStore.resetInstance()
     fetchDataStore.hideComponents()
         .then(() => {
             useErrorStore().resetErrorList();

@@ -9,14 +9,26 @@
     "register": "Register"
   },
   "navigation": {
-    "dashboard": "Dashboard",
-    "home": "Home",
-    "userList": "Users",
-    "permissionList": "Permissions",
-    "roleList": "Roles",
-    "countryList": "Countries",
-    "regionList": "Regions",
-    "instructorList": "Instructors",
+    "main": {
+      "header": "Main",
+      "home": "Home"
+    },
+    "admin": {
+      "header": "Administration",
+      "home": "Dashboard",
+      "users": "Users",
+      "permissions": "Permissions",
+      "roles": "Roles",
+      "countries": "Countries",
+      "regions": "Regions",
+      "instructors": "Instructors",
+      "certificates": "Certificates",
+      "categories": "Categories"
+    },
+    "submenu": {
+      "list": "List",
+      "create": "Create"
+    },
     "login": "LOGIN",
     "register": "REGISTER",
     "logout": "LOG OUT"
@@ -29,15 +41,22 @@
     "create": "Create",
     "edit": "Edit"
   },
-  "field": {
-    "name": "Name (-s)",
-    "surname": "Surname (-s)",
-    "birthdate": "Date of birth",
-    "person_code": "Person code",
-    "email": "E-mail address",
-    "phone": "Phone",
-    "password": "Password",
-    "password_confirmation": "Password confirmation"
+  "fields": {
+    "user": {
+      "name": "Name (-s)",
+      "surname": "Surname (-s)",
+      "birthdate": "Date of birth",
+      "person_code": "Person code",
+      "email": "E-mail address",
+      "phone": "Phone",
+      "iban_code": "Bank account",
+      "password": "Password",
+      "password_confirmation": "Password confirmation",
+      "roles": "Roles"
+    },
+    "category": {
+      "name": "Name"
+    }
   },
   "check_email": "Please make sure that the entered e-mail address is correct.",
   "check_phone": "Please make sure that the entered phone number is correct.",
@@ -47,35 +66,35 @@
       "manage users": "Manage users",
       "create user": "Create user",
       "edit user": "Edit user",
-      "in total x users": "{total} users in total"
+      "total": "{total} users in total"
     },
     "permissions": {
       "permissions": "Permissions",
       "manage permissions": "Manage permissions",
       "create permission": "Create permission",
       "edit permission": "Edit permission",
-      "in total x permissions": "{total} permissions in total"
+      "total": "{total} permissions in total"
     },
     "roles": {
       "roles": "Roles",
       "manage roles": "Manage roles",
       "create role": "Create role",
       "edit role": "Edit role",
-      "in total x roles": "{total} roles in total"
+      "total": "{total} roles in total"
     },
     "countries": {
       "countries": "Countries",
       "manage countries": "Manage countries",
       "create country": "Create country",
       "edit country": "Edit country",
-      "in total x countries": "{total} countries in total"
+      "total": "{total} countries in total"
     },
     "regions": {
       "regions": "Regions",
       "manage regions": "Manage regions",
       "create region": "Create region",
       "edit region": "Edit region",
-      "in total x regions": "{total} regions in total"
+      "total": "{total} regions in total"
     },
     "instructors": {
       "instructors": "Instructors",
@@ -83,6 +102,20 @@
       "create instructor": "Create instructor",
       "edit instructor": "Edit instructor",
       "total": "{total} instructors in total"
+    },
+    "certificates": {
+      "certificates": "Certificates",
+      "manage certificates": "Manage certificates",
+      "create certificate": "Create sertificate",
+      "edit certificate": "Edit certificate",
+      "total": "{total} certificates in total"
+    },
+    "categories": {
+      "categories": "Categories",
+      "manage categories": "Manage categories",
+      "create category": "Create category",
+      "edit category": "Edit category",
+      "total": "{total} categories in total"
     }
   },
   "table": {
@@ -90,6 +123,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "search": "Search",
+    "empty": "No records found",
     "id": "ID",
     "countries": {
       "name": "Name"
@@ -128,6 +162,13 @@
       "user": "User",
       "choose_user": "Choose a user"
     },
+    "certificates": {
+      "expiration_date": "Exp. date",
+      "category": "Category"
+    },
+    "categories": {
+      "name": "Name"
+    },
     "created_at": "Created",
     "updated_at": "Updated",
     "info": {
@@ -140,7 +181,9 @@
     "role": "Role details",
     "permission": "Permission details",
     "country": "Country details",
-    "region": "Region details"
+    "region": "Region details",
+    "certificate": "Certificate details",
+    "category": "Category details"
   },
   "This action is unauthorized.": "This action is unauthorized.",
   "user_details_not_editable": "User details cannot be edited in this view."

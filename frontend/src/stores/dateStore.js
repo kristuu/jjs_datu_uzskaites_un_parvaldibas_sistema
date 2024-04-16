@@ -21,21 +21,25 @@ export const useDateStore = defineStore({
             if (instance) {
                 Object.keys(instance).forEach((key) => {
                     if (keys.includes(key)) {
-                        let date;
+                        try {
+                            let date;
 
-                        if (instance[key] instanceof Date) {
-                            date = instance[key];
-                        } else {
-                            // Parse time in the 'dd.mm.yyyy' format
-                            let parts = instance[key].split(".");
-                            date = new Date(parts[2], parts[1] - 1, parts[0]);
+                            if (instance[key] instanceof Date) {
+                                date = instance[key];
+                            } else {
+                                // Parse time in the 'dd.mm.yyyy' format
+                                let parts = instance[key].split(".");
+                                date = new Date(parts[2], parts[1] - 1, parts[0]);
+                            }
+
+                            let year = date.getFullYear();
+                            let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Ensure month is 2 digits
+                            let day = date.getDate().toString().padStart(2, '0'); // Ensure day is 2 digits
+
+                            instance[key] = `${year}-${month}-${day}`;
+                        } catch (e) {
+
                         }
-
-                        let year = date.getFullYear();
-                        let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Ensure month is 2 digits
-                        let day = date.getDate().toString().padStart(2, '0'); // Ensure day is 2 digits
-
-                        instance[key] = `${year}-${month}-${day}`;
                     }
                 });
             }

@@ -9,14 +9,26 @@
     "register": "Reģistrēties"
   },
   "navigation": {
-    "dashboard": "Panelis",
-    "home": "Sākums",
-    "userList": "Lietotāji",
-    "permissionList": "Tiesības",
-    "roleList": "Lomas",
-    "countryList": "Valstis",
-    "regionList": "Reģioni",
-    "instructorList": "Treneri",
+    "main": {
+      "header": "Galvenā sadaļa",
+      "home": "Sākums"
+    },
+    "admin": {
+      "header": "Administrācija",
+      "home": "Panelis",
+      "users": "Lietotāji",
+      "permissions": "Piekļuves tiesības",
+      "roles": "Lomas",
+      "countries": "Valstis",
+      "regions": "Reģioni",
+      "instructors": "Treneri",
+      "certificates": "Sertifikāti",
+      "categories": "Kategorijas"
+    },
+    "submenu": {
+      "list": "Saraksts",
+      "create": "Pievienošana"
+    },
     "login": "AUTORIZĀCIJA",
     "register": "REĢISTRĀCIJA",
     "logout": "IZIET"
@@ -29,15 +41,23 @@
     "create": "Pievienošana",
     "edit": "Rediģēšana"
   },
-  "field": {
-    "name": "Vārds (-i)",
-    "surname": "Uzvārds (-i)",
-    "birthdate": "Dzimšanas datums",
-    "person_code": "Personas kods",
-    "email": "E-pasta adrese",
-    "phone": "Telefona numurs",
-    "password": "Parole",
-    "password_confirmation": "Parole (atkārtoti)"
+  "fields": {
+    "id": "ID",
+    "user": {
+      "name": "Vārds (-i)",
+      "surname": "Uzvārds (-i)",
+      "birthdate": "Dzimšanas datums",
+      "person_code": "Personas kods",
+      "email": "E-pasta adrese",
+      "phone": "Telefona numurs",
+      "iban_code": "Bankas konta nr.",
+      "password": "Parole",
+      "password_confirmation": "Parole (atkārtoti)",
+      "roles": "Lomas"
+    },
+    "category": {
+      "name": "Nosaukums"
+    }
   },
   "check_email": "Lūdzu, pārliecinieties, ka ievadītā e-pasta adrese ir pareiza.",
   "check_phone": "Lūdzu, pārliecinieties, ka ievadītais telefona numurs ir pareizs.",
@@ -47,42 +67,56 @@
       "manage users": "Lietotāju pārvaldība",
       "create user": "Lietotāja pievienošana",
       "edit user": "Lietotāja rediģēšana",
-      "in total x users": "Kopā {total} lietotāji"
+      "total": "Kopā {total} lietotājs (-i)"
     },
     "permissions": {
       "permissions": "Piekļuves tiesības",
       "manage permissions": "Piekļuves pārvaldība",
       "create permission": "Tiesību pievienošana",
       "edit permission": "Tiesību rediģēšana",
-      "in total x permissions": "Kopā {total} tiesības"
+      "total": "Kopā {total} tiesība (-s)"
     },
     "roles": {
       "roles": "Lomas",
       "manage roles": "Lomu pārvaldība",
       "create role": "Lomu pievienošana",
       "edit role": "Lomu rediģēšana",
-      "in total x roles": "Kopā {total} lomas"
+      "total": "Kopā {total} loma (-s)"
     },
     "countries": {
       "countries": "Valstis",
       "manage countries": "Valstu pārvaldība",
       "create country": "Valsts pievienošana",
       "edit country": "Valsts rediģēšana",
-      "in total x countries": "Kopā {total} valstis"
+      "total": "Kopā {total} valsts (-is)"
     },
     "regions": {
       "regions": "Reģioni",
       "manage regions": "Reģionu pārvaldība",
       "create region": "Reģiona pievienošana",
       "edit region": "Reģiona rediģēšana",
-      "in total x regions": "Kopā {total} reģioni"
+      "total": "Kopā {total} reģions (-i)"
     },
     "instructors": {
       "instructors": "Treneri",
       "manage instructors": "Treneru pārvaldība",
       "create instructor": "Trenera pievienošana",
       "edit instructor": "Trenera rediģēšana",
-      "total": "Kopā {total} treneri"
+      "total": "Kopā {total} treneris (-i)"
+    },
+    "certificates": {
+      "certificates": "Sertifikāti",
+      "manage certificates": "Sertifikātu pārvaldība",
+      "create certificate": "Sertifikāta pievienošana",
+      "edit certificate": "Sertifikāta rediģēšana",
+      "total": "Kopā {total} sertifikāts (-i)"
+    },
+    "categories": {
+      "categories": "Kategorijas",
+      "manage categories": "Kategoriju pārvaldība",
+      "create category": "Kategorijas pievienošana",
+      "edit category": "Kategorijas rediģēšana",
+      "total": "Kopā {total} kategorija (-s)"
     }
   },
   "table": {
@@ -90,6 +124,7 @@
     "edit": "Rediģēt",
     "delete": "Dzēst",
     "search": "Meklēšana",
+    "empty": "Netika atrasts neviens ieraksts",
     "id": "ID",
     "countries": {
       "name": "Nosaukums"
@@ -129,6 +164,13 @@
       "user": "Lietotājs",
       "choose_user": "Izvēlēties lietotāju"
     },
+    "certificates": {
+      "expiration_date": "Derīguma term.",
+      "category": "Kategorija"
+    },
+    "categories": {
+      "name": "Nosaukums"
+    },
     "created_at": "Izveidots",
     "updated_at": "Atjaunināts",
     "info": {
@@ -141,7 +183,9 @@
     "role": "Lomas pārskats",
     "permission": "Tiesības pārskats",
     "country": "Valsts pārskats",
-    "region": "Reģiona pārskats"
+    "region": "Reģiona pārskats",
+    "certificate": "Sertifikāta pārskats",
+    "category": "Kategorijas pārskats"
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
   "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams."

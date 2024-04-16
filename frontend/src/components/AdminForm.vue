@@ -12,7 +12,6 @@ const fetchDataStore = useFetchDataStore();
 const errorStore = useErrorStore();
 const toast = useToast();
 const locale = useI18n();
-const emit = defineEmits(['update-error-list'])
 
 
 let errorList = ref({});
@@ -29,12 +28,11 @@ const props = defineProps({
 const isUpdateMode = !!route.params.id;
 console.log(isUpdateMode);
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   if (!isUpdateMode) {
     fetchDataStore.resetInstance();
-    console.log(`Instance reset`)
   } else {
-    fetchDataStore.fetchInstance(props.databaseTable, route.params.id);
+    await fetchDataStore.fetchInstance(props.databaseTable, route.params.id);
   }
   errorStore.resetErrorList();
 });

@@ -20,7 +20,7 @@ const user = computed(() => authStore.user);
 
 const items = ref([
   {
-    label: locale.t("navigation.home"),
+    label: locale.t("navigation.main.home"),
     command: () => {
       router.push({ name: "HomePage" });
     }
@@ -103,13 +103,13 @@ const showSidebar = () => {
                             }"
                   class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
               >
-                <span style="font-weight: 900;" class="submenu">GALVENĀ SADAĻA</span>
+                <span style="font-weight: 900;" class="submenu">{{ $t(`navigation.main.header`).toLocaleUpperCase() }}</span>
                 <i class="bi bi-chevron-down"></i>
               </div>
               <ul class="list-none px-2 m-0 overflow-hidden">
                 <li>
                   <router-link :to="{ name: `HomePage` }" @click="visible = false" v-ripple class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
-                    <span class="font-medium">SĀKUMS</span>
+                    <span class="font-medium">{{ $t(`navigation.main.home`).toLocaleUpperCase() }}</span>
                   </router-link>
                 </li>
               </ul>
@@ -126,13 +126,13 @@ const showSidebar = () => {
                             }"
                   class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
               >
-                <span style="font-weight: 900;" class="submenu">ADMINISTRĀCIJA</span>
+                <span style="font-weight: 900;" class="submenu">{{ $t(`navigation.admin.header`).toLocaleUpperCase() }}</span>
                 <i class="bi bi-chevron-down"></i>
               </div>
               <ul class="list-none px-2 m-0 overflow-hidden">
                 <li>
-                  <router-link :to="{ name: `HomePage` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
-                    <span class="font-medium">SĀKUMS</span>
+                  <router-link :to="{ name: `AdminDashboard` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
+                    <span class="font-medium">{{ $t(`navigation.admin.home`).toLocaleUpperCase() }}</span>
                   </router-link>
                 </li>
                 <Divider type="dotted" v-if="can(`access admin dashboard`)" />
@@ -147,20 +147,20 @@ const showSidebar = () => {
                             }"
                       class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
                   >
-                    <span class="font-medium">LIETOTĀJI</span>
+                    <span class="font-medium">{{ $t(`navigation.admin.users`).toLocaleUpperCase() }}</span>
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
                     <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `UserList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
-                        <span>Saraksts</span>
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
                       </router-link>
                     </li>
                     <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateUser` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
-                        <span>Pievienošana</span>
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
                       </router-link>
                     </li>
                   </ul>
@@ -176,20 +176,20 @@ const showSidebar = () => {
                             }"
                       class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
                   >
-                    <span class="font-medium">TIESĪBAS</span>
+                    <span class="font-medium">{{ $t(`navigation.admin.permissions`).toLocaleUpperCase() }}</span>
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
                     <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `PermissionList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
-                        <span>Saraksts</span>
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
                       </router-link>
                     </li>
                     <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreatePermission` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
-                        <span>Pievienošana</span>
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
                       </router-link>
                     </li>
                   </ul>
@@ -205,20 +205,20 @@ const showSidebar = () => {
                             }"
                       class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
                   >
-                    <span class="font-medium">LOMAS</span>
+                    <span class="font-medium">{{ $t(`navigation.admin.roles`).toLocaleUpperCase() }}</span>
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
                     <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `RoleList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
-                        <span>Saraksts</span>
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
                       </router-link>
                     </li>
                     <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateRole` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
-                        <span>Pievienošana</span>
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
                       </router-link>
                     </li>
                   </ul>
@@ -235,20 +235,20 @@ const showSidebar = () => {
                             }"
                       class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
                   >
-                    <span class="font-medium">VALSTIS</span>
+                    <span class="font-medium">{{ $t(`navigation.admin.countries`).toLocaleUpperCase() }}</span>
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
                     <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `CountryList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
-                        <span>Saraksts</span>
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
                       </router-link>
                     </li>
                     <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateCountry` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
-                        <span>Pievienošana</span>
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
                       </router-link>
                     </li>
                   </ul>
@@ -264,20 +264,20 @@ const showSidebar = () => {
                             }"
                       class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
                   >
-                    <span class="font-medium">REĢIONI</span>
+                    <span class="font-medium">{{ $t(`navigation.admin.regions`).toLocaleUpperCase() }}</span>
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
                     <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `RegionList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
-                        <span>Saraksts</span>
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
                       </router-link>
                     </li>
                     <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateRegion` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
-                        <span>Pievienošana</span>
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
                       </router-link>
                     </li>
                   </ul>
@@ -294,20 +294,20 @@ const showSidebar = () => {
                             }"
                       class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
                   >
-                    <span class="font-medium">TRENERI</span>
+                    <span class="font-medium">{{ $t(`navigation.admin.instructors`).toLocaleUpperCase() }}</span>
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
                     <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `InstructorList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
-                        <span>Saraksts</span>
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
                       </router-link>
                     </li>
                     <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateInstructor` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
-                        <span>Pievienošana</span>
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
                       </router-link>
                     </li>
                   </ul>
@@ -323,25 +323,54 @@ const showSidebar = () => {
                             }"
                       class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
                   >
-                    <span class="font-medium">SERTIFIKĀTI</span>
+                    <span class="font-medium">{{ $t(`navigation.admin.certificates`).toLocaleUpperCase() }}</span>
                     <i class="bi bi-chevron-down"></i>
                   </div>
                   <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
                     <li v-if="can(`list instances`)">
                       <router-link :to="{ name: `CertificateList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-search mr-2" />
-                        <span>Saraksts</span>
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
                       </router-link>
                     </li>
                     <li v-if="can(`create instances`)">
                       <router-link :to="{ name: `CreateCertificate` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
                         <i class="bi bi-plus-lg mr-2" />
-                        <span>Pievienošana</span>
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
                       </router-link>
                     </li>
                   </ul>
                 </li>
-                <Divider type="dotted" v-if="can(`manage instructors`) || can(`manage certificates`)" />
+                <li v-if="can(`manage categories`)">
+                  <div
+                      v-styleclass="{
+                                selector: '@next',
+                                enterClass: 'hidden',
+                                enterActiveClass: 'slidedown',
+                                leaveToClass: 'hidden',
+                                leaveActiveClass: 'slideup'
+                            }"
+                      class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
+                  >
+                    <span class="font-medium">{{ $t(`navigation.admin.categories`).toLocaleUpperCase() }}</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </div>
+                  <ul class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
+                    <li v-if="can(`list instances`)">
+                      <router-link :to="{ name: `CategoryList` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
+                        <i class="bi bi-search mr-2" />
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
+                      </router-link>
+                    </li>
+                    <li v-if="can(`create instances`)">
+                      <router-link :to="{ name: `CreateCategory` }" @click="visible = false" class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple">
+                        <i class="bi bi-plus-lg mr-2" />
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
+                      </router-link>
+                    </li>
+                  </ul>
+                </li>
+                <Divider type="dotted" v-if="can(`manage instructors`) || can(`manage certificates`) || can(`manage categories`)" />
               </ul>
             </li>
           </ul>

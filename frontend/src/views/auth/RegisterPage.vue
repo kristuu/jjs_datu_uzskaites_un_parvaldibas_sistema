@@ -106,7 +106,7 @@
                   :invalid="errorList.password_confirmation"
                   :disabled="fetchDataStore.isProcessing"
               />
-              <InputError :errors="errorList.password" />
+              <InputError :errors="errorList.password_confirmation" />
             </div>
           </div>
           <div class="mt-3 col-12 text-center">

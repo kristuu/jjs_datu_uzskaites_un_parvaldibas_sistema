@@ -6,7 +6,7 @@
         :database-table="'countries'"
         :model-name="'Country'"
         :instance-id-column="'id'"
-        :short-desc="$t(`pageHeadings.countries.in total x countries`, {total: totalInstances})"
+        :short-desc="$t(`pageHeadings.countries.total`, {total: totalInstances})"
         :filterOptions="filterOptions"
     >
       <DataTable :value="instances" size="small" stripedRows removableSort
@@ -28,7 +28,18 @@
             </IconField>
           </div>
         </template>
-        <template #empty>NAV IERAKSTU</template>
+        <template #empty>
+          <div class="d-flex flex-column gap-2" v-if="fetchDataStore.isFetching">
+            <template v-for="i in [1, 2, 3, 4]">
+              <Skeleton height="2rem" />
+              <Divider class="m-0"/>
+            </template>
+            <Skeleton height="2rem" />
+          </div>
+          <div class="text-center" v-else>
+            <span>{{ $t(`table.empty`) }}</span>
+          </div>
+        </template>
         <Column field="id" :header="$t('table.id')">
           <template #body="{ data }">
             {{ data.id }}

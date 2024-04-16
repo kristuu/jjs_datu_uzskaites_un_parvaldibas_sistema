@@ -76,7 +76,7 @@ export const useAuthStore = defineStore({
                 const response = await axios.post(`/api/login`, useFetchDataStore().instance);
                 console.log(response);
                 this.authorized = true;
-                this.user = response.data.user;
+                await this.checkAuth();
                 useFetchDataStore().resetInstance();
                 await router.push({name: "HomePage"});
             } catch (error) {

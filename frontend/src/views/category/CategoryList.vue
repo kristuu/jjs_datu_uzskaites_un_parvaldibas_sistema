@@ -1,23 +1,23 @@
 <template>
   <div>
     <AdminTable
-        v-show="can('manage regions')"
-        :page-name="$t(`pageHeadings.regions.manage regions`)"
-        :database-table="'regions'"
-        :model-name="'Region'"
+        v-show="can('manage categories')"
+        :page-name="$t(`pageHeadings.categories.manage categories`)"
+        :database-table="'categories'"
+        :model-name="'Category'"
         :instance-id-column="'id'"
-        :short-desc="$t(`pageHeadings.regions.total`, {total: totalInstances})"
+        :short-desc="$t(`pageHeadings.categories.total`, {total: totalInstances})"
     >
       <DataTable :value="instances" size="small" stripedRows removableSort
                  paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
                  v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 :rowClass="rowClass" selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
+                 selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
         <template #header>
           <div class="d-flex justify-content-between flex-wrap mb-2 mt-2">
             <Button v-if="can('create instances')"
                     icon="bi bi-plus-lg"
                     rounded raised
-                    @click="router.push({ name: 'CreateRegion' })">
+                    @click="router.push({ name: 'CreateCategory' })">
             </Button>
             <IconField iconPosition="left">
               <InputIcon>
@@ -49,7 +49,7 @@
                 v-model="filterModel.value"/>
           </template>
         </Column>
-        <Column field="name" :header="$t('table.regions.name')" sortable>
+        <Column field="expiration_date" :header="$t('table.categories.name')" sortable>
           <template #body="{ data }">
             {{ data.name }}
           </template>
@@ -59,60 +59,42 @@
                 v-model="filterModel.value"/>
           </template>
         </Column>
-        <Column field="country.name" filter-field="country.name" :header="$t('table.regions.country.name')" sortable>
-          <template #body="{ data }">
-            {{ data.country.name }}
-          </template>
-          <template #filter="{ filterModel }">
-            <InputText
-                type="text"
-                v-model="filterModel.value"/>
-          </template>
-        </Column>
         <Column :exportable="false">
           <template #body="{ data }">
-            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`regions`, data.id)" outlined rounded />
+            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`categories`, data.id)" outlined rounded />
           </template>
         </Column>
       </DataTable>
     </AdminTable>
 
-    <Sidebar v-model:visible="visible" position="bottom" style="height:30rem; max-height: 90vh;">
+    <Sidebar v-model:visible="visible" position="bottom" style="height:20rem; max-height: 90vh;">
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full container">
           <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
             <img src="@/assets/logo-red.svg" width="50" />
-            <span class="font-semibold text-2xl text-primary">Reģiona apskate</span>
+            <span class="font-semibold text-2xl text-primary">{{ $t(`details_sidebar.category`) }}</span>
             <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
           </div>
           <Divider />
           <div class="overflow-y-auto w-100">
-            <div class="row container-fluid mx-auto">
-              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
+            <div class="row gap-3 container-fluid mx-auto">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3 ">
                 <label>ID</label>
                 <span>{{ instance.id }}</span>
               </div>
               <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
-                <label>{{ $t(`table.regions.name`) }}</label>
+                <label>{{ $t(`table.categories.name`) }}</label>
                 <span>{{ instance.name }}</span>
               </div>
-              <Fieldset legend="Atrašanās vieta">
-                <div class="row mx-1">
-                  <div class="d-flex flex-column col-12 sm:col-6 lg:col-4">
-                    <label>{{ $t(`table.regions.country.name`) }}</label>
-                    <span>{{ instance.country.name }}</span>
-                  </div>
-                </div>
-              </Fieldset>
             </div>
           </div>
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link v-if="instance.id" :to="{ name: `EditRegion`, params: { id: instance.id } }">
+              <router-link v-if="instance.id" :to="{ name: `EditCategory`, params: { id: instance.id } }" @click="visible = false;">
                 <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
               </router-link>
-              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`regions`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`categories`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
             </div>
           </div>
         </div>
@@ -135,7 +117,7 @@ const instances = computed(() => fetchDataStore.allInstances);
 const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
 
 const globalFilterFields = ref([
-  'id', 'name', 'country.name'
+  'id', 'name',
 ]);
 const filters = ref();
 
@@ -147,23 +129,22 @@ const initFilters = () => {
 
   filters.value = {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    id: defaultTextContainsFilter(),
-    name: defaultTextContainsFilter(),
-    "country.name": defaultTextContainsFilter(),
+    "id": defaultTextContainsFilter(),
+    "name": defaultTextContainsFilter(),
   }
 };
 
 initFilters();
 
+let visible = ref(false);
+
 const onRowSelect = async (event) => {
-  await fetchDataStore.fetchInstance("regions", event.data.id);
+  await fetchDataStore.fetchInstance("categories", event.data.id);
   visible.value = true;
 }
 
-let visible = ref(false);
-
 onBeforeMount(async () => {
-  await fetchDataStore.fetchDatabaseData("regions");
+  await fetchDataStore.fetchDatabaseData("categories");
 });
 </script>
 

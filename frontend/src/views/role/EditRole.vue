@@ -39,6 +39,7 @@ let errorList = computed(() => errorStore.errorList);
           <label for="name">Nosaukums</label>
           <InputText v-model="instance.name"
                      :invalid="errorList.name"
+                     :disabled="fetchDataStore.isProcessing"
                      id="name"/>
           <InputError :errors="errorList.name" />
         </div>
@@ -54,6 +55,7 @@ let errorList = computed(() => errorStore.errorList);
                     <div v-if="getGeneralPermissions(permission.name)" class="col-12 md:col-6 lg:col-4">
                       <InputSwitch v-model="instance.permissions[index].checked"
                                    :invalid="errorList.permissions"
+                                   :disabled="fetchDataStore.isProcessing"
                                    @update:modelValue="console.log(instance.permissions)"/>
                       <label class="ms-2">{{ capitalize(permission.name) }}</label>
                     </div>
@@ -66,6 +68,7 @@ let errorList = computed(() => errorStore.errorList);
                     <div v-if="getManagePermissions(permission.name)" class="col-12 md:col-6 lg:col-4">
                       <InputSwitch v-model="instance.permissions[index].checked"
                                    :invalid="errorList.permissions"
+                                   :disabled="fetchDataStore.isProcessing"
                                    @update:modelValue="console.log(instance.permissions)"/>
                       <label class="ms-2">{{ capitalize(permission.name) }}</label>
                     </div>
@@ -78,6 +81,7 @@ let errorList = computed(() => errorStore.errorList);
                     <div v-if="getOtherPermissions(permission.name)" class="col-12 md:col-6 lg:col-4">
                       <InputSwitch v-model="instance.permissions[index].checked"
                                    :invalid="errorList.permissions"
+                                   :disabled="fetchDataStore.isProcessing"
                                    @update:modelValue="console.log(instance.permissions)"/>
                       <label class="ms-2">{{ capitalize(permission.name) }}</label>
                     </div>

@@ -81,7 +81,7 @@ export const useFetchDataStore = defineStore({
                 this.resetInstance();
                 await router.push(`/admin/${databaseTable}`);
             } catch (error) {
-                useErrorStore().setErrorList(error.response.data.errors);
+                useErrorStore().setErrorList(error.response.data);
             } finally {
                 this.setIsProcessing(false);
             }
@@ -94,11 +94,12 @@ export const useFetchDataStore = defineStore({
                 useDateStore().formatDatesOnInstance(this.instance);
                 await axios.get(`/sanctum/csrf-cookie`);
                 const response = await axios.put(`/api/${databaseTable}/${instanceId}`, this.instance);
-                console.log(response);
+                console.log(`Server response when updating: ` + response);
                 this.resetInstance();
                 await router.push(`/admin/${databaseTable}`);
             } catch (error) {
-                useErrorStore().setErrorList(error.response.data.errors);
+                console.log(error);
+                useErrorStore().setErrorList(error.response.data);
             } finally {
                 this.setIsProcessing(false);
             }
