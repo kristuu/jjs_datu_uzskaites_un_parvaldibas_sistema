@@ -207,6 +207,12 @@ label {
     }
 }
 
+@media only screen and (max-width: 992px) {
+    .p-timeline-event-opposite {
+        display: none;
+    }
+}
+
 .navbar-brand:hover {
     box-shadow: none;
     background-color: inherit;

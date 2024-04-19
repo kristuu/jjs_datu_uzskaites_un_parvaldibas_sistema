@@ -4,7 +4,11 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\CertificateController;
 use App\Http\Controllers\API\CountryController;
+use App\Http\Controllers\API\EventCategoryController;
+use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\API\EventTypeController;
 use App\Http\Controllers\API\InstructorController;
+use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\API\RoleController;
@@ -24,7 +28,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod) {
+function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod)
+{
     Route::group(['middleware' => ['auth:sanctum', 'can:manage ' . $base]], function () use ($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod) {
         Route::get("/{$base}", [$controller, $getAllMethod]);
         Route::get("/{$base}/{id}", [$controller, $getMethod]);
@@ -33,6 +38,8 @@ function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $
         Route::middleware('can:delete instances')->delete("/{$base}/{id}", [$controller, $destroyMethod]);
     });
 }
+
+Route::get("/events", [EventController::class, 'getAllEvents']);
 
 Route::middleware('auth:sanctum')->group(function () {
     registerResourceRoutes('users', UserController::class, 'getAllUsers', 'findUserById', 'storeUser', 'updateUser', 'destroyUser');
@@ -43,6 +50,15 @@ Route::middleware('auth:sanctum')->group(function () {
     registerResourceRoutes('instructors', InstructorController::class, 'getAllInstructors', 'findInstructorById', 'storeInstructor', 'updateInstructor', 'destroyInstructor');
     registerResourceRoutes('certificates', CertificateController::class, 'getAllCertificates', 'findCertificateById', 'storeCertificate', 'updateCertificate', 'destroyCertificate');
     registerResourceRoutes('categories', CategoryController::class, 'getAllCategories', 'findCategoryById', 'storeCategory', 'updateCategory', 'destroyCategory');
+    registerResourceRoutes('locations', LocationController::class, 'getAllLocations', 'findLocationById', 'storeLocation', 'updateLocation', 'destroyLocation');
+    registerResourceRoutes('event_types', EventTypeController::class, 'getAllEventTypes', 'findEventTypeById', 'storeEventType', 'updateEventType', 'destroyEventType');
+    registerResourceRoutes('event_categories', EventCategoryController::class, 'getAllEventCategories', 'findEventCategoryById', 'storeEventCategory', 'updateEventCategory', 'destroyEventCategory');
+
+    Route::group(['middleware' => ['permission:manage events']], function () {
+        Route::post('events', [EventController::class, 'storeEvent']);
+        Route::put('events/{id}', [EventController::class, 'updateEvent']);
+        Route::delete('events/{id}', [EventController::class, 'destroyEvent']);
+    });
 
     Route::group(['middleware' => ['permission:manage instructors|manage certificates']], function () {
         Route::get("/unused_certificates/{instructorId}", [CertificateController::class, "getUnusedCertificates"]);
@@ -66,4 +82,6 @@ Route::get('/get-permissions', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout']);
-Route::post('/setlocale', function (Request $request) { App::setLocale($request->getLocale()); });
+Route::post('/setlocale', function (Request $request) {
+    App::setLocale($request->getLocale());
+});

@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->foreign('breed_id')->references('id')->on('breeds')->onUpdate('CASCADE');
             $table->string('owner_person_code', 11);
             $table->foreign('owner_person_code')->references('person_code')->on('users')->onUpdate('CASCADE');
+            $table->unsignedBigInteger('location_id');
+            $table->foreign('location_id')->references('id')->on('locations')->onUpdate('CASCADE');
             $table->timestamps();
         });
     }
