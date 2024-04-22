@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Http\Traits\PaginationTrait;
 use App\Models\Event;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -40,12 +42,65 @@ class EventController extends Controller
 
     public function storeEvent(EventRequest $request)
     {
-        return $this->store($request, Event::class);
+        try {
+            $requestData = $request->validated(); // Extracting validated data
+
+            // Parsing and modifying the dates
+            $start = Carbon::parse($requestData['start'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
+            $end = Carbon::parse($requestData['end'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
+
+            // Replace the old dates with the modified ones
+            $requestData['start'] = $start;
+            $requestData['end'] = $end;
+
+            // Create the event
+            $instance = Event::create($requestData);
+
+            if ($instance) {
+                return $this->sendResponse(['message' => __('validation.instance.creation', [
+                    'model' => __('validation.models.' . class_basename(Event::class))
+                ])]);
+            } else {
+                return $this->sendResponse(['message' => __('`validation.instance.creation_failed', [
+                    'model' => __('validation.models.' . class_basename(Event::class))
+                ])], 500);
+            }
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return $this->sendResponse([
+                'message' => 'Error occurred while creating the ' . class_basename($className),
+                'error' => $exception->getMessage(),
+            ], 500);
+        }
     }
 
     public function updateEvent(EventRequest $request, string $id)
     {
-        return $this->update($request, $id, Event::class);
+        $requestData = $request->validated(); // Extracting validated data
+
+        // Parsing and modifying the dates
+        $start = Carbon::parse($requestData['start'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
+        $end = Carbon::parse($requestData['end'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
+
+        // Replace the old dates with the modified ones
+        $requestData['start'] = $start;
+        $requestData['end'] = $end;
+
+        // Create the event
+        $instance = Event::find($id);
+
+        if ($instance) {
+            $instance->update($requestData);
+
+            return $this->sendResponse(['message' => __('validation.instance.updated', [
+                'model' => __('validation.models.' . class_basename(Event::class))
+            ])]);
+        } else {
+            return $this->sendResponse(['message' => __('validation.instance.not_found', [
+                'model' => __('validation.models.' . class_basename(Event::class)),
+                'id' => $id])], 404);
+        }
     }
 
     public function destroyEvent(string $id)

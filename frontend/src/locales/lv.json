@@ -4,6 +4,8 @@
   "register": "Reģistrācija",
   "need_to_register": "Nepieciešams reģistrēties?",
   "have_account_already": "Jau ir izveidots konts?",
+  "yes": "Jā",
+  "no": "Nē",
   "actions": {
     "login": "Ienākt",
     "register": "Reģistrēties"
@@ -23,7 +25,11 @@
       "regions": "Reģioni",
       "instructors": "Treneri",
       "certificates": "Sertifikāti",
-      "categories": "Kategorijas"
+      "categories": "Kategorijas",
+      "events": "Pasākumi",
+      "event_categories": "Pasākumu kategorijas",
+      "event_types": "Pasākumu tipi",
+      "locations": "Lokācijas"
     },
     "submenu": {
       "list": "Saraksts",
@@ -57,6 +63,12 @@
     },
     "category": {
       "name": "Nosaukums"
+    },
+    "locations": {
+      "name": "Nosaukums",
+      "stables": "Staļļi",
+      "competitions": "Sacensības",
+      "horse_capacity": "Staļļu ietiplība (zirgu skaits)"
     }
   },
   "check_email": "Lūdzu, pārliecinieties, ka ievadītā e-pasta adrese ir pareiza.",
@@ -171,6 +183,12 @@
     "categories": {
       "name": "Nosaukums"
     },
+    "locations": {
+      "name": "Nosaukums",
+      "stables": "Staļļi",
+      "competitions": "Sacensības",
+      "horse_capacity": "Staļļu ietilpība (zirgu skaits)"
+    },
     "created_at": "Izveidots",
     "updated_at": "Atjaunināts",
     "info": {
@@ -185,7 +203,17 @@
     "country": "Valsts pārskats",
     "region": "Reģiona pārskats",
     "certificate": "Sertifikāta pārskats",
-    "category": "Kategorijas pārskats"
+    "category": "Kategorijas pārskats",
+    "location": "Lokācijas pārskats"
+  },
+  "editor": {
+    "bold": "Treknraksts",
+    "italic": "Slīpraksts",
+    "underline": "Pasvītrojums",
+    "superscript": "Augšraksts",
+    "subscript": "Apakšraksts",
+    "text_color": "Teksta krāsa",
+    "text_background": "Teksta fons"
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
   "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams."

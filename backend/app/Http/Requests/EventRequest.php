@@ -12,10 +12,10 @@ class EventRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'start' => ['required', 'date'],
             'end' => ['required', 'date', 'after_or_equal:start'],
-            'event_category_id' => ['required', 'exists:event_categories'],
-            'event_type_id' => ['required', 'exists:event_types'],
-            'location_id' => ['required', 'exists:locations'],
-            'comment' => ['string', 'max:4294967295'],
+            'event_category_id' => ['required', 'exists:event_categories,id'],
+            'event_type_id' => ['required', 'exists:event_types,id'],
+            'location_id' => ['required', 'exists:locations,id'],
+            'comment' => ['string', 'max:4294967295', 'nullable'],
         ];
     }
 

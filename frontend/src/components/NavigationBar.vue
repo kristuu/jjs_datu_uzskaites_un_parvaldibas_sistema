@@ -667,11 +667,53 @@ const showSidebar = () => {
                     </li>
                   </ul>
                 </li>
+                <li v-if="can(`manage locations`)">
+                  <div
+                    v-styleclass="{
+                      selector: '@next',
+                      enterClass: 'hidden',
+                      enterActiveClass: 'slidedown',
+                      leaveToClass: 'hidden',
+                      leaveActiveClass: 'slideup',
+                    }"
+                    class="p-3 flex align-items-center justify-content-between cursor-pointer p-ripple"
+                  >
+                    <span class="font-medium">{{
+                      $t(`navigation.admin.locations`).toLocaleUpperCase()
+                    }}</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </div>
+                  <ul
+                    class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out"
+                  >
+                    <li v-if="can(`list instances`)">
+                      <router-link
+                        :to="{ name: `LocationList` }"
+                        class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple"
+                        @click="visible = false"
+                      >
+                        <i class="bi bi-search mr-2" />
+                        <span>{{ $t(`navigation.submenu.list`) }}</span>
+                      </router-link>
+                    </li>
+                    <li v-if="can(`create instances`)">
+                      <router-link
+                        :to="{ name: `CreateLocation` }"
+                        class="flex align-items-center cursor-pointer p-3 border-round hover:fw-bold transition-duration-150 transition-colors p-ripple"
+                        @click="visible = false"
+                      >
+                        <i class="bi bi-plus-lg mr-2" />
+                        <span>{{ $t(`navigation.submenu.create`) }}</span>
+                      </router-link>
+                    </li>
+                  </ul>
+                </li>
                 <Divider
                   v-if="
                     can(`manage events`) ||
                     can(`manage event_types`) ||
-                    can(`manage event_categories`)
+                    can(`manage event_categories`) ||
+                    can(`manage locations`)
                   "
                   type="dotted"
                 />

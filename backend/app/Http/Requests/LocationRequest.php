@@ -10,8 +10,8 @@ class LocationRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'stables' => ['required', 'boolean'],
-            'competitions' => ['required', 'boolean'],
+            'stables' => ['boolean'],
+            'competitions' => ['boolean'],
             'horse_capacity' => ['required', 'integer'],
         ];
     }

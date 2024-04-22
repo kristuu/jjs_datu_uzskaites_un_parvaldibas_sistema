@@ -4,6 +4,8 @@
   "register": "Register",
   "need_to_register": "Need to register?",
   "have_account_already": "Have an account already?",
+  "yes": "Yes",
+  "no": "No",
   "actions": {
     "login": "Login",
     "register": "Register"
@@ -23,7 +25,11 @@
       "regions": "Regions",
       "instructors": "Instructors",
       "certificates": "Certificates",
-      "categories": "Categories"
+      "categories": "Categories",
+      "events": "Events",
+      "event_categories": "Event categories",
+      "event_types": "Event types",
+      "locations": "Locations"
     },
     "submenu": {
       "list": "List",
@@ -56,6 +62,12 @@
     },
     "category": {
       "name": "Name"
+    },
+    "locations": {
+      "name": "Name",
+      "stables": "Stables",
+      "competitions": "Competitions",
+      "horse_capacity": "Stables horse capacity"
     }
   },
   "check_email": "Please make sure that the entered e-mail address is correct.",
@@ -116,6 +128,29 @@
       "create category": "Create category",
       "edit category": "Edit category",
       "total": "{total} categories in total"
+    },
+    "events": {
+      "events": "Events",
+      "manage events": "Manage events",
+      "create event": "Create event",
+      "edit event": "Edit event",
+      "total": "{total} events in total"
+    },
+    "event_categories": {
+      "event_categories": "Event categories",
+      "manage event_categories": "Manage event categories",
+      "create event_category": "Create event category",
+      "edit event_category": "Edit event category",
+      "total": "{total} event categories in total"
+    },
+    "event_types": {
+      "event_types": "Event types",
+      "manage event_types": "Manage event types",
+      "create event_type": "Create event type",
+      "edit event_type": "Edit event type",
+      "total": "{total} event types in total"
+    },
+    "locations": {
     }
   },
   "table": {
@@ -169,6 +204,12 @@
     "categories": {
       "name": "Name"
     },
+    "locations": {
+      "name": "Name",
+      "stables": "Stables",
+      "competitions": "Competitions",
+      "horse_capacity": "Stables horse capacity"
+    },
     "created_at": "Created",
     "updated_at": "Updated",
     "info": {
@@ -183,7 +224,15 @@
     "country": "Country details",
     "region": "Region details",
     "certificate": "Certificate details",
-    "category": "Category details"
+    "category": "Category details",
+    "location": "Location details"
+  },
+  "editor": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "superscript": "Superscript",
+    "subscript": "Subscript"
   },
   "This action is unauthorized.": "This action is unauthorized.",
   "user_details_not_editable": "User details cannot be edited in this view."

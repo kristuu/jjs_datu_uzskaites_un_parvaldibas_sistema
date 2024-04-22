@@ -18,24 +18,22 @@ class Event extends Model
     ];
 
     protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime',
+        'start' => 'datetime:d.m.Y H:i',
+        'end' => 'datetime:d.m.Y H:i',
     ];
-
-    protected $dateFormat = 'd.m.Y H:i';
 
     public function eventCategory(): BelongsTo
     {
-        return $this->belongsTo(EventCategory::class);
+        return $this->belongsTo(EventCategory::class, 'event_category_id');
     }
 
     public function eventType(): BelongsTo
     {
-        return $this->belongsTo(EventType::class);
+        return $this->belongsTo(EventType::class, 'event_type_id');
     }
 
     public function location(): BelongsTo
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsTo(Location::class, 'location_id');
     }
 }

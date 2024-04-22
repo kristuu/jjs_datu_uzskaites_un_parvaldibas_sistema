@@ -1,12 +1,14 @@
 <template>
   <div>
     <AdminTable
-      v-show="can('manage events')"
-      :database-table="'events'"
+      v-show="can('manage locations')"
+      :database-table="'locations'"
       :instance-id-column="'id'"
-      :model-name="'Event'"
-      :page-name="$t(`pageHeadings.events.manage events`)"
-      :short-desc="$t(`pageHeadings.events.total`, { total: totalInstances })"
+      :model-name="'Location'"
+      :page-name="$t(`pageHeadings.locations.manage locations`)"
+      :short-desc="
+        $t(`pageHeadings.locations.total`, { total: totalInstances })
+      "
     >
       <DataTable
         v-model:filters="filters"
@@ -33,7 +35,7 @@
               icon="bi bi-plus-lg"
               raised
               rounded
-              @click="router.push({ name: 'CreateEvent' })"
+              @click="router.push({ name: 'CreateLocation' })"
             >
             </Button>
             <IconField iconPosition="left">
@@ -70,45 +72,9 @@
             <InputText v-model="filterModel.value" type="text" />
           </template>
         </Column>
-        <Column :header="$t('table.events.name')" field="name" sortable>
+        <Column :header="$t('table.locations.name')" field="name" sortable>
           <template #body="{ data }">
             {{ data.name }}
-          </template>
-          <template #filter="{ filterModel }">
-            <InputText v-model="filterModel.value" type="text" />
-          </template>
-        </Column>
-        <Column :header="$t('table.events.start')" field="start" sortable>
-          <template #body="{ data }">
-            {{ data.start }}
-          </template>
-          <template #filter="{ filterModel }">
-            <InputText v-model="filterModel.value" type="text" />
-          </template>
-        </Column>
-        <Column :header="$t('table.events.end')" field="end" sortable>
-          <template #body="{ data }">
-            {{ data.end }}
-          </template>
-          <template #filter="{ filterModel }">
-            <InputText v-model="filterModel.value" type="text" />
-          </template>
-        </Column>
-        <Column
-          :header="$t('table.events.category')"
-          field="event_category"
-          sortable
-        >
-          <template #body="{ data }">
-            {{ data.event_category.name }}
-          </template>
-          <template #filter="{ filterModel }">
-            <InputText v-model="filterModel.value" type="text" />
-          </template>
-        </Column>
-        <Column :header="$t('table.events.type')" field="event_type" sortable>
-          <template #body="{ data }">
-            {{ data.event_type.name }}
           </template>
           <template #filter="{ filterModel }">
             <InputText v-model="filterModel.value" type="text" />
@@ -120,7 +86,7 @@
               icon="bi bi-trash-fill"
               outlined
               rounded
-              @click="fetchDataStore.deleteInstance(`permissions`, data.id)"
+              @click="fetchDataStore.deleteInstance(`locations`, data.id)"
             />
           </template>
         </Column>
@@ -130,7 +96,7 @@
     <Sidebar
       v-model:visible="visible"
       position="bottom"
-      style="height: 30rem; max-height: 90vh"
+      style="height: 20rem; max-height: 90vh"
     >
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full container">
@@ -138,9 +104,9 @@
             class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0"
           >
             <img src="@/assets/logo-red.svg" width="50" />
-            <span class="font-semibold text-2xl text-primary"
-              >Piekļuves tiesības apskate</span
-            >
+            <span class="font-semibold text-2xl text-primary">{{
+              $t(`details_sidebar.location`)
+            }}</span>
             <Button
               class="h-2rem w-2rem"
               icon="pi pi-times"
@@ -152,52 +118,27 @@
           </div>
           <Divider />
           <div class="overflow-y-auto w-100">
-            <div class="grid container-fluid mx-auto">
-              <div class="col-12 sm:col-6 lg:col-3">
-                <div class="d-flex flex-column">
-                  <label>ID</label>
-                  <span>{{ instance.id }}</span>
-                </div>
+            <div class="row container-fluid mx-auto">
+              <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
+                <label>ID</label>
+                <span>{{ instance.id }}</span>
               </div>
               <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
-                <label>{{ $t(`table.events.name`) }}</label>
+                <label>{{ $t(`table.locations.name`) }}</label>
                 <span>{{ instance.name }}</span>
               </div>
               <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
-                <label>{{ $t(`table.events.start`) }}</label>
-                <span>{{ instance.start }}</span>
+                <label>{{ $t(`table.locations.stables`) }}</label>
+                <span>{{ instance.stables ? $t(`yes`) : $t(`no`) }}</span>
               </div>
               <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
-                <label>{{ $t(`table.events.end`) }}</label>
-                <span>{{ instance.end }}</span>
+                <label>{{ $t(`table.locations.competitions`) }}</label>
+                <span>{{ instance.competitions ? $t(`yes`) : $t(`no`) }}</span>
               </div>
-              <Panel class="col-12 mt-1" header="Lokācija">
-                <div class="grid">
-                  <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
-                    <label>{{ $t(`table.locations.name`) }}</label>
-                    <span>{{ instance.location.name }}</span>
-                  </div>
-                  <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
-                    <label>{{ $t(`table.locations.competitions`) }}</label>
-                    <span>{{
-                      instance.location.competitions ? $t(`yes`) : $t(`no`)
-                    }}</span>
-                  </div>
-                  <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">
-                    <label>{{ $t(`table.locations.stables`) }}</label>
-                    <span>{{
-                      instance.location.stables ? $t(`yes`) : $t(`no`)
-                    }}</span>
-                  </div>
-                  <div
-                    v-if="instance.location.stables"
-                    class="d-flex flex-column col-12 sm:col-6 lg:col-3"
-                  >
-                    <label>{{ $t(`table.locations.horse_capacity`) }}</label>
-                    <span>{{ instance.location.horse_capacity }}</span>
-                  </div>
-                </div>
-              </Panel>
+              <div v-if="instance.stables" class="d-flex flex-column col-12">
+                <label>{{ $t(`table.locations.horse_capacity`) }}</label>
+                <span>{{ instance.horse_capacity }}</span>
+              </div>
             </div>
           </div>
           <div class="mt-auto">
@@ -205,7 +146,8 @@
             <div class="m-3 flex justify-content-between gap-3 text-primary">
               <router-link
                 v-if="instance.id"
-                :to="{ name: `EditEvent`, params: { id: instance.id } }"
+                :to="{ name: `EditLocation`, params: { id: instance.id } }"
+                @click="visible = false"
               >
                 <span class="font-bold"
                   ><i class="bi bi-pencil-fill" /> {{ $t(`table.edit`) }}</span
@@ -215,7 +157,7 @@
                 class="font-bold cursor-pointer"
                 @click="
                   () => {
-                    fetchDataStore.deleteInstance(`events`, instance.id);
+                    fetchDataStore.deleteInstance(`locations`, instance.id);
                     visible = false;
                   }
                 "
@@ -261,15 +203,15 @@ const initFilters = () => {
 
 initFilters();
 
+let visible = ref(false);
+
 const onRowSelect = async (event) => {
-  await fetchDataStore.fetchInstance("events", event.data.id);
+  await fetchDataStore.fetchInstance("locations", event.data.id);
   visible.value = true;
 };
 
-let visible = ref(false);
-
 onBeforeMount(async () => {
-  await fetchDataStore.fetchDatabaseData("events");
+  await fetchDataStore.fetchDatabaseData("locations");
 });
 </script>
 

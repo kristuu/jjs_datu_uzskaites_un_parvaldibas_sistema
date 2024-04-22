@@ -46,6 +46,9 @@ import EditEventCategory from "@/views/eventCategory/EditEventCategory.vue";
 import EventTypeList from "@/views/eventType/EventTypeList.vue";
 import CreateEventType from "@/views/eventType/CreateEventType.vue";
 import EditEventType from "@/views/eventType/EditEventType.vue";
+import LocationList from "@/views/location/LocationList.vue";
+import CreateLocation from "@/views/location/CreateLocation.vue";
+import EditLocation from "@/views/location/EditLocation.vue";
 
 const routes = [
   {
@@ -301,6 +304,25 @@ const routes = [
         path: "event_types/:id/edit",
         name: "EditEventType",
         component: EditEventType,
+        meta: { public: false },
+      },
+
+      {
+        path: "locations",
+        name: "LocationList",
+        component: LocationList,
+        meta: { public: false },
+      },
+      {
+        path: "locations/create",
+        name: "CreateLocation",
+        component: CreateLocation,
+        meta: { public: false },
+      },
+      {
+        path: "locations/:id/edit",
+        name: "EditLocation",
+        component: EditLocation,
         meta: { public: false },
       },
     ],

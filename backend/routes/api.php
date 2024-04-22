@@ -55,9 +55,15 @@ Route::middleware('auth:sanctum')->group(function () {
     registerResourceRoutes('event_categories', EventCategoryController::class, 'getAllEventCategories', 'findEventCategoryById', 'storeEventCategory', 'updateEventCategory', 'destroyEventCategory');
 
     Route::group(['middleware' => ['permission:manage events']], function () {
-        Route::post('events', [EventController::class, 'storeEvent']);
-        Route::put('events/{id}', [EventController::class, 'updateEvent']);
-        Route::delete('events/{id}', [EventController::class, 'destroyEvent']);
+        Route::post('/events', [EventController::class, 'storeEvent']);
+        Route::get('/events/{id}', [EventController::class, 'findEventById']);
+        Route::put('/events/{id}', [EventController::class, 'updateEvent']);
+        Route::delete('/events/{id}', [EventController::class, 'destroyEvent']);
+
+        Route::get('/event/categories', [EventCategoryController::class, 'getAllEventCategories']);
+        Route::get('/event/types', [EventTypeController::class, 'getAllEventTypes']);
+        Route::get('/event/locations', [LocationController::class, 'getAllLocations']);
+
     });
 
     Route::group(['middleware' => ['permission:manage instructors|manage certificates']], function () {

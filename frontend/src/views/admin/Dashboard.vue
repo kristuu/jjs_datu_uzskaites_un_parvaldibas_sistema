@@ -31,21 +31,23 @@
                     <Button icon="bi bi-pencil" outlined rounded text />
                   </div>
                   <Divider class="mt-2" />
-                  <Timeline :value="events">
+                  <Timeline :value="competitions">
                     <template #opposite="slotProps">
                       <small class="hidden lg:block p-text-secondary">{{
-                        slotProps.item.date
+                        slotProps.item.start + ` - ` + slotProps.item.end
                       }}</small>
                     </template>
                     <template #content="slotProps">
                       <div class="mb-4">
                         <small class="p-text-secondary block lg:hidden">{{
-                          slotProps.item.date
+                          slotProps.item.start + ` - ` + slotProps.item.end
                         }}</small>
                         <p class="m-0">
                           <strong>{{ slotProps.item.name }}</strong>
                         </p>
-                        <p class="m-0">{{ slotProps.item.discipline }}</p>
+                        <p class="m-0">
+                          {{ slotProps.item.event_category.name }}
+                        </p>
                       </div>
                     </template>
                   </Timeline>
@@ -61,18 +63,20 @@
                   <Timeline :value="seminars">
                     <template #opposite="slotProps">
                       <small class="hidden lg:block p-text-secondary">{{
-                        slotProps.item.date
+                        slotProps.item.start + ` - ` + slotProps.item.end
                       }}</small>
                     </template>
                     <template #content="slotProps">
                       <div class="mb-4">
                         <small class="p-text-secondary block lg:hidden">{{
-                          slotProps.item.date
+                          slotProps.item.start + ` - ` + slotProps.item.end
                         }}</small>
                         <p class="m-0">
                           <strong>{{ slotProps.item.name }}</strong>
                         </p>
-                        <p class="m-0">{{ slotProps.item.discipline }}</p>
+                        <p class="m-0">
+                          {{ slotProps.item.event_category.name }}
+                        </p>
                       </div>
                     </template>
                   </Timeline>
@@ -92,7 +96,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import axios from "@/services/axios";
 
@@ -103,33 +107,31 @@ let date = ref(new Date().toLocaleDateString());
 
 const events = ref([]);
 
-const seminars = ref([
-  {
-    discipline: "Vispārīgs / General",
-    name: "Zirgu psiholoģija",
-    date: "24.04.",
-  },
-  {
-    discipline: "Vispārīgs / General",
-    name: "Seminārs ar Anci Polāni",
-    date: "27.04.",
-  },
-  {
-    discipline: "Konkūrs / Show jumping",
-    name: "Equestrian Forum",
-    date: "04.05. - 05.05.",
-  },
-]);
+const competitions = computed(() =>
+  events.value
+    .filter((event) => event.event_type.name === `Sacensības`)
+    .slice(0, 3)
+);
+const seminars = computed(() =>
+  events.value
+    .filter((event) => event.event_type.name === `Semināri`)
+    .slice(0, 3)
+);
 
 onBeforeMount(async () => {
+  useFetchDataStore().isFetching = true;
   await axios
     .get("/api/events")
     .then((response) => {
-      events.value = response.data;
+      events.value = response.data.instances;
       console.log(response);
     })
     .catch((e) => {
-      console.log(`AAAAAAAAAAAAA:`, e.response.data);
+      console.log(e.response.data);
+    })
+    .finally(() => {
+      useFetchDataStore().isFetching = false;
+      useFetchDataStore().showComponents();
     });
 });
 
@@ -137,8 +139,6 @@ onMounted(() => {
   timer = setInterval(() => {
     time.value = new Date().toLocaleTimeString();
   }, 1000);
-
-  useFetchDataStore().showComponents();
 });
 
 onUnmounted(() => {
