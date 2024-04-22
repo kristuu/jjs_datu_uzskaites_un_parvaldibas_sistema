@@ -40,6 +40,8 @@ function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $
 }
 
 Route::get("/events", [EventController::class, 'getAllEvents']);
+Route::get("/event_count", [EventController::class, 'getEventCountByMonth']);
+Route::get("/event_percentage", [EventController::class, 'getEventPercentageThisYear']);
 
 Route::middleware('auth:sanctum')->group(function () {
     registerResourceRoutes('users', UserController::class, 'getAllUsers', 'findUserById', 'storeUser', 'updateUser', 'destroyUser');

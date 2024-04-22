@@ -78,7 +78,13 @@
             <InputText v-model="filterModel.value" type="text" />
           </template>
         </Column>
-        <Column :header="$t('table.events.start')" field="start" sortable>
+        <Column
+          :header="$t('table.events.start')"
+          dataType="date"
+          field="start"
+          filterField="date"
+          sortable
+        >
           <template #body="{ data }">
             {{ data.start }}
           </template>

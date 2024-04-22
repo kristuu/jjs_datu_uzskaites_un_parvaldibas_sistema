@@ -24,7 +24,7 @@
           </div>
           <div class="col-12 lg:col-9">
             <div class="grid">
-              <div class="col-12 sm:col-6">
+              <div class="col-12 xl:col-6">
                 <div class="p-3 bg-white rounded shadow h-full">
                   <div class="flex justify-content-between align-items-center">
                     <h2 class="m-0">SACENSĪBAS</h2>
@@ -53,7 +53,7 @@
                   </Timeline>
                 </div>
               </div>
-              <div class="col-12 sm:col-6">
+              <div class="col-12 xl:col-6">
                 <div class="p-3 bg-white rounded shadow h-full">
                   <div class="flex justify-content-between align-items-center">
                     <h2 class="m-0">SEMINĀRI</h2>
@@ -89,6 +89,51 @@
               <h2 class="m-0">STATISTIKA</h2>
             </div>
           </div>
+          <div class="col-12">
+            <div class="grid flex-row-reverse">
+              <div class="col-12 lg:col-6">
+                <div class="grid h-full">
+                  <div class="col-12">
+                    <div
+                      class="p-3 bg-white rounded shadow h-full align-content-center"
+                    >
+                      <MeterGroup
+                        :value="[
+                          {
+                            label: `Sacensības / Competitions`,
+                            value: competitionsPercentage,
+                          },
+                        ]"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div
+                      class="p-3 bg-white rounded shadow h-full align-content-center"
+                    >
+                      <MeterGroup
+                        :value="[
+                          {
+                            label: `Semināri / Seminars`,
+                            value: seminarsPercentage,
+                          },
+                        ]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 lg:col-6">
+                <div class="p-3 bg-white rounded shadow h-full">
+                  <div class="flex justify-content-between align-items-center">
+                    <h2 class="m-0">2024. GADA PASĀKUMI</h2>
+                  </div>
+                  <Divider class="mt-2" />
+                  <EventsByMonthChart />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -106,15 +151,21 @@ let timer = null;
 let date = ref(new Date().toLocaleDateString());
 
 const events = ref([]);
+const seminarsPercentage = ref(0);
+const competitionsPercentage = ref(0);
 
 const competitions = computed(() =>
   events.value
-    .filter((event) => event.event_type.name === `Sacensības`)
+    .filter((event) =>
+      event.event_type.name.toLocaleLowerCase().includes(`sacensības`)
+    )
     .slice(0, 3)
 );
 const seminars = computed(() =>
   events.value
-    .filter((event) => event.event_type.name === `Semināri`)
+    .filter((event) =>
+      event.event_type.name.toLocaleLowerCase().includes(`seminārs`)
+    )
     .slice(0, 3)
 );
 
@@ -126,11 +177,24 @@ onBeforeMount(async () => {
       events.value = response.data.instances;
       console.log(response);
     })
-    .catch((e) => {
-      console.log(e.response.data);
+    .catch((error) => {
+      console.error(error);
     })
     .finally(() => {
       useFetchDataStore().isFetching = false;
+    });
+
+  await axios
+    .get(`/api/event_percentage`)
+    .then((response) => {
+      console.log(response);
+      seminarsPercentage.value = response.data.seminars;
+      competitionsPercentage.value = response.data.competitions;
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
       useFetchDataStore().showComponents();
     });
 });

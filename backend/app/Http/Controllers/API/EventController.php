@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventRequest;
 use App\Http\Traits\PaginationTrait;
 use App\Models\Event;
+use App\Models\EventType;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
@@ -20,6 +22,63 @@ class EventController extends Controller
     public function getAllEvents()
     {
         return $this->getAll(Event::class, $this->globalFilterFields, $this->relationships);
+    }
+
+    public function getEventCountByMonth()
+    {
+        $eventTypes = EventType::with('events')->get();
+
+        $data = [];
+
+        foreach ($eventTypes as $eventType) {
+            $events = DB::table('events')->select(
+                'event_types.name',
+                DB::raw('YEAR(events.start) as year'),
+                DB::raw('MONTH(events.start) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+                ->join('event_types', 'events.event_type_id', '=', 'event_types.id')
+                ->where('event_types.id', $eventType->id)
+                ->groupBy('event_types.name', 'year', 'month')
+                ->get()
+                ->groupBy('year')
+                ->mapWithKeys(function ($yearGroup, $year) {
+                    $monthArray = $yearGroup->keyBy('month')->map->count->toArray();
+                    return [$monthArray + array_fill(1, 12, 0)];
+                })
+                ->toArray();
+
+            $data[$eventType->name] = $events;
+        }
+
+        return response()->json($data);
+    }
+
+    public function getEventPercentageThisYear()
+    {
+        $currentYear = date('Y');
+        $currentDate = new \DateTime();
+
+        $allCompetitionsCount = Event::whereHas('eventType', function ($query) {
+            $query->where('name', '=', 'Sacensības / Competition');
+        })->whereYear('start', $currentYear)->count();
+
+        $passedCompetitionsCount = Event::whereHas('eventType', function ($query) {
+            $query->where('name', '=', 'Sacensības / Competition');
+        })->whereYear('start', $currentYear)->whereDate('end', '<=', $currentDate)->count();
+
+        $allSeminarsCount = Event::whereHas('eventType', function ($query) {
+            $query->where('name', '=', 'Seminārs / Seminar');
+        })->whereYear('start', $currentYear)->count();
+
+        $passedSeminarsCount = Event::whereHas('eventType', function ($query) {
+            $query->where('name', '=', 'Seminārs / Seminar');
+        })->whereYear('start', $currentYear)->whereDate('end', '<=', $currentDate)->count();
+
+        return response()->json([
+            'seminars' => $passedSeminarsCount > 0 ? $passedSeminarsCount / $allSeminarsCount * 100 : 0,
+            'competitions' => $passedCompetitionsCount > 0 ? $passedCompetitionsCount / $allCompetitionsCount * 100 : 0
+        ]);
     }
 
     public function getThisYearsEvents()
@@ -69,7 +128,7 @@ class EventController extends Controller
             Log::error($exception->getMessage());
 
             return $this->sendResponse([
-                'message' => 'Error occurred while creating the ' . class_basename($className),
+                'message' => 'Error occurred while creating the ' . class_basename(Event::class),
                 'error' => $exception->getMessage(),
             ], 500);
         }

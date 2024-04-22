@@ -35,6 +35,7 @@ import Ripple from "primevue/ripple";
 import StyleClass from "primevue/styleclass";
 import { useAuthStore } from "@/stores/authStore";
 import Tooltip from "primevue/tooltip";
+import MeterGroup from "primevue/metergroup";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -68,6 +69,7 @@ app.component("VueDatePicker", VueDatePicker);
 app.component("Toast", Toast);
 app.component("IconField", IconField);
 app.component("InputIcon", InputIcon);
+app.component("MeterGroup", MeterGroup);
 
 app.use(pinia);
 app.use(router);
