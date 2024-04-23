@@ -24,6 +24,42 @@ class EventController extends Controller
         return $this->getAll(Event::class, $this->globalFilterFields, $this->relationships);
     }
 
+    public function getUpcomingEvents()
+    {
+        $currentDate = Carbon::now();
+
+        $competitions = Event::whereHas('eventType', function ($query) {
+            $query->where('name', '=', 'Sacensības / Competition');
+        })->with(['eventType', 'eventCategory', 'location'])->whereDate('end', '>=', $currentDate)->orderBy('start', 'asc')->limit(3)->get();
+
+        $seminars = Event::whereHas('eventType', function ($query) {
+            $query->where('name', '=', 'Seminārs / Seminar');
+        })->with(['eventType', 'eventCategory', 'location'])->whereDate('end', '>=', $currentDate)->orderBy('start', 'asc')->limit(3)->get();
+
+        return response()->json([
+            'competitions' => $competitions,
+            'seminars' => $seminars,
+        ]);
+    }
+
+    public function getThisYearsEventCount()
+    {
+        $currentYear = date('Y');
+
+        $competitions = Event::whereHas('eventType', function ($query) {
+            $query->where('name', 'Sacensības / Competition');
+        })->whereYear('start', $currentYear)->count();
+
+        $seminars = Event::whereHas('eventType', function ($query) {
+            $query->where('name', 'Seminārs / Seminar');
+        })->whereYear('start', $currentYear)->count();
+
+        return response()->json([
+            'competitions' => $competitions,
+            'seminars' => $seminars,
+        ]);
+    }
+
     public function getEventCountByMonth()
     {
         $eventTypes = EventType::with('events')->get();
@@ -85,18 +121,6 @@ class EventController extends Controller
     {
         $currentYear = date('Y');
         return response()->json(Event::whereYear('start', $currentYear)->whereYear('end', $currentYear)->get());
-    }
-
-    public function getThisYearsEventCount()
-    {
-        $currentYear = date('Y');
-        return response()->json(
-            [
-                'total' => Event::whereYear('start', $currentYear)->whereYear('end', $currentYear)->count(),
-                'completed' => Event::where('end', '<', now())->count(),
-                'upcoming' => Event::where('start', '>', now())->count()
-            ]
-        );
     }
 
     public function storeEvent(EventRequest $request)

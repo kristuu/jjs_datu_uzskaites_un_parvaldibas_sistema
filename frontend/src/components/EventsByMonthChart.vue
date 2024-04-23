@@ -1,5 +1,13 @@
 <template>
   <Chart :data="chartData" :options="chartOptions" type="line" />
+  <div class="mt-2 flex justify-content-center">
+    <Button
+      :label="$t(`reset_colors`).toLocaleUpperCase()"
+      rounded
+      size="small"
+      @click="resetColors"
+    />
+  </div>
 </template>
 
 <script setup>
@@ -17,6 +25,14 @@ const chartData = ref({
 });
 const chartOptions = ref();
 
+function resetColors() {
+  for (let dataset of chartData.value.datasets) {
+    const tempResetColor = getRandomRedsOrangesYellows();
+    dataset.borderColor = `rgb(${tempResetColor})`;
+    dataset.backgroundColor = `rgba(${tempResetColor}, 0.2)`;
+  }
+}
+
 function getRandomRedsOrangesYellows() {
   const red = 255;
   const green = Math.floor(Math.random() * 256); // Between red and yellow
@@ -32,7 +48,7 @@ onMounted(() => {
 onBeforeMount(async () => {
   const documentStyle = getComputedStyle(document.documentElement);
 
-  const response = await axios.get(`/api/event_count`);
+  const response = await axios.get(`/api/event_count_by_month`);
   for (const [eventName, data] of Object.entries(response.data)) {
     const color = getRandomRedsOrangesYellows();
     chartData.value.datasets.push({
@@ -58,6 +74,9 @@ const setChartOptions = () => {
     maintainAspectRatio: false,
     aspectRatio: 0.6,
     plugins: {
+      datalabels: {
+        display: false,
+      },
       legend: {
         labels: {
           color: textColor,

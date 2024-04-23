@@ -6,6 +6,12 @@
   "have_account_already": "Jau ir izveidots konts?",
   "yes": "Jā",
   "no": "Nē",
+  "competitions": "Sacensības",
+  "seminars": "Semināri",
+  "event_count": "Pasākumu uzskaitījums",
+  "event_progress": "Pasākumu progress",
+  "statistics": "Statistika",
+  "reset_colors": "Atiestatīt krāsas",
   "actions": {
     "login": "Ienākt",
     "register": "Reģistrēties"

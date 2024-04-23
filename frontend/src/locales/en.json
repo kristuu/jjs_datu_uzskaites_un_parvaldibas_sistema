@@ -6,6 +6,12 @@
   "have_account_already": "Have an account already?",
   "yes": "Yes",
   "no": "No",
+  "competitions": "Competitions",
+  "seminars": "Seminars",
+  "event_count": "Event count",
+  "event_progress": "Event progress",
+  "statistics": "Statistics",
+  "reset_colors": "Reset colors",
   "actions": {
     "login": "Login",
     "register": "Register"

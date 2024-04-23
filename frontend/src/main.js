@@ -37,6 +37,9 @@ import { useAuthStore } from "@/stores/authStore";
 import Tooltip from "primevue/tooltip";
 import MeterGroup from "primevue/metergroup";
 
+import { Chart } from "chart.js";
+import datalabels from "chartjs-plugin-datalabels";
+
 const pinia = createPinia();
 const app = createApp(App);
 
@@ -64,6 +67,8 @@ const globalOptions = {
     placeholder: null,
   },
 };
+
+Chart.register(datalabels);
 
 app.component("VueDatePicker", VueDatePicker);
 app.component("Toast", Toast);

@@ -27,7 +27,9 @@
               <div class="col-12 xl:col-6">
                 <div class="p-3 bg-white rounded shadow h-full">
                   <div class="flex justify-content-between align-items-center">
-                    <h2 class="m-0">SACENSĪBAS</h2>
+                    <h2 class="m-0 text-primary">
+                      {{ $t(`competitions`).toLocaleUpperCase() }}
+                    </h2>
                     <Button icon="bi bi-pencil" outlined rounded text />
                   </div>
                   <Divider class="mt-2" />
@@ -56,7 +58,9 @@
               <div class="col-12 xl:col-6">
                 <div class="p-3 bg-white rounded shadow h-full">
                   <div class="flex justify-content-between align-items-center">
-                    <h2 class="m-0">SEMINĀRI</h2>
+                    <h2 class="m-0 text-primary">
+                      {{ $t(`seminars`).toLocaleUpperCase() }}
+                    </h2>
                     <Button icon="bi bi-pencil" outlined rounded text />
                   </div>
                   <Divider class="mt-2" />
@@ -86,22 +90,33 @@
           </div>
           <div class="col-12">
             <div class="p-3 bg-primary rounded shadow">
-              <h2 class="m-0">STATISTIKA</h2>
+              <h2 class="m-0">{{ $t(`statistics`).toLocaleUpperCase() }}</h2>
             </div>
           </div>
           <div class="col-12">
             <div class="grid flex-row-reverse">
               <div class="col-12 lg:col-6">
-                <div class="grid h-full">
+                <div class="grid">
                   <div class="col-12">
                     <div
-                      class="p-3 bg-white rounded shadow h-full align-content-center"
+                      class="p-3 bg-white text-primary rounded shadow align-content-center"
+                    >
+                      <h2 class="m-0">
+                        {{ $t(`event_progress`).toLocaleUpperCase() }}
+                        <small>(2024)</small>
+                      </h2>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div
+                      class="p-3 bg-white rounded shadow align-content-center"
                     >
                       <MeterGroup
                         :value="[
                           {
                             label: `Sacensības / Competitions`,
                             value: competitionsPercentage,
+                            color: 'var(--red-600)',
                           },
                         ]"
                       />
@@ -109,13 +124,14 @@
                   </div>
                   <div class="col-12">
                     <div
-                      class="p-3 bg-white rounded shadow h-full align-content-center"
+                      class="p-3 bg-white rounded shadow align-content-center"
                     >
                       <MeterGroup
                         :value="[
                           {
                             label: `Semināri / Seminars`,
                             value: seminarsPercentage,
+                            color: 'var(--orange-400)',
                           },
                         ]"
                       />
@@ -124,12 +140,27 @@
                 </div>
               </div>
               <div class="col-12 lg:col-6">
-                <div class="p-3 bg-white rounded shadow h-full">
-                  <div class="flex justify-content-between align-items-center">
-                    <h2 class="m-0">2024. GADA PASĀKUMI</h2>
+                <div class="grid">
+                  <div class="col-12">
+                    <div
+                      class="p-3 bg-white text-primary rounded shadow align-content-center"
+                    >
+                      <h2 class="m-0">
+                        {{ $t(`event_count`).toLocaleUpperCase() }}
+                        <small>(2024)</small>
+                      </h2>
+                    </div>
                   </div>
-                  <Divider class="mt-2" />
-                  <EventsByMonthChart />
+                  <div class="col-12">
+                    <div class="p-3 bg-white rounded shadow h-full">
+                      <EventsByMonthChart />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="p-3 bg-white rounded shadow h-full">
+                      <EventCountThisYearChart />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,7 +172,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import axios from "@/services/axios";
 
@@ -150,32 +181,20 @@ let timer = null;
 
 let date = ref(new Date().toLocaleDateString());
 
-const events = ref([]);
 const seminarsPercentage = ref(0);
 const competitionsPercentage = ref(0);
 
-const competitions = computed(() =>
-  events.value
-    .filter((event) =>
-      event.event_type.name.toLocaleLowerCase().includes(`sacensības`)
-    )
-    .slice(0, 3)
-);
-const seminars = computed(() =>
-  events.value
-    .filter((event) =>
-      event.event_type.name.toLocaleLowerCase().includes(`seminārs`)
-    )
-    .slice(0, 3)
-);
+const competitions = ref([]);
+const seminars = ref([]);
 
 onBeforeMount(async () => {
   useFetchDataStore().isFetching = true;
   await axios
-    .get("/api/events")
+    .get("/api/upcoming_events")
     .then((response) => {
-      events.value = response.data.instances;
       console.log(response);
+      competitions.value = response.data.competitions;
+      seminars.value = response.data.seminars;
     })
     .catch((error) => {
       console.error(error);
