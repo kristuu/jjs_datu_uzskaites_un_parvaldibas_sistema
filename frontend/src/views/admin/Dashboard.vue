@@ -30,7 +30,13 @@
                     <h2 class="m-0 text-primary">
                       {{ $t(`competitions`).toLocaleUpperCase() }}
                     </h2>
-                    <Button icon="bi bi-pencil" outlined rounded text />
+                    <Button
+                      icon="bi bi-pencil"
+                      outlined
+                      rounded
+                      text
+                      @click="router.push({ name: 'EventList' })"
+                    />
                   </div>
                   <Divider class="mt-2" />
                   <Timeline :value="competitions">
@@ -153,12 +159,12 @@
                   </div>
                   <div class="col-12">
                     <div class="p-3 bg-white rounded shadow h-full">
-                      <EventsByMonthChart />
+                      <EventCountThisYearChart />
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="p-3 bg-white rounded shadow h-full">
-                      <EventCountThisYearChart />
+                      <EventsByMonthChart />
                     </div>
                   </div>
                 </div>
@@ -175,6 +181,7 @@
 import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import axios from "@/services/axios";
+import router from "@/router/router";
 
 let time = ref(new Date().toLocaleTimeString());
 let timer = null;

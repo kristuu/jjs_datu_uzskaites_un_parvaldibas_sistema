@@ -67,6 +67,7 @@ const setChartOptions = () => {
   const textColor = documentStyle.getPropertyValue("--text-color");
 
   return {
+    aspectRatio: 2,
     plugins: {
       datalabels: {
         color: "black",
