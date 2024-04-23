@@ -67,7 +67,13 @@
                     <h2 class="m-0 text-primary">
                       {{ $t(`seminars`).toLocaleUpperCase() }}
                     </h2>
-                    <Button icon="bi bi-pencil" outlined rounded text />
+                    <Button
+                      icon="bi bi-pencil"
+                      outlined
+                      rounded
+                      text
+                      @click="router.push({ name: 'EventList' })"
+                    />
                   </div>
                   <Divider class="mt-2" />
                   <Timeline :value="seminars">
