@@ -247,3 +247,7 @@ label {
 .p-password > .p-input-icon {
     margin-top: -0.5rem !important;
 }
+
+.p-dataview-content {
+    background: none;
+}

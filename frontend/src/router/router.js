@@ -6,7 +6,6 @@ import CreateUser from "../views/user/CreateUser.vue";
 import EditUser from "../views/user/EditUser.vue";
 import LoginPage from "../views/auth/LoginPage.vue";
 import RegisterPage from "../views/auth/RegisterPage.vue";
-import InstructorsList from "@/views/booking/InstructorsList.vue";
 
 import MaugloCompute from "@/views/calculateReportDiapazone.vue";
 import ErrorView from "@/views/error/ErrorView.vue";
@@ -49,6 +48,7 @@ import EditEventType from "@/views/eventType/EditEventType.vue";
 import LocationList from "@/views/location/LocationList.vue";
 import CreateLocation from "@/views/location/CreateLocation.vue";
 import EditLocation from "@/views/location/EditLocation.vue";
+import BookingList from "@/views/booking/BookingList.vue";
 
 const routes = [
   {
@@ -59,8 +59,8 @@ const routes = [
   },
   {
     path: "/booking",
-    name: "InstructorsList",
-    component: InstructorsList,
+    name: "BookingList",
+    component: BookingList,
     meta: { public: false },
   },
   {

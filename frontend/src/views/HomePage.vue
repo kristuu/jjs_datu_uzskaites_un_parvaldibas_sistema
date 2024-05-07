@@ -26,7 +26,12 @@
                     <h2 class="m-0 text-primary">
                       {{ $t(`your_reservations`).toLocaleUpperCase() }}
                     </h2>
-                    <Button class="mt-2 md:m-0" icon="bi bi-plus-lg" outlined />
+                    <Button
+                      class="mt-2 md:m-0"
+                      icon="bi bi-plus-lg"
+                      outlined
+                      @click="$router.push({ name: 'BookingList' })"
+                    />
                   </div>
                   <Divider class="my-3" />
                 </div>
