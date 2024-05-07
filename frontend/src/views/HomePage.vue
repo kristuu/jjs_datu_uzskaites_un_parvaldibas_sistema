@@ -33,6 +33,24 @@
               </div>
             </div>
           </div>
+          <div class="col-3 mt-5">
+            <Button
+              class="w-100"
+              label="09.00 (ilgums 1h 3min)"
+              severity="primary"
+            />
+          </div>
+          <div class="col-3 mt-5">
+            <Button class="w-100" label="09.00 (ilgums 1h 3min)" outlined />
+          </div>
+          <div class="col-3 mt-5">
+            <Button
+              class="w-100"
+              disabled
+              label="09.00 (ilgums 1h 3min)"
+              severity="secondary"
+            />
+          </div>
         </div>
       </div>
     </div>
