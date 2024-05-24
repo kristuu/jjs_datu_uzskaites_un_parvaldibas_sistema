@@ -49,6 +49,7 @@ import LocationList from "@/views/location/LocationList.vue";
 import CreateLocation from "@/views/location/CreateLocation.vue";
 import EditLocation from "@/views/location/EditLocation.vue";
 import BookingList from "@/views/booking/BookingList.vue";
+import BookingInstructor from "@/views/booking/BookingInstructor.vue";
 
 const routes = [
   {
@@ -61,6 +62,12 @@ const routes = [
     path: "/booking",
     name: "BookingList",
     component: BookingList,
+    meta: { public: false },
+  },
+  {
+    path: "/booking/:id",
+    name: "BookingInstructor",
+    component: BookingInstructor,
     meta: { public: false },
   },
   {
