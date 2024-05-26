@@ -139,8 +139,6 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/_laravel_idea" />
       <excludeFolder url="file://$MODULE_DIR$/backend/storage/app" />
       <excludeFolder url="file://$MODULE_DIR$/backend/storage/framework" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/giggsey/libphonenumber-for-php" />
-      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/giggsey/locale" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/nembie/iban-rule" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/propaganistas/laravel-phone" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/laravel-permission" />
@@ -175,6 +173,7 @@
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/spatie/typescript-transformer" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/stichoza/google-translate-php" />
       <excludeFolder url="file://$MODULE_DIR$/backend/vendor/tightenco/ziggy" />
+      <excludeFolder url="file://$MODULE_DIR$/backend/vendor/giggsey/libphonenumber-for-php-lite" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

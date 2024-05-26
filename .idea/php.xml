@@ -143,8 +143,6 @@
       <path value="$PROJECT_DIR$/backend/vendor/phpdocumentor/reflection-common" />
       <path value="$PROJECT_DIR$/backend/vendor/guzzlehttp/promises" />
       <path value="$PROJECT_DIR$/backend/vendor/_laravel_idea" />
-      <path value="$PROJECT_DIR$/backend/vendor/giggsey/libphonenumber-for-php" />
-      <path value="$PROJECT_DIR$/backend/vendor/giggsey/locale" />
       <path value="$PROJECT_DIR$/backend/vendor/propaganistas/laravel-phone" />
       <path value="$PROJECT_DIR$/backend/vendor/nembie/iban-rule" />
       <path value="$PROJECT_DIR$/backend/vendor/spatie/laravel-permission" />
@@ -179,6 +177,7 @@
       <path value="$PROJECT_DIR$/backend/vendor/daverandom/libdns" />
       <path value="$PROJECT_DIR$/backend/vendor/amphp/cache" />
       <path value="$PROJECT_DIR$/backend/vendor/amphp/parser" />
+      <path value="$PROJECT_DIR$/backend/vendor/giggsey/libphonenumber-for-php-lite" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
