@@ -7,6 +7,7 @@ use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\API\EventCategoryController;
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\EventTypeController;
+use App\Http\Controllers\API\InstructorAvailabilityController;
 use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\API\PermissionController;
@@ -77,6 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['middleware' => ['permission:manage certificates']], function () {
         Route::get("/certificates_categories", [CategoryController::class, "getAllCategories"]);
     });
+
+    Route::get('/availabilities/{date}', [InstructorAvailabilityController::class, 'getAvailabilitiesByDate']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
