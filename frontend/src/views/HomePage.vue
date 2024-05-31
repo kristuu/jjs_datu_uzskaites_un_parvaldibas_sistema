@@ -163,31 +163,41 @@
                                   />
                                 </div>
                                 <div v-else>
-                                  <span class="text-xl font-semibold text-900">
-                                    {{
-                                      formatDate(
-                                        item.instructor_availability.start_time
-                                      )
-                                    }}
-                                  </span>
-                                  <br />
-                                  <span class="text-xl font-semibold text-900">
-                                    {{
-                                      formatTimeRange(
-                                        item.instructor_availability.start_time,
-                                        item.instructor_availability.end_time
-                                      )
-                                    }}
-                                  </span>
+                                  <div class="text-sm fw-bold text-black">
+                                    Datums
+                                    <br />
+                                    <span
+                                      class="text-xl font-semibold text-900"
+                                    >
+                                      {{
+                                        formatDate(
+                                          item.instructor_availability
+                                            .start_time
+                                        )
+                                      }}
+                                    </span>
+                                  </div>
+                                  <div class="mt-2 text-sm fw-bold text-black">
+                                    Laiks
+                                    <br />
+                                    <span
+                                      class="text-xl font-semibold text-900"
+                                    >
+                                      {{
+                                        formatTimeRange(
+                                          item.instructor_availability
+                                            .start_time,
+                                          item.instructor_availability.end_time
+                                        )
+                                      }}
+                                    </span>
+                                  </div>
                                 </div>
                                 <div
+                                  v-if="item.status !== 'accepted'"
                                   class="flex flex-row-reverse md:flex-row gap-2"
                                 >
                                   <Button
-                                    :disabled="
-                                      item.status === 'accepted' ||
-                                      fetchDataStore.isFetching
-                                    "
                                     :label="
                                       $t(
                                         `reservations.cancel`
@@ -248,7 +258,11 @@
                                 <div
                                   class="flex flex-row-reverse md:flex-row gap-2"
                                 >
-                                  <Skeleton height="2rem" width="100%" />
+                                  <Skeleton
+                                    height="2rem"
+                                    style="min-width: 168px"
+                                    width="100%"
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -257,6 +271,10 @@
                       </div>
                     </template>
                   </DataView>
+                  <Divider class="m-0" />
+                  <Button class="my-3 float-end" @click="showAllReservations">
+                    VISAS REZERVĀCIJAS
+                  </Button>
                 </div>
               </div>
             </div>
@@ -301,7 +319,7 @@ const formatTimeRange = (startTimeString, endTimeString) => {
   const endHours = padZero(endTime.getHours());
   const endMinutes = padZero(endTime.getMinutes());
 
-  return `no ${startHours}.${startMinutes} līdz ${endHours}.${endMinutes}`;
+  return `${startHours}.${startMinutes} - ${endHours}.${endMinutes}`;
 };
 
 onBeforeMount(async () => {
