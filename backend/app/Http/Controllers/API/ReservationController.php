@@ -20,7 +20,7 @@ class ReservationController extends Controller
     {
         $user = auth()->user();
 
-        $instructorAvailability = instructors_availability::find($request->instructor_aviailability_id);
+        $instructorAvailability = instructors_availability::find($request->instructor_availability_id);
 
         if ($instructorAvailability) {
             $reservation = Reservation::create([
