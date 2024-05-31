@@ -223,7 +223,7 @@
               />
             </div>
             <Divider/>
-            <div>
+            <div style="max-height: 50vh; overflow: hidden auto;">
               {{ instance.description }}
             </div>
           </div>
@@ -262,7 +262,7 @@
               </div>
             </div>
             <Divider/>
-            <div>
+            <div style="max-height: 50vh; overflow: hidden auto">
               <div class="fw-bold">
                 Izvēlies vienu no pieejamajiem sākuma laikiem:
               </div>

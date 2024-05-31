@@ -36,9 +36,11 @@ import StyleClass from "primevue/styleclass";
 import { useAuthStore } from "@/stores/authStore";
 import Tooltip from "primevue/tooltip";
 import MeterGroup from "primevue/metergroup";
+import ConfirmationPopup from "primevue/confirmpopup";
 
 import { Chart } from "chart.js";
 import datalabels from "chartjs-plugin-datalabels";
+import ConfirmationService from "primevue/confirmationservice";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -75,6 +77,7 @@ app.component("Toast", Toast);
 app.component("IconField", IconField);
 app.component("InputIcon", InputIcon);
 app.component("MeterGroup", MeterGroup);
+app.component("ConfirmationPopup", ConfirmationPopup);
 
 app.use(pinia);
 app.use(router);
@@ -83,6 +86,7 @@ app.use(PrimeVue, {
 });
 
 app.use(ToastService);
+app.use(ConfirmationService);
 
 app.directive("ripple", Ripple);
 app.directive("styleclass", StyleClass);

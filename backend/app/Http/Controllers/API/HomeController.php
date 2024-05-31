@@ -20,13 +20,13 @@ class HomeController extends Controller
             ->whereHas('instructor', function ($query) use ($user) {
                 $query->where('user_person_code', $user->person_code);
             })
-            ->where('status', '!=', 'cancelled') // Exclude cancelled reservations
+            ->where('status', '!=', 'denied') // Exclude denied reservations for small reservation list
             ->whereHas('instructorAvailability', function ($query) {
                 $query->where('end_time', '>=', now()); // Exclude past reservations
             })
             ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
             ->orderBy(DB::raw('DATE(instructors_availabilities.start_time)'), 'asc') // Order by date
-            ->get(['reservations.*']); // Select only columns from reservations
+            ->get(['reservations.*']);
 
         return $this->sendResponse($reservations);
     }

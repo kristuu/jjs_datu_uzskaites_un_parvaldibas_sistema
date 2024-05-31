@@ -1,5 +1,5 @@
 <template>
-  <Transition name="fade" mode="out-in">
+  <Transition mode="out-in" name="fade">
     <template v-if="fetchDataStore.show">
       <div>
         <div
@@ -7,8 +7,8 @@
         >
           <h1 class="fw-bold mb-0">Treniņa rezervācija</h1>
           <span class="ml-2"
-            ><i class="bi bi-caret-right-fill" />Pašlaik pieejami 3
-            treneri</span
+            ><i class="bi bi-caret-right-fill" />Pašlaik pieejami
+            {{ fetchDataStore.totalInstanceCount }} treneri</span
           >
         </div>
         <div class="grid">
@@ -25,11 +25,11 @@
             </div>
           </div>
           <DataView
+            :layout="'grid'"
             :value="fetchDataStore.allInstances"
             class="col-12 bg-transparent"
-            :layout="'grid'"
           >
-            <template #grid="slotProps">
+            <template v-if="!fetchDataStore.isFetching" #grid="slotProps">
               <div class="grid">
                 <div
                   v-for="(instructor, index) in slotProps.items"
@@ -78,14 +78,18 @@
                                 0px 1px 2px 0px rgba(0, 0, 0, 0.06);
                             "
                           >
-                            <i
-                              class="pi pi-star-fill text-yellow-500"
-                              v-for="i in 3"
-                            ></i>
-                            <i
-                              class="pi pi-star text-yellow-500"
-                              v-for="i in 2"
-                            ></i>
+                            <template v-for="star in 5">
+                              <i
+                                v-if="star <= instructor.rating"
+                                :key="'filled-' + star"
+                                class="pi pi-star-fill text-yellow-500"
+                              ></i>
+                              <i
+                                v-else
+                                :key="'empty-' + star"
+                                class="pi pi-star text-yellow-500"
+                              ></i>
+                            </template>
                           </div>
                         </div>
                       </div>
@@ -102,9 +106,19 @@
                       </div>
                     </div>
                     <div class="text-right bottom-0">
-                      <Button icon="pi pi-arrow-right" />
+                      <Button
+                        icon="pi pi-arrow-right"
+                        @click="router.push(`/booking/${instructor.id}`)"
+                      />
                     </div>
                   </div>
+                </div>
+              </div>
+            </template>
+            <template v-if="fetchDataStore.isFetching" #empty>
+              <div class="grid">
+                <div v-for="i in 5" class="col-12 md:col-6 xl:col-4 p-2">
+                  <Skeleton height="20rem" width="100%" />
                 </div>
               </div>
             </template>
@@ -121,6 +135,7 @@ import { FilterMatchMode, FilterOperator } from "primevue/api";
 
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import router from "@/router/router";
+
 const fetchDataStore = useFetchDataStore();
 
 const instance = computed(() => fetchDataStore.instance);

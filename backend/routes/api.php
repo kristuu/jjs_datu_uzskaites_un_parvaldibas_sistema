@@ -85,6 +85,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/availability-counts/{instructor_id}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);
 
     Route::post('/reservations', [ReservationController::class, 'storeReservation']);
+
+    Route::get('/getAllReservations', [HomeController::class, 'getAllReservations']);
+    Route::delete('/personal_reservations/{id}', [ReservationController::class, 'destroyReservation']);
     Route::get('/homeData', [HomeController::class, 'index']);
 });
 

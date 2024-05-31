@@ -46,4 +46,9 @@ class ReservationController extends Controller
             ], 404);
         }
     }
+
+    public function destroyReservation(int $id)
+    {
+        return $this->destroy($id, Reservation::class);
+    }
 }

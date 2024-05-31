@@ -226,7 +226,7 @@
   "reservations": {
     "submitted": "Pieteikts",
     "accepted": "Apstiprināts",
-    "declined": "Noraidīts",
+    "denied": "Noraidīts",
     "cancel": "Atcelt pieteikumu"
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
