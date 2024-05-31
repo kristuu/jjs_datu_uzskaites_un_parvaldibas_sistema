@@ -25,7 +25,7 @@ class HomeController extends Controller
                 $query->where('end_time', '>=', now()); // Exclude past reservations
             })
             ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
-            ->orderBy(DB::raw('DATE(instructors_availabilities.start_time)'), 'asc') // Order by date
+            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc') // Order by date
             ->get(['reservations.*']);
 
         return $this->sendResponse($reservations);
@@ -44,7 +44,7 @@ class HomeController extends Controller
                 $query->where('user_person_code', $user->person_code);
             })
             ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
-            ->orderBy(DB::raw('DATE(instructors_availabilities.start_time)'), 'asc') // Order by date
+            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc') // Order by date
             ->get(['reservations.*']); // Select only columns from reservations
 
         return $this->sendResponse($reservations);

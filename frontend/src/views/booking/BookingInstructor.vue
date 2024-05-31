@@ -58,11 +58,18 @@
                               0px 1px 2px 0px rgba(0, 0, 0, 0.06);
                           "
                         >
-                          <i
-                              v-for="i in 3"
-                              class="pi pi-star-fill text-primary"
-                          ></i>
-                          <i v-for="i in 2" class="pi pi-star text-primary"></i>
+                          <template v-for="star in 5">
+                            <i
+                                v-if="star <= instance.rating"
+                                :key="'filled-' + star"
+                                class="pi pi-star-fill text-primary"
+                            ></i>
+                            <i
+                                v-else
+                                :key="'empty-' + star"
+                                class="pi pi-star text-primary"
+                            ></i>
+                          </template>
                         </div>
                       </div>
                     </div>
