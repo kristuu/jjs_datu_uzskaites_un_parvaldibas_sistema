@@ -49,12 +49,18 @@ class InstructorAvailabilityController extends Controller
     {
         $instructor_id = $request->route("instructor_id");
 
-        $availabilityCounts = DB::table('instructors_availabilities')
-            ->select(DB::raw('DATE(start_time) as date'), DB::raw('count(*) as count'))
-            ->where('instructor_id', $instructor_id)
-            ->groupBy(DB::raw('DATE(start_time)'))
+        $availabilityCounts = DB::table('instructors_availabilities as ia')
+            ->leftJoin('reservations as r', 'ia.id', '=', 'r.instructor_availability_id')
+            ->select(DB::raw('DATE(ia.start_time) as date'), DB::raw('count(*) as count'))
+            ->where('ia.instructor_id', $instructor_id)
+            ->where(function ($query) {
+                $query->whereNull('r.status')
+                    ->orWhereNotIn('r.status', ['submitted', 'accepted']);
+            })
+            ->groupBy(DB::raw('DATE(ia.start_time)'))
             ->get();
 
         return response()->json($availabilityCounts);
     }
+
 }

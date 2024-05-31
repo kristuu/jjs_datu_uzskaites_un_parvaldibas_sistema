@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Instructor extends Model
 {
@@ -41,22 +40,22 @@ class Instructor extends Model
     /**
      * Get the user that is the instructor.
      */
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_person_code', 'person_code');
     }
 
-    public function certificate() : BelongsTo
+    public function certificate(): BelongsTo
     {
         return $this->belongsTo(Certificate::class);
     }
 
-    public function availability() : HasMany
+    public function availabilities()
     {
         return $this->hasMany(instructors_availability::class);
     }
 
-    public function reservation() : HasMany
+    public function reservation(): HasMany
     {
         return $this->hasMany(Reservation::class);
     }

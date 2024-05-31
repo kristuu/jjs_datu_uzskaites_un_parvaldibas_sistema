@@ -223,6 +223,10 @@
     "text_color": "Teksta krāsa",
     "text_background": "Teksta fons"
   },
+  "reservations": {
+    "submitted": "Pieteikts",
+    "cancel": "Atcelt rezervāciju"
+  },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
   "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams."
 }

@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ReservationRequest;
 use App\Models\instructors_availability;
 use App\Models\Reservation;
+use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    public function getUserReservations(ReservationRequest $request)
+    public function getUserReservations(Request $request)
     {
         $user = auth()->user();
         $reservations = Reservation::where('user_person_code', $user->person_code)->get();

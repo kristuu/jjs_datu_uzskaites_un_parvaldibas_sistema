@@ -490,11 +490,7 @@ const submitReservation = async () => {
       instructor_availability_id: selectedTime.value.id
     });
 
-    if (response.data.message === 'Reservation submitted successfully') {
-      // Handle success
-    } else {
-      // Handle failure
-    }
+    fetchAvailabilityCounts();
   } catch (error) {
     console.error("Error submitting reservation:", error);
   } finally {

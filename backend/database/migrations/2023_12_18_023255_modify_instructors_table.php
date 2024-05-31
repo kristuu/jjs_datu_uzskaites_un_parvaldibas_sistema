@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::table('instructors', function (Blueprint $table) {
             $table->text('description');
+            $table->enum('rating', ['1', '2', '3', '4', '5']);
         });
     }
 

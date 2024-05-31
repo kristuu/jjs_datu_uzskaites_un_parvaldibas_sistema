@@ -7,6 +7,7 @@ use App\Http\Controllers\API\CountryController;
 use App\Http\Controllers\API\EventCategoryController;
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\EventTypeController;
+use App\Http\Controllers\API\HomeController;
 use App\Http\Controllers\API\InstructorAvailabilityController;
 use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\LocationController;
@@ -84,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/availability-counts/{instructor_id}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);
 
     Route::post('/reservations', [ReservationController::class, 'storeReservation']);
+    Route::get('/homeData', [HomeController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
