@@ -12,6 +12,7 @@ use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\LocationController;
 use App\Http\Controllers\API\PermissionController;
 use App\Http\Controllers\API\RegionController;
+use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
@@ -79,7 +80,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("/certificates_categories", [CategoryController::class, "getAllCategories"]);
     });
 
-    Route::get('/availabilities/{date}', [InstructorAvailabilityController::class, 'getAvailabilitiesByDate']);
+    Route::get('/availabilities/{instructor_id}/{date}', [InstructorAvailabilityController::class, 'getAvailabilitiesByDate']);
+    Route::get('/availability-counts/{instructor_id}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);
+
+    Route::post('/reservations', [ReservationController::class, 'storeReservation']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

@@ -9,11 +9,7 @@ class ReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_time' => ['required', 'date'],
-            'end_time' => ['required', 'date'],
-            'status' => ['required'],
-            'person_code' => ['required'],
-            'instructor_id' => ['required'],
+            'instructor_availability_id' => ['required']
         ];
     }
 

@@ -3,7 +3,7 @@
     <template v-if="fetchDataStore.show">
       <div>
         <div
-          class="flex flex-column lg:flex-row align-items-baseline text-primary lg:text-white mb-3"
+            class="flex flex-column lg:flex-row align-items-baseline text-primary lg:text-white mb-3"
         >
           <h1 class="fw-bold mb-0">Trenera profils</h1>
           <!--          <span class="ml-2"
@@ -15,7 +15,7 @@
         <div class="grid mb-2">
           <div class="col-12">
             <div
-              class="p-5 bg-primary lg:bg-white text-white lg:text-primary rounded shadow text-center"
+                class="p-5 bg-primary lg:bg-white text-white lg:text-primary rounded shadow text-center"
             >
               <p class="fw-bold">
                 Pārliecinies par savas kontaktinformācijas aktualitāti, lai
@@ -27,40 +27,40 @@
         <div class="grid">
           <div class="col-12 md:col-5 xl:col-4">
             <div
-              class="bg-primary rounded shadow p-4 rounded flex flex-column h-full"
+                class="bg-primary rounded shadow p-4 rounded flex flex-column h-full"
             >
               <div>
                 <div class="grid">
                   <div class="col-6">
                     <div>
                       <img
-                        class="w-full"
-                        src="https://via.placeholder.com/720x1080/eee?text=PROFILA%20FOTO"
-                        style="border-radius: 0.375rem 0.375rem 0 0"
+                          class="w-full"
+                          src="https://via.placeholder.com/720x1080/eee?text=PROFILA%20FOTO"
+                          style="border-radius: 0.375rem 0.375rem 0 0"
                       />
                     </div>
                     <div v-if="fetchDataStore.isFetching">
                       <Skeleton
-                        height="2rem"
-                        style="border-radius: 0 0 6px 6px"
+                          height="2rem"
+                          style="border-radius: 0 0 6px 6px"
                       />
                     </div>
                     <div v-else>
                       <div
-                        class="surface-100 p-1 w-full"
-                        style="border-radius: 0 0 0.375rem 0.375rem"
+                          class="surface-100 p-1 w-full"
+                          style="border-radius: 0 0 0.375rem 0.375rem"
                       >
                         <div
-                          class="surface-0 flex align-items-center gap-1 justify-content-center py-1 px-3"
-                          style="
+                            class="surface-0 flex align-items-center gap-1 justify-content-center py-1 px-3"
+                            style="
                             border-radius: 0 0 0.375rem 0.375rem;
                             box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04),
                               0px 1px 2px 0px rgba(0, 0, 0, 0.06);
                           "
                         >
                           <i
-                            v-for="i in 3"
-                            class="pi pi-star-fill text-primary"
+                              v-for="i in 3"
+                              class="pi pi-star-fill text-primary"
                           ></i>
                           <i v-for="i in 2" class="pi pi-star text-primary"></i>
                         </div>
@@ -69,58 +69,116 @@
                   </div>
                   <div class="col-6">
                     <div v-if="fetchDataStore.isFetching">
-                      <Skeleton class="mb-2" height="1.5rem" width="75%" />
-                      <Skeleton class="mb-5" height="1.5rem" />
-                      <Skeleton style="height: 1rem" />
+                      <Skeleton class="mb-2" height="1.5rem" width="75%"/>
+                      <Skeleton class="mb-5" height="1.5rem"/>
+                      <Skeleton style="height: 1rem"/>
                     </div>
                     <div v-else>
                       <h2 class="h2 font-bold p-0 m-0 mb-3">
                         {{ `${instance.user?.name} ${instance.user?.surname}` }}
                       </h2>
                       <span class="font-medium text-sm">{{
-                        instance.certificate?.category?.name
-                      }}</span>
+                          instance.certificate?.category?.name
+                        }}</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="pt-4 mb-5">
                 <div v-if="fetchDataStore.isFetching">
-                  <Skeleton class="mb-2" style="height: 1rem" width="90%" />
-                  <Skeleton class="mb-2" style="height: 1rem" />
-                  <Skeleton class="mb-2" style="height: 1rem" width="50%" />
-                  <Skeleton style="height: 2rem; width: 130px" />
+                  <Skeleton class="mb-2" style="height: 1rem" width="90%"/>
+                  <Skeleton class="mb-2" style="height: 1rem"/>
+                  <Skeleton class="mb-2" style="height: 1rem" width="50%"/>
+                  <Skeleton style="height: 2rem; width: 130px"/>
                 </div>
                 <div v-else>
-                  <div class="mb-2">{{ instance.description }}</div>
+                  <div class="mb-2">{{ instance.short_description }}</div>
                   <Button
-                    class="text-primary"
-                    label="RĀDĪT VAIRĀK"
-                    raised
-                    severity="secondary"
-                    size="small"
+                      class="text-primary"
+                      label="RĀDĪT VAIRĀK"
+                      raised
+                      severity="secondary"
+                      size="small"
+                      @click="descriptionVisible = true"
                   />
                 </div>
               </div>
               <div class="text-right bottom-0">
                 <span class="fw-bold">Novērtē treneri:</span>
                 <Rating
-                  v-model="instance.rating"
-                  :cancel="false"
-                  class="justify-content-end mt-1"
+                    v-model="instance.rating"
+                    :cancel="false"
+                    class="justify-content-end mt-1"
                 ></Rating>
               </div>
             </div>
           </div>
           <div class="col-12 md:col-7 xl:col-8">
-            <div
-              class="bg-white rounded shadow h-full w-full text-center d-flex"
-            >
-              <Calendar
-                :min-date="new Date()"
-                class="m-auto md:w-full"
-                inline
-              />
+            <div class="grid">
+              <div class="col-12">
+                <div class="bg-primary rounded shadow h-full text-center">
+                  <h1 class="m-0 py-3">DATUMA IZVĒLE</h1>
+                </div>
+              </div>
+              <div class="col-12">
+                <div
+                    class="bg-white rounded shadow h-full py-3 text-center d-flex flex-column justify-content-center"
+                >
+                  <Calendar
+                      v-model="chosenDate"
+                      :event-dates="eventDates"
+                      :min-date="new Date()"
+                      class="mx-auto"
+                      inline
+                      @dateSelect="onDateSelect"
+                  >
+                    <template #date="slotProps">
+                      <div
+                          :class="{ 'p-disabled': !isEvent(slotProps.date) }"
+                          class="d-flex justify-content-center"
+                      >
+                        <span :class="isEvent(slotProps.date) ? `mb-2` : ``">{{
+                            slotProps.date.day
+                          }}</span>
+                        <span
+                            v-if="isEvent(slotProps.date)"
+                            :style="{
+                            backgroundColor: getBackgroundColor(slotProps.date),
+                          }"
+                            class="event-dot"
+                        ></span>
+                      </div>
+                    </template>
+                  </Calendar>
+                  <Divider class="w-75 mx-auto mt-0"/>
+                  <div class="text-end text-sm w-75 m-auto">
+                    <p class="m-0 mb-1">
+                      <span class="p-disabled">n</span>
+                      <span> - nepieejams datums</span>
+                    </p>
+                    <p class="m-0 mb-1 d-flex align-items-center justify-content-end">
+                      <div class="w-fit text-center">
+                        <span>n</span>
+                        <span
+                            class="event-dot"
+                            style="background-color: yellow; position: unset"
+                        ></span>
+                      </div>
+                      <span class="ms-2">- 3 vai mazāk pieejamu laiku</span>
+                    </p>
+                    <p class="m-0 mb-2 d-flex align-items-center justify-content-end">
+                      <div class="w-fit text-center">
+                        <span>n</span>
+                        <span
+                            class="event-dot"
+                            style="background-color: limegreen; position: unset"
+                        ></span>
+                      </div>
+                      <span class="ms-2">- vairāk par 3 pieejamiem laikiem</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -128,79 +186,129 @@
     </template>
   </Transition>
 
-  <Button icon="pi pi-user" label="Login" @click="visible = true" />
-
   <Dialog
-    v-model:visible="visible"
-    :pt="{
+      v-model:visible="descriptionVisible"
+      :pt="{
       root: 'border-none',
       mask: {
-        style: 'backdrop-filter: blur(2px)',
+        style: 'backdrop-filter: blur(4px)',
       },
     }"
-    modal
+      dismissableMask
+      modal
+      position="top"
+      style="background: none"
   >
     <template #container="{ closeCallback }">
-      <div
-        class="flex flex-column px-5 py-5 gap-4"
-        style="
-          border-radius: 12px;
-          background-image: radial-gradient(
-            circle at left top,
-            var(--primary-400),
-            var(--primary-700)
-          );
-        "
-      >
-        <svg
-          class="block mx-auto"
-          fill="none"
-          height="40"
-          viewBox="0 0 35 40"
-          width="35"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M25.87 18.05L23.16 17.45L25.27 20.46V29.78L32.49 23.76V13.53L29.18 14.73L25.87 18.04V18.05ZM25.27 35.49L29.18 31.58V27.67L25.27 30.98V35.49ZM20.16 17.14H20.03H20.17H20.16ZM30.1 5.19L34.89 4.81L33.08 12.33L24.1 15.67L30.08 5.2L30.1 5.19ZM5.72 14.74L2.41 13.54V23.77L9.63 29.79V20.47L11.74 17.46L9.03 18.06L5.72 14.75V14.74ZM9.63 30.98L5.72 27.67V31.58L9.63 35.49V30.98ZM4.8 5.2L10.78 15.67L1.81 12.33L0 4.81L4.79 5.19L4.8 5.2ZM24.37 21.05V34.59L22.56 37.29L20.46 39.4H14.44L12.34 37.29L10.53 34.59V21.05L12.42 18.23L17.45 26.8L22.48 18.23L24.37 21.05ZM22.85 0L22.57 0.69L17.45 13.08L12.33 0.69L12.05 0H22.85Z"
-            fill="var(--primary-700)"
-          />
-          <path
-            d="M30.69 4.21L24.37 4.81L22.57 0.69L22.86 0H26.48L30.69 4.21ZM23.75 5.67L22.66 3.08L18.05 14.24V17.14H19.7H20.03H20.16H20.2L24.1 15.7L30.11 5.19L23.75 5.67ZM4.21002 4.21L10.53 4.81L12.33 0.69L12.05 0H8.43002L4.22002 4.21H4.21002ZM21.9 17.4L20.6 18.2H14.3L13 17.4L12.4 18.2L12.42 18.23L17.45 26.8L22.48 18.23L22.5 18.2L21.9 17.4ZM4.79002 5.19L10.8 15.7L14.7 17.14H14.74H15.2H16.85V14.24L12.24 3.09L11.15 5.68L4.79002 5.2V5.19Z"
-            fill="var(--primary-200)"
-          />
-        </svg>
-        <div class="inline-flex flex-column gap-2">
-          <label class="text-primary-50 font-semibold" for="username"
-            >Username</label
-          >
-          <InputText
-            id="username"
-            class="bg-white-alpha-20 border-none p-3 text-primary-50 w-20rem"
-          ></InputText>
+      <div class="grid mt-2">
+        <div class="col-12">
+          <div class="bg-primary rounded text-center shadow">
+            <h1 class="py-4 m-0">TRENERA APRAKSTS</h1>
+          </div>
         </div>
-        <div class="inline-flex flex-column gap-2">
-          <label class="text-primary-50 font-semibold" for="password"
-            >Password</label
-          >
-          <InputText
-            id="password"
-            class="bg-white-alpha-20 border-none p-3 text-primary-50 w-20rem"
-            type="password"
-          ></InputText>
+        <div class="col-12">
+          <div class="bg-white rounded p-3">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="fw-bold">Izvēlētais treneris</div>
+                <div>
+                  {{ `${instance.user?.name} ${instance.user?.surname}` }}
+                </div>
+              </div>
+              <Button
+                  class="fs-2 p-0"
+                  icon="bi bi-x-lg"
+                  text
+                  @click="closeCallback"
+              />
+            </div>
+            <Divider/>
+            <div>
+              {{ instance.description }}
+            </div>
+          </div>
         </div>
-        <div class="flex align-items-center gap-3">
-          <Button
-            class="p-3 w-full text-primary-50 border-1 border-white-alpha-30 hover:bg-white-alpha-10"
-            label="Cancel"
-            text
-            @click="closeCallback"
-          ></Button>
-          <Button
-            class="p-3 w-full text-primary-50 border-1 border-white-alpha-30 hover:bg-white-alpha-10"
-            label="Sign-In"
-            text
-            @click="closeCallback"
-          ></Button>
+      </div>
+    </template>
+  </Dialog>
+
+  <Dialog
+      v-model:visible="bookingVisible"
+      :pt="{ root: 'border-none', mask: { style: 'backdrop-filter: blur(4px)' } }"
+      class="container-sm"
+      dismissableMask
+      modal
+      position="top" style="background: none"
+  >
+    <template #container="{ closeCallback }">
+      <div class="grid mt-2">
+        <div class="col-12">
+          <div class="bg-primary rounded text-center shadow">
+            <h1 class="py-4 m-0">REZERVĀCIJAS PIETEIKŠANA</h1>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="bg-white rounded p-3">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="fw-bold">Izvēlētais treneris</div>
+                <div>
+                  {{ `${instance.user?.name} ${instance.user?.surname} - ${instance.certificate.category.name}` }}
+                </div>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold">Izvēlētais datums</div>
+                <div>{{ chosenDateDisplay }}</div>
+              </div>
+            </div>
+            <Divider/>
+            <div>
+              <div class="fw-bold">
+                Izvēlies vienu no pieejamajiem sākuma laikiem:
+              </div>
+              <div v-if="isFetchingTimes" class="grid mt-2">
+                <div v-for="i in 8" class="col-12 md:col-6">
+                  <Skeleton height="2rem"/>
+                </div>
+              </div>
+              <div v-else class="grid mt-2">
+                <div
+                    v-if="sortedAvailableTimes.length === 0"
+                    class="col-12 text-center"
+                >
+                  <span
+                  >Diemžēl šajā datumā treneris pieteikumus nepieņem.</span
+                  >
+                </div>
+                <div
+                    v-for="time in sortedAvailableTimes"
+                    :key="time.id"
+                    class="col-12 md:col-6"
+                >
+                  <Button
+                      :class="{
+    'bg-primary text-white': time.selected && !time.reserved,
+    'bg-white text-primary': !time.selected && !time.reserved
+  }"
+                      :disabled="time.reserved"
+                      :label="`${time.label} (ilgums ${time.duration})`"
+                      :severity="time.reserved ? 'secondary' : ''"
+                      class="w-full"
+                      @click="selectTime(time)"
+                  ></Button>
+                </div>
+              </div>
+            </div>
+            <div class="text-end">
+              <Button
+                  :label="
+        sortedAvailableTimes.length > 0 ? `PIETEIKT REZERVĀCIJU` : `AIZVĒRT`
+      "
+                  class="mt-4"
+                  @click="submitReservation"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </template>
@@ -208,26 +316,195 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, onMounted, ref } from "vue";
-
-import { useFetchDataStore } from "@/stores/fetchDataStore";
-import { useRoute } from "vue-router";
+import {computed, onBeforeMount, onMounted, ref} from "vue";
+import axios from "@/services/axios"; // Import custom axios instance
+import {useFetchDataStore} from "@/stores/fetchDataStore";
+import {useRoute} from "vue-router";
+import {useAuthStore} from "@/stores/authStore";
 
 const fetchDataStore = useFetchDataStore();
-
+const authStore = useAuthStore();
 const instance = computed(() => fetchDataStore.instance);
-
 const route = useRoute();
 
-const onRowSelect = async (event) => {
-  await fetchDataStore.fetchInstance("instructors", event.data.id);
-  visible.value = true;
+let descriptionVisible = ref(false);
+let bookingVisible = ref(false);
+let chosenDate = ref(null);
+let chosenDateDisplay = ref(null);
+
+const availableTimes = ref([]);
+let selectedTime = ref(null);
+
+const disabledDates = ref([]);
+const eventDates = ref([]);
+
+const selectTime = (time) => {
+  availableTimes.value.forEach((t) => (t.selected = false));
+  time.selected = true;
+  selectedTime.value = time;
 };
 
-let visible = ref(false);
+const continueReservation = () => {
+  // Handle continue reservation logic
+  closeBookingModal();
+};
+
+const closeBookingModal = () => {
+  bookingVisible.value = false;
+  availableTimes.value = [];
+};
+
+const formatDateForDisplay = (date) => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+};
+
+const formatDateForApi = (date) => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const onDateSelect = async (date) => {
+  availableTimes.value = [];
+  chosenDateDisplay.value = formatDateForDisplay(date);
+  chosenDate.value = formatDateForApi(date);
+  bookingVisible.value = true;
+
+  // Fetch data from backend for the selected date
+  await fetchReservationsForDate(chosenDate.value);
+};
+
+const formatDuration = (start, end) => {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const diffMs = endDate - startDate;
+  const diffMins = Math.floor(diffMs / 60000);
+  const hours = Math.floor(diffMins / 60);
+  const minutes = diffMins % 60;
+  let duration = "";
+  if (hours > 0) {
+    duration += `${hours}h`;
+  }
+  if (minutes > 0) {
+    duration += `${hours > 0 ? " " : ""}${minutes}min`;
+  }
+  return duration;
+};
+
+let isFetchingTimes = ref(false);
+
+const fetchReservationsForDate = async (date) => {
+  try {
+    isFetchingTimes.value = true;
+    const response = await axios.get(
+        `/api/availabilities/${instance.value.id}/${date}`
+    );
+    availableTimes.value = response.data.map((availability) => ({
+      id: availability.id,
+      label: new Date(availability.start_time).toLocaleTimeString("lv-LV", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      duration: formatDuration(availability.start_time, availability.end_time),
+      selected: false,
+      reserved: availability.reserved,
+    }));
+  } catch (error) {
+    console.error("Error fetching availabilities:", error);
+  } finally {
+    isFetchingTimes.value = false;
+  }
+};
+
+const fetchAvailabilityCounts = async () => {
+  try {
+    const response = await axios.get(
+        `/api/availability-counts/${instance.value.id}`
+    );
+    const counts = response.data;
+    disabledDates.value = counts
+        .filter((count) => count.count === 0)
+        .map((count) => new Date(count.date));
+    eventDates.value = counts
+        .filter((count) => count.count > 0)
+        .map((count) => ({
+          date: new Date(count.date),
+          count: count.count,
+        }));
+  } catch (error) {
+    console.error("Error fetching availability counts:", error);
+  }
+};
+
+const sortedAvailableTimes = computed(() => {
+  return availableTimes.value.slice().sort((end, start) => {
+    const endTime = new Date(
+        `1970-01-01T${end.label.split(" ")[0]}:00`
+    ).getTime();
+    const startTime = new Date(
+        `1970-01-01T${start.label.split(" ")[0]}:00`
+    ).getTime();
+    return endTime - startTime;
+  });
+});
+
+const isSameDay = (date1, date2) => {
+  if (!date1 || !date2) return false;
+  return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+  );
+};
+
+const isEvent = (date) => {
+  return (
+      date &&
+      eventDates.value.some((e) => {
+        const eventDate = e.date;
+        eventDate.setHours(0, 0, 0);
+        const calendarDate = new Date(date.year, date.month, date.day);
+        calendarDate.setHours(0, 0, 0);
+
+        return eventDate.getTime() === calendarDate.getTime();
+      })
+  );
+};
+
+const getBackgroundColor = (date) => {
+  const events = eventDates.value.find((e) => {
+    const eventDate = new Date(e.date);
+    const calendarDate = new Date(date.year, date.month, date.day);
+    return eventDate.getTime() === calendarDate.getTime();
+  });
+  return events ? (events.count > 3 ? "limegreen" : "yellow") : "";
+};
+
+const submitReservation = async () => {
+  try {
+    const response = await axios.post('/api/reservations', {
+      instructor_availability_id: selectedTime.value.id
+    });
+
+    if (response.data.message === 'Reservation submitted successfully') {
+      // Handle success
+    } else {
+      // Handle failure
+    }
+  } catch (error) {
+    console.error("Error submitting reservation:", error);
+  } finally {
+    bookingVisible.value = false;
+  }
+};
 
 onBeforeMount(async () => {
   await fetchDataStore.fetchInstance("instructors", route.params.id);
+  fetchAvailabilityCounts();
 });
 
 onMounted(() => {
@@ -250,10 +527,20 @@ onMounted(() => {
 }
 
 ::v-deep
-  .p-rating:not(.p-disabled):not(.p-readonly)
-  .p-rating-item:hover
-  .p-rating-icon {
+.p-rating:not(.p-disabled):not(.p-readonly)
+.p-rating-item:hover
+.p-rating-icon {
   color: gold;
+}
+
+.p-calendar {
+  width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+  .p-calendar {
+    width: 75%;
+  }
 }
 
 p {
@@ -267,5 +554,28 @@ h5 {
 
 nav ul {
   margin-bottom: 0 !important;
+}
+
+.custom-day {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.disabled-day {
+  color: #ccc;
+  pointer-events: none;
+}
+
+.event-dot {
+  width: 15px;
+  height: 6px;
+  border-radius: 15px;
+  display: block;
+  position: absolute;
+  bottom: 2px;
 }
 </style>

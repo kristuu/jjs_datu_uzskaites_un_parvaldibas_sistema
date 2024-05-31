@@ -12,9 +12,7 @@ class ReservationController extends Controller
     public function getUserReservations(ReservationRequest $request)
     {
         $user = auth()->user();
-
         $reservations = Reservation::where('user_person_code', $user->person_code)->get();
-
         return $this->sendResponse($reservations);
     }
 
@@ -22,7 +20,7 @@ class ReservationController extends Controller
     {
         $user = auth()->user();
 
-        $instructorAvailability = instructors_availability::find($request->id);
+        $instructorAvailability = instructors_availability::find($request->instructor_aviailability_id);
 
         if ($instructorAvailability) {
             $reservation = Reservation::create([

@@ -14,6 +14,8 @@ class Reservation extends Model
         'status',
         'user_person_code',
         'instructor_id',
+        'start_time',
+        'end_time'
     ];
 
     protected $casts = [
@@ -23,17 +25,17 @@ class Reservation extends Model
         'created_at', 'updated_at'
     ];
 
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_person_code', 'person_code');
     }
 
-    public function instructor() : BelongsTo
+    public function instructor(): BelongsTo
     {
         return $this->belongsTo(Instructor::class);
     }
 
-    public function instructors_availability() : BelongsTo
+    public function instructors_availability(): BelongsTo
     {
         return $this->belongsTo(instructors_availability::class, 'instructor_availability_id', 'id');
     }
