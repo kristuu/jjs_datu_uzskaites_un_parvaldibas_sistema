@@ -60,11 +60,16 @@ const showSidebar = () => {
             @click="changeLocale"
           />
         </template>
-        <template #menubutton><span /></template>
+        <template #menubutton><span class="focus-color-primary" /></template>
         <template #item="{ item, props, hasSubmenu, root }">
           <a class="flex" v-bind="props.action">
-            <span v-if="item.icon" :class="item.icon" />
-            <span :class="item.icon ? `ml-2` : ``">{{ item.label }}</span>
+            <span
+              v-if="item.icon"
+              :class="item.icon + ' focus-color-primary'"
+            />
+            <span :class="item.icon ? `ml-2` : `` + ' focus-color-primary'">{{
+              item.label
+            }}</span>
             <Badge
               v-if="item.badge"
               :class="{ 'ml-auto': !root, 'ml-2': root }"
@@ -731,9 +736,16 @@ const showSidebar = () => {
               class="mx-3 flex align-items-center cursor-pointer p-3 gap-2 transition-duration-150 transition-colors p-ripple"
             >
               <Avatar
+                :image="
+                  authStore.user.profile_picture
+                    ? authStore.user.profile_picture
+                    : ''
+                "
                 :label="
-                  authStore.user?.name.substring(0, 1) +
-                  authStore.user?.surname.substring(0, 1)
+                  authStore.user.profile_picture
+                    ? authStore.user?.name.substring(0, 1) +
+                      authStore.user?.surname.substring(0, 1)
+                    : ''
                 "
                 shape="circle"
                 style="background-color: #ffdfdf; color: #611212"

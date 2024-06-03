@@ -50,6 +50,7 @@ import CreateLocation from "@/views/location/CreateLocation.vue";
 import EditLocation from "@/views/location/EditLocation.vue";
 import BookingList from "@/views/booking/BookingList.vue";
 import BookingInstructor from "@/views/booking/BookingInstructor.vue";
+import UserProfileEdit from "@/views/public/user/UserProfileEdit.vue";
 
 const routes = [
   {
@@ -93,6 +94,12 @@ const routes = [
     name: "ErrorView",
     component: ErrorView,
     meta: { public: true },
+  },
+  {
+    path: "/profile",
+    name: "UserProfile",
+    component: UserProfileEdit,
+    meta: { public: false },
   },
   {
     path: "/admin",

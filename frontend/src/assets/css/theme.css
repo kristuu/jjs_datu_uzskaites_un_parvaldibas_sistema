@@ -8746,9 +8746,9 @@
 
     .p-megamenu {
         padding: 0.5rem 0.5rem;
-        background: #ffffff;
-        color: #334155;
-        border: 1px solid #e2e8f0;
+        background: none;
+        color: #fff;
+        border: none;
         border-radius: 6px;
     }
 
@@ -8769,19 +8769,19 @@
     }
 
     .p-megamenu .p-menuitem > .p-menuitem-content {
-        color: #334155;
+        color: #fff;
         transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, outline-color 0.2s;
         border-radius: 4px;
     }
 
     .p-megamenu .p-menuitem > .p-menuitem-content .p-menuitem-link {
-        color: #334155;
+        color: #fff;
         padding: 0.5rem 0.75rem;
         user-select: none;
     }
 
     .p-megamenu .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-text {
-        color: #334155;
+        color: #fff;
     }
 
     .p-megamenu .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-icon {
@@ -8793,11 +8793,10 @@
         color: #94a3b8;
     }
 
-    .p-megamenu .p-menuitem.p-highlight > .p-menuitem-content {
-        color: #7b251e;
-        background: #EEF2FF;
-    }
-
+    /*.p-megamenu .p-menuitem.p-highlight > .p-menuitem-content {*/
+    /*    color: #7b251e;*/
+    /*    background: #EEF2FF;*/
+    /*}*/
     .p-megamenu .p-menuitem.p-highlight > .p-menuitem-content .p-menuitem-link .p-menuitem-text {
         color: #7b251e;
     }
@@ -8806,52 +8805,42 @@
         color: #7b251e;
     }
 
-    .p-megamenu .p-menuitem.p-highlight.p-focus > .p-menuitem-content {
-        background: #E0E7FF;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content {
-        color: #334155;
-        background: #f1f5f9;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content .p-menuitem-link .p-menuitem-text {
-        color: #334155;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content .p-menuitem-link .p-menuitem-icon, .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content .p-menuitem-link .p-submenu-icon {
-        color: #334155;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover {
-        color: #334155;
-        background: #f1f5f9;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-text {
-        color: #334155;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon, .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-        color: #334155;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover {
-        color: #334155;
-        background: #f1f5f9;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-text {
-        color: #334155;
-    }
-
-    .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon, .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-        color: #334155;
-    }
-
+    /*.p-megamenu .p-menuitem.p-highlight.p-focus > .p-menuitem-content {*/
+    /*    background: #E0E7FF;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content {*/
+    /*    color: #334155;*/
+    /*    background: #f1f5f9;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content .p-menuitem-link .p-menuitem-text {*/
+    /*    color: #334155;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content .p-menuitem-link .p-menuitem-icon, .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content .p-menuitem-link .p-submenu-icon {*/
+    /*    color: #334155;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover {*/
+    /*    color: #334155;*/
+    /*    background: #f1f5f9;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-text {*/
+    /*    color: #334155;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon, .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus > .p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {*/
+    /*    color: #334155;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover {*/
+    /*    color: #334155;*/
+    /*    background: #f1f5f9;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-text {*/
+    /*    color: #334155;*/
+    /*}*/
+    /*.p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon, .p-megamenu .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {*/
+    /*    color: #334155;*/
+    /*}*/
     .p-megamenu .p-megamenu-panel {
-        background: #ffffff;
-        color: #334155;
+        background: #fff;
+        color: #fff;
         border: 1px solid #e2e8f0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         border-radius: 6px;
@@ -8861,7 +8850,7 @@
         margin: 0;
         padding: 0.5rem 0.75rem;
         color: #94a3b8;
-        background: #ffffff;
+        background: none;
         font-weight: 600;
         border-top-right-radius: 6px;
         border-top-left-radius: 6px;
@@ -8883,7 +8872,7 @@
     }
 
     .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list > .p-menuitem > .p-menuitem-content {
-        color: #334155;
+        color: #fff;
         transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, outline-color 0.2s;
         border-radius: 6px;
     }
@@ -8894,7 +8883,7 @@
     }
 
     .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-text {
-        color: #334155;
+        color: #fff;
     }
 
     .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link .p-menuitem-icon {
@@ -8908,16 +8897,16 @@
     }
 
     .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list > .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover {
-        color: #334155;
-        background: #f1f5f9;
+        color: #fff;
+        background: none;
     }
 
     .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list > .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-text {
-        color: #334155;
+        color: #fff;
     }
 
     .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list > .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-menuitem-icon, .p-megamenu.p-megamenu-horizontal .p-megamenu-root-list > .p-menuitem:not(.p-highlight):not(.p-disabled) > .p-menuitem-content:hover .p-menuitem-link .p-submenu-icon {
-        color: #334155;
+        color: #fff;
     }
 
     .p-megamenu.p-megamenu-mobile.p-megamenu-vertical {
@@ -8935,8 +8924,8 @@
     }
 
     .p-megamenu.p-megamenu-mobile .p-megamenu-button:hover {
-        color: #334155;
-        background: #f1f5f9;
+        color: #9A2E26FF;
+        background: none;
     }
 
     .p-megamenu.p-megamenu-mobile .p-megamenu-button:focus {
@@ -9005,7 +8994,7 @@
     .p-menu {
         padding: 0.25rem 0.25rem;
         background: #ffffff;
-        color: #334155;
+        color: #fff;
         border: 1px solid #e2e8f0;
         border-radius: 6px;
         min-width: 12.5rem;

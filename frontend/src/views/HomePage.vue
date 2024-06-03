@@ -6,12 +6,32 @@
           <div class="col-12 lg:col-3">
             <div class="grid">
               <div class="col-12 h-full">
-                <div
-                  class="p-2 bg-primary lg:bg-white rounded shadow text-center h-full"
-                >
-                  <h1 class="m-0 text-white lg:text-primary">
-                    {{ $t(`home`).toLocaleUpperCase() }}
-                  </h1>
+                <div class="grid">
+                  <div class="col-12">
+                    <div
+                      class="p-2 bg-primary lg:bg-white rounded shadow text-center h-full"
+                    >
+                      <h1 class="m-0 text-white lg:text-primary">
+                        {{ $t(`home`).toLocaleUpperCase() }}
+                      </h1>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div
+                      class="p-2 bg-primary lg:bg-white rounded shadow h-full"
+                    >
+                      <div>
+                        <p class="m-0 fw-bold text-white lg:text-primary">
+                          {{ $t(`authorized_as`).toLocaleUpperCase() }}
+                        </p>
+                        <p class="m-0 text-white lg:text-primary">
+                          {{
+                            `${authStore.user.name} ${authStore.user.surname}`
+                          }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -50,8 +70,8 @@
                           >
                             <div class="md:w-7rem relative">
                               <img
+                                :src="item.instructor.user.profile_picture"
                                 class="block xl:block mx-auto border-round w-full"
-                                src="https://via.placeholder.com/720x1080/eee?text=PROFILA%20FOTO"
                                 style="border-radius: 0.375rem 0.375rem 0 0"
                               />
                               <Tag
@@ -215,6 +235,11 @@
                                     @click="confirm1($event, item.id)"
                                   ></Button>
                                 </div>
+                                <Button
+                                  v-if="isEligibleForPDF(item)"
+                                  @click="() => generatePDF(item)"
+                                  >Drukāt PDF
+                                </Button>
                               </div>
                             </div>
                           </div>
@@ -334,8 +359,8 @@
                     >
                       <div class="md:w-7rem relative">
                         <img
+                          :src="item.instructor.user.profile_picture"
                           class="block xl:block mx-auto border-round w-full"
-                          src="https://via.placeholder.com/720x1080/eee?text=PROFILA%20FOTO"
                           style="border-radius: 0.375rem 0.375rem 0 0"
                         />
                         <Tag
@@ -471,6 +496,13 @@
                               @click="confirm1($event, item.id)"
                             ></Button>
                           </div>
+                          <Button
+                            v-if="item.status === 'accepted'"
+                            :disabled="!isEligibleForPDF(item)"
+                            size="small"
+                            @click="generatePDF(item)"
+                            >Drukāt PDF
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -531,13 +563,16 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import axios from "@/services/axios";
 import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
 import ConfirmPopup from "primevue/confirmpopup";
+import { useAuthStore } from "@/stores/authStore";
+import html2pdf from "html2pdf.js";
 
+const authStore = useAuthStore();
 const fetchDataStore = useFetchDataStore();
 
 let time = ref(new Date().toLocaleTimeString());
@@ -559,6 +594,114 @@ const confirm = useConfirm();
 const toast = useToast();
 
 const reservationToCancel = ref();
+
+const acceptedReservations = computed(() => {
+  return usersReservations.value.filter(
+    (reservation) =>
+      reservation.status === "accepted" &&
+      new Date(reservation.instructor_availability.end_time) <= new Date()
+  );
+});
+
+const isEligibleForPDF = (reservation) => {
+  return (
+    reservation.status === "accepted" &&
+    new Date(reservation.instructor_availability.end_time) <= new Date()
+  );
+};
+
+const generatePDF = (reservation) => {
+  const logo = "https://imgur.com/Z21sETW.png";
+
+  const tempStart = new Date(reservation.instructor_availability.start_time);
+  const tempEnd = new Date(reservation.instructor_availability.end_time);
+  const tempStartDate = tempStart.getDate().toString().padStart(2, "0");
+  const tempStartMonth = (tempStart.getMonth() + 1).toString().padStart(2, "0");
+  const tempStartYear = tempStart.getFullYear().toString();
+  const tempStartTime = tempStart.getTime().toString();
+  const tempEndDate = tempEnd.getDate().toString().padStart(2, "0");
+  const tempEndMonth = (tempEnd.getMonth() + 1).toString().padStart(2, "0");
+  const tempEndYear = tempEnd.getFullYear().toString();
+  const tempEndTime = tempEnd.getTime().toString();
+  const element = document.createElement("div");
+  element.innerHTML = `
+    <div style="font-family: Arial, sans-serif; margin: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <img src="${logo}" alt="logo" style="width: 150px;">
+        <div style="text-align: right;">
+          <p>Datums: ${formatDate(new Date())}</p>
+          <p>Saistības izpildīt līdz: ${formatDate(
+            new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
+          )}</p>
+        </div>
+      </div>
+      <div style="margin-bottom: 20px;">
+        <h2 style="margin: 0;">Uzņēmuma rekvizīti:</h2>
+        <p>Nosaukums: "Jauno jātnieku skola"</p>
+        <p>Tiesiskā forma: Biedrība (BDR)</p>
+        <p>Reģistrācijas numurs, datums: 40008114442, 20.04.2007</p>
+        <p>Reģistrs, Ierakstīts reģistrā: Biedrību un nodibinājumu reģistrs, 20.04.2007</p>
+        <p>SEPA identifikators: LV42ZZZ40008114442</p>
+        <p>Dati no PVN maksātāju reģistra:</p>
+        <p>PVN maksātāja numurs: LV40008114442</p>
+        <p>Statuss: Ir aktīvs, 10.04.2014</p>
+        <p>Juridiskā adrese: Rīga, Mārupes iela 4, LV-1002</p>
+        <p>Pasta adrese: Mārupes iela 4, Rīga, LV-1002</p>
+      </div>
+      <h2 style="text-align: center; margin-bottom: 20px;">Pavadzīme Nr. ${
+        reservation.id
+      }</h2>
+      <div style="margin-bottom: 20px;">
+        <h3 style="margin: 0;">Saņēmējs:</h3>
+        <p>${reservation.instructor.user.name} ${
+    reservation.instructor.user.surname
+  }</p>
+        <p>${reservation.instructor.user.email}</p>
+        <p>${reservation.instructor.user.phone}</p>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <thead>
+          <tr>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Nosaukums</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Daudzums</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Norises datums</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Sākuma - Beigu laiks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center">
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">Jāšanas treniņš</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">1</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">${tempStartDate}.${tempStartMonth}.${tempStartYear}</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">${formatTimeRange(
+              reservation.instructor_availability.start_time,
+              reservation.instructor_availability.end_time
+            )}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 20px;">
+        <p><strong>Šis NAV rēķins! Šī pavadzīme kopā ar pakalpojuma apmaksu apliecinošu dokumentu - čeku - ir uzskatāma par pakalpojuma sniegšanas-saņemšanas pierādījumu.</strong></p>
+        <p style="font-style: italic; color: #888; text-align: center;">Rēķins sagatavots elektroniski un derīgs bez paraksta.</p>
+      </div>
+    </div>
+  `;
+  html2pdf()
+    .from(element)
+    .set({
+      margin: 0.5,
+      filename: `JJS-rezervacija-${
+        reservation.instructor.certificate.category.name
+      }-${reservation.instructor.user.name}_${
+        reservation.instructor.user.surname
+      }-${tempStartDate.padStart(2, "0")}${tempStartMonth.padStart(2, "0")}-${
+        reservation.id
+      }.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+    })
+    .save();
+};
 
 const confirm1 = (event, reservationID) => {
   confirm.require({

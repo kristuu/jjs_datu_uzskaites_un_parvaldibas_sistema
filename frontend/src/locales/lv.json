@@ -1,4 +1,7 @@
 {
+  "home": "Sākums",
+  "user_profile": "Lietotāja profils",
+  "authorized_as": "Autorizējies kā",
   "businessName": "Jauno Jātnieku skola",
   "login": "Autorizācija",
   "register": "Reģistrācija",
@@ -67,7 +70,12 @@
       "iban_code": "Bankas konta nr.",
       "password": "Parole",
       "password_confirmation": "Parole (atkārtoti)",
-      "roles": "Lomas"
+      "roles": "Lomas",
+      "profile_picture": "Profila foto",
+      "old_password": "Vecā parole",
+      "new_password": "Jaunā parole",
+      "new_password_confirmation": "Jaunās paroles apstiprinājums",
+      "choose_photo": "Izvēlēties foto"
     },
     "category": {
       "name": "Nosaukums"
@@ -228,6 +236,12 @@
     "accepted": "Apstiprināts",
     "denied": "Noraidīts",
     "cancel": "Atcelt pieteikumu"
+  },
+  "tabpanel": {
+    "user": {
+      "info": "Personīgā informācija",
+      "change_password": "Paroles maiņa"
+    }
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
   "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams."

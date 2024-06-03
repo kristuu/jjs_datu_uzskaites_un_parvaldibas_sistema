@@ -30,6 +30,7 @@ a {
 
 .hover-black {
     transition: all 0.2s ease-in-out;
+
     &:hover {
         background-color: black !important;
         color: white !important;
@@ -105,6 +106,7 @@ input[type="number"].no-spin::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 /* For Firefox */
 input[type="number"].no-spin {
     -moz-appearance: textfield;
@@ -180,10 +182,19 @@ label {
 
 .navbar-overlap, .p-menubar {
     background-color: var(--yrs-primary-shaded-10) !important;
+    padding: 0 !important;
 }
 
 .navbar .p-menuitem-content {
     border-radius: 0;
+}
+
+.navbar a, .navbar li {
+    margin: 0 !important;
+}
+
+.p-avatar img {
+    object-fit: cover;
 }
 
 /* lg sized screen breakpoint 992px (starting from 992) */
@@ -210,33 +221,6 @@ label {
 @media only screen and (max-width: 992px) {
     .p-timeline-event-opposite {
         display: none;
-    }
-}
-
-.navbar-brand:hover {
-    box-shadow: none;
-    background-color: inherit;
-}
-
-.nav-link:hover {
-    box-shadow: none;
-    background-color: white;
-}
-
-.navbar a {
-    color: white;
-    &:hover {
-        color: var(--yrs-primary) !important;
-    }
-}
-
-.p-menubar li > a {
-    padding: 0 5px;
-    box-shadow: inset 0 0 0 0 white;
-    transition: all 0.35s ease-in-out 0s !important;
-    &:hover {
-        box-shadow: inset 0 -100px 0 0 white;
-        color: var(--yrs-primary) !important;
     }
 }
 
