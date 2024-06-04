@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -19,7 +18,9 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('password', 255);
             $table->string('phone', 32)->nullable();
-            $table->string('googleplaces_address_code', 255)->nullable();
+            $table->string('profile_picture', 255)->nullable();
+            $table->unsignedBigInteger('address_id')->nullable();
+            $table->foreign('address_id')->references('id')->on('addresses');
             $table->string('iban_code', 255)->nullable();
             $table->rememberToken();
             $table->timestamps();

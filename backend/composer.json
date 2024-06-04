@@ -11,6 +11,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "mpdf/mpdf": "*",
         "nembie/iban-rule": "^1.0",
         "outhebox/laravel-translations": "^1.0.7",
         "propaganistas/laravel-phone": "^5.1",

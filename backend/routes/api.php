@@ -8,6 +8,7 @@ use App\Http\Controllers\API\EventCategoryController;
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\EventTypeController;
 use App\Http\Controllers\API\HomeController;
+use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\InstructorAvailabilityController;
 use App\Http\Controllers\API\InstructorController;
 use App\Http\Controllers\API\LocationController;
@@ -84,11 +85,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/availabilities/{instructor_id}/{date}', [InstructorAvailabilityController::class, 'getAvailabilitiesByDate']);
     Route::get('/availability-counts/{instructor_id}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);
 
+    Route::get('/instructor/reservations', [InstructorController::class, 'getReservations']);
+    Route::post('/instructor/reservation/{id}', [InstructorController::class, 'manageReservation']);
+
     Route::post('/reservations', [ReservationController::class, 'storeReservation']);
 
     Route::get('/getAllReservations', [HomeController::class, 'getAllReservations']);
     Route::delete('/personal_reservations/{id}', [ReservationController::class, 'destroyReservation']);
     Route::get('/homeData', [HomeController::class, 'index']);
+
+    Route::post('/upload-image', [ImageController::class, 'uploadToImgur']);
+
+    Route::put('/user/profile', [UserController::class, 'updateProfile']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

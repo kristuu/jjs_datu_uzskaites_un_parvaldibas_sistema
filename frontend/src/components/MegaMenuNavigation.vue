@@ -48,6 +48,19 @@
           <RouterLink :to="{ name: 'UserProfile' }">
             <Avatar :image="authStore.user?.profile_picture" shape="circle" />
           </RouterLink>
+          <Button
+            v-if="authStore.authorized"
+            class="bg-white shadow hover-black ms-3"
+            rounded
+            text
+            @click="
+              () => {
+                authStore.logout();
+                visible = false;
+              }
+            "
+            >{{ $t(`navigation.logout`) }}
+          </Button>
         </template>
       </MegaMenu>
     </div>

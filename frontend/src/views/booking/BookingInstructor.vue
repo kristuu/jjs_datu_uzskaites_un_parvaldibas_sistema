@@ -34,8 +34,8 @@
                   <div class="col-6">
                     <div>
                       <img
+                          :src="instance.user.profile_picture"
                           class="w-full"
-                          src="https://via.placeholder.com/720x1080/eee?text=PROFILA%20FOTO"
                           style="border-radius: 0.375rem 0.375rem 0 0"
                       />
                     </div>
@@ -323,7 +323,7 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, onMounted, ref} from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 import axios from "@/services/axios"; // Import custom axios instance
 import {useFetchDataStore} from "@/stores/fetchDataStore";
 import {useRoute} from "vue-router";
@@ -508,9 +508,6 @@ const submitReservation = async () => {
 onBeforeMount(async () => {
   await fetchDataStore.fetchInstance("instructors", route.params.id);
   fetchAvailabilityCounts();
-});
-
-onMounted(() => {
   fetchDataStore.showComponents();
 });
 </script>

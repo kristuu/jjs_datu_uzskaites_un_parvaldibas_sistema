@@ -17,15 +17,14 @@ class HomeController extends Controller
             'instructor.certificate.category',
             'instructorAvailability'
         ])
-            ->whereHas('instructor', function ($query) use ($user) {
-                $query->where('user_person_code', $user->person_code);
-            })
-            ->where('status', '!=', 'denied') // Exclude denied reservations for small reservation list
+            ->where('user_person_code', $user->person_code)
+            ->where('status', '!=', 'denied')
             ->whereHas('instructorAvailability', function ($query) {
-                $query->where('end_time', '>=', now()); // Exclude past reservations
+                $query->where('end_time', '>=', now());
             })
             ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
-            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc') // Order by date
+            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc')
+            ->take(3)
             ->get(['reservations.*']);
 
         return $this->sendResponse($reservations);
@@ -40,12 +39,10 @@ class HomeController extends Controller
             'instructor.certificate.category',
             'instructorAvailability'
         ])
-            ->whereHas('instructor', function ($query) use ($user) {
-                $query->where('user_person_code', $user->person_code);
-            })
+            ->where('user_person_code', $user->person_code)
             ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
-            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc') // Order by date
-            ->get(['reservations.*']); // Select only columns from reservations
+            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc')
+            ->get(['reservations.*']);
 
         return $this->sendResponse($reservations);
     }

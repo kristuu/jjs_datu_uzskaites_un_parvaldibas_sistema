@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,9 +19,9 @@ class User extends Authenticatable
     use LaravelPermissionToVueJS;
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    public $incrementing = false;
     protected $table = 'users';
     protected $primaryKey = 'person_code';
-    public $incrementing = false;
     protected $keyType = 'string';
 
     /**
@@ -38,7 +37,8 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'googleplaces_address_code',
+        'profile_picture',
+        'address_id',
         'iban_code',
     ];
 
@@ -70,25 +70,25 @@ class User extends Authenticatable
         $this->attributes["password"] = bcrypt($value);
     }
 
-    public function address() : BelongsTo
+    public function address(): BelongsTo
     {
         return $this->belongsTo(Address::class);
     }
 
-    public function permissionLevels() : BelongsToMany
+    public function permissionLevels(): BelongsToMany
     {
         return $this->belongsToMany(Permission_Level::class,
-        'users_permission_levels',
-        'user_person_code',
-        'permission_level_id');
+            'users_permission_levels',
+            'user_person_code',
+            'permission_level_id');
     }
 
-    public function instructor() : HasMany
+    public function instructor(): HasMany
     {
         return $this->hasMany(Instructor::class, 'user_person_code', 'person_code');
     }
 
-    public function reservations() : HasMany
+    public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class, 'user_person_code', 'person_code');
     }

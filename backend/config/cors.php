@@ -20,13 +20,13 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [env(
-        'FRONTEND_URL', 'http://localhost:8080'),
+        'FRONTEND_URL', 'http://localhost:8081'),
         'http://10.12.250.203:8080',
         'http://127.0.0.1:8080',
         'http://localhost',
         'https://localhost',
         'https://localhost:8080'
-        ],
+    ],
 
     'allowed_origins_patterns' => [],
 

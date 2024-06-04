@@ -17,7 +17,7 @@
               class="p-5 bg-primary lg:bg-white text-white lg:text-primary rounded shadow text-center"
             >
               <p class="fw-bold">
-                UZMANĪBU! 10. maijā veiktās treniņu rezervācijas tiek
+                UZMANĪBU! 29. jūnijā veiktās treniņu rezervācijas tiek
                 automātiski pārceltas no āra laukumiem uz manēžām saistībā ar
                 notiekošām treniņsacensībām! Papildu jautājumu gadījumā lūdzam
                 sazināties ar savu treneri.
@@ -40,19 +40,11 @@
                     class="bg-white rounded shadow p-4 rounded flex flex-column h-full"
                   >
                     <div class="flex">
-                      <div
-                        class="surface-100 rounded p-3 align-content-center text-center"
-                        style="
-                          width: 125px;
-                          height: 200px;
-                          min-width: 125px;
-                          min-height: 200px;
-                        "
-                      >
-                        <div class="relative mx-auto">
-                          <h3 class="my-6 text-secondary">PROFILA FOTO</h3>
-                        </div>
-                      </div>
+                      <img
+                        :src="instructor.user.profile_picture"
+                        class="rounded"
+                        style="max-width: 7rem"
+                      />
                       <div class="w-auto px-3 py-0 align-content-center">
                         <div>
                           <div class="text-lg font-bold text-900">
