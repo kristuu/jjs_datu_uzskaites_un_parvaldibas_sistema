@@ -97,6 +97,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/upload-image', [ImageController::class, 'uploadToImgur']);
 
     Route::put('/user/profile', [UserController::class, 'updateProfile']);
+
+    // PDF routes
+    Route::get('/reservation/pdf/{reservationId}', [ReservationController::class, 'generatePdf']);
+
 });
 
 Route::middleware('auth:sanctum')->group(function () {

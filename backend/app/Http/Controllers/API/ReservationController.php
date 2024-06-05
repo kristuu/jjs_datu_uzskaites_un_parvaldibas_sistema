@@ -7,6 +7,7 @@ use App\Http\Requests\ReservationRequest;
 use App\Models\instructors_availability;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Mpdf\Mpdf;
 
 class ReservationController extends Controller
 {
@@ -50,5 +51,28 @@ class ReservationController extends Controller
     public function destroyReservation(int $id)
     {
         return $this->destroy($id, Reservation::class);
+    }
+
+    public function generatePdf(Request $request, $reservationId)
+    {
+        $reservation = Reservation::with('instructor', 'instructor.user', 'instructor.certificate.category')
+            ->findOrFail($reservationId);
+
+        $mpdf = new Mpdf(['tempDir' => __DIR__ . '/tmp/pdf']);
+        $html = view('pdf.reservation', compact('reservation'))->render();
+
+        $mpdf->WriteHTML($html);
+
+        $filename = 'JJS-rezervacija-' . $reservation->instructor->certificate->category->name . '-' .
+            $reservation->instructor->user->name . '_' . $reservation->instructor->user->surname . '-' .
+            $reservation->instructorAvailability->start_time->format('d.m.Y_H.i') . '-' . $reservation->instructorAvailability->end_time->format('d.m.Y_H.i') . '.pdf';
+
+        $filename = sanitize_filename($filename);
+
+        $mpdf->setTitle($filename);
+
+        return response()->streamDownload(function () use ($mpdf) {
+            echo $mpdf->Output('', 'S');
+        }, $filename);
     }
 }
