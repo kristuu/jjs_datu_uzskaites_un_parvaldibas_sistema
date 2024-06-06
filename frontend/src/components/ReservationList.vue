@@ -21,7 +21,7 @@
         :index="index"
         :isLoading="isFetching"
         :reservation="item"
-        class="w-full mb-3"
+        class="w-full"
         @reservation-cancelled="fetchReservations"
       />
     </div>

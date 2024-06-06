@@ -132,6 +132,7 @@ import Tag from "primevue/tag";
 import Button from "primevue/button";
 import { useI18n } from "vue-i18n";
 import axios from "@/services/axios";
+import moment from "moment";
 
 const { t } = useI18n();
 const emit = defineEmits(["reservation-cancelled"]);
@@ -163,16 +164,10 @@ const formatDate = (dateString) => {
 };
 
 const formatTimeRange = (startTimeString, endTimeString) => {
-  const startTime = new Date(startTimeString);
-  const endTime = new Date(endTimeString);
-  const padZero = (num) => String(num).padStart(2, "0");
+  const startTime = moment(startTimeString).format("HH.mm");
+  const endTime = moment(endTimeString).format("HH.mm");
 
-  const startHours = padZero(startTime.getHours());
-  const startMinutes = padZero(startTime.getMinutes());
-  const endHours = padZero(endTime.getHours());
-  const endMinutes = padZero(endTime.getMinutes());
-
-  return `${startHours}.${startMinutes} - ${endHours}.${endMinutes}`;
+  return `${startTime} - ${endTime}`;
 };
 
 const isEligibleForPDF = (reservation) => {

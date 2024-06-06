@@ -247,8 +247,8 @@
             <td style="border-bottom: 1px solid #ddd; padding: 8px;" class="fw-bold">Jāšanas treniņš</td>
             <td style="border-bottom: 1px solid #ddd; padding: 8px;">1</td>
             <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->instructorAvailability->start_time->format('d.m.Y') }}</td>
-            <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->instructorAvailability->start_time->setTimezone('Europe/Riga')->format('H.i') }}
-                - {{ $reservation->instructorAvailability->end_time->setTimezone('Europe/Riga')->format('H.i') }}</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->instructorAvailability->start_time->format('H.i') }}
+                - {{ $reservation->instructorAvailability->end_time->format('H.i') }}</td>
         </tr>
         </tbody>
     </table>

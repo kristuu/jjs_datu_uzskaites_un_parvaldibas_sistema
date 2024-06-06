@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ReservationRequest;
 use App\Models\instructors_availability;
 use App\Models\Reservation;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 
@@ -59,18 +58,17 @@ class ReservationController extends Controller
         $reservation = Reservation::with('instructor', 'instructor.user', 'instructor.certificate.category')
             ->findOrFail($reservationId);
 
-        // Ensure times are converted to 'Europe/Riga' timezone
-        $reservation->instructorAvailability->start_time = Carbon::parse($reservation->instructorAvailability->start_time)->setTimezone('Europe/Riga');
-        $reservation->instructorAvailability->end_time = Carbon::parse($reservation->instructorAvailability->end_time)->setTimezone('Europe/Riga');
+        $start_time = $reservation->instructorAvailability->start_time;
+        $end_time = $reservation->instructorAvailability->end_time;
 
         $mpdf = new Mpdf(['tempDir' => __DIR__ . '/tmp/pdf']);
-        $html = view('pdf.reservation', compact('reservation'))->render();
+        $html = view('pdf.reservation', compact('reservation', 'start_time', 'end_time'))->render();
 
         $mpdf->WriteHTML($html);
 
         $filename = 'JJS-rezervacija-' . $reservation->instructor->certificate->category->name . '-' .
             $reservation->instructor->user->name . '_' . $reservation->instructor->user->surname . '-' .
-            $reservation->instructorAvailability->start_time->format('d.m.Y_H.i') . '-' . $reservation->instructorAvailability->end_time->format('d.m.Y_H.i') . '.pdf';
+            $start_time->format('d.m.Y_H.i') . '-' . $end_time->format('d.m.Y_H.i') . '.pdf';
 
         $filename = sanitize_filename($filename);
 

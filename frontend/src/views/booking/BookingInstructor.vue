@@ -328,6 +328,7 @@ import axios from "@/services/axios"; // Import custom axios instance
 import {useFetchDataStore} from "@/stores/fetchDataStore";
 import {useRoute} from "vue-router";
 import {useAuthStore} from "@/stores/authStore";
+import moment from "moment";
 
 const fetchDataStore = useFetchDataStore();
 const authStore = useAuthStore();
@@ -412,13 +413,11 @@ const fetchReservationsForDate = async (date) => {
     );
     availableTimes.value = response.data.map((availability) => ({
       id: availability.id,
-      label: new Date(availability.start_time).toLocaleTimeString("lv-LV", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      label: moment(availability.start_time).format("HH.mm"),
       duration: formatDuration(availability.start_time, availability.end_time),
       selected: false,
       reserved: availability.reserved,
+      startDate: availability.start_time // Make sure startDate is included
     }));
   } catch (error) {
     console.error("Error fetching availabilities:", error);
@@ -448,14 +447,10 @@ const fetchAvailabilityCounts = async () => {
 };
 
 const sortedAvailableTimes = computed(() => {
-  return availableTimes.value.slice().sort((end, start) => {
-    const endTime = new Date(
-        `1970-01-01T${end.label.split(" ")[0]}:00`
-    ).getTime();
-    const startTime = new Date(
-        `1970-01-01T${start.label.split(" ")[0]}:00`
-    ).getTime();
-    return endTime - startTime;
+  return availableTimes.value.slice().sort((a, b) => {
+    const aTime = new Date(a.startDate).getTime();
+    const bTime = new Date(b.startDate).getTime();
+    return aTime - bTime;
   });
 });
 
@@ -486,7 +481,7 @@ const getBackgroundColor = (date) => {
   const events = eventDates.value.find((e) => {
     const eventDate = new Date(e.date);
     const calendarDate = new Date(date.year, date.month, date.day);
-    return eventDate.getTime() === calendarDate.getTime();
+    return eventDate.getTime() === calendarDate.getTime() && moment(eventDate) >= moment.now();
   });
   return events ? (events.count > 3 ? "limegreen" : "yellow") : "";
 };

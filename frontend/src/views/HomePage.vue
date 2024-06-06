@@ -135,6 +135,8 @@ onMounted(() => {
   timer = setInterval(() => {
     time.value = new Date().toLocaleTimeString();
   }, 1000);
+
+  console.log(new Date().toString());
 });
 
 onUnmounted(() => {

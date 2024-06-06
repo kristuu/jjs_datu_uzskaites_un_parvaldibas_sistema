@@ -247,5 +247,7 @@
     }
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
-  "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams."
+  "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams.",
+  "date": "Datums",
+  "time": "Laiks"
 }

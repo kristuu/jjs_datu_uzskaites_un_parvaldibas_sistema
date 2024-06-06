@@ -22,12 +22,13 @@ class InstructorAvailabilityController extends Controller
         // Parse the date
         $parsedDate = Carbon::createFromFormat('d-m-Y', $date)->format('Y-m-d');
 
-        // Fetch availabilities for the specified date and instructor ID
+        // Fetch availabilities for the specified date and instructor ID that are in the future
         $availabilities = InstructorAvailability::where('instructor_id', $instructor_id)
             ->where(function ($query) use ($parsedDate) {
                 $query->whereDate('start_time', $parsedDate)
                     ->orWhereDate('end_time', $parsedDate);
             })
+            ->where('start_time', '>', Carbon::now())
             ->get();
 
         foreach ($availabilities as $availability) {
@@ -53,6 +54,7 @@ class InstructorAvailabilityController extends Controller
             ->leftJoin('reservations as r', 'ia.id', '=', 'r.instructor_availability_id')
             ->select(DB::raw('DATE(ia.start_time) as date'), DB::raw('count(*) as count'))
             ->where('ia.instructor_id', $instructor_id)
+            ->where('ia.start_time', '>', Carbon::now())
             ->where(function ($query) {
                 $query->whereNull('r.status')
                     ->orWhereNotIn('r.status', ['submitted', 'accepted']);
@@ -62,5 +64,4 @@ class InstructorAvailabilityController extends Controller
 
         return response()->json($availabilityCounts);
     }
-
 }
