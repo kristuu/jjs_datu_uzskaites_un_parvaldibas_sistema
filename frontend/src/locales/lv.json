@@ -24,6 +24,16 @@
     "cancel": "Atcelt",
     "cancel_photo_change": "Atcelt fotogrāfijas maiņu"
   },
+  "address": {
+    "edit_address": "Adreses pārvaldība",
+    "enter_address": "Sāc rakstīt adresi...",
+    "address_line1": "Adreses līnija 1",
+    "address_line2": "Adreses līnija 2",
+    "city": "Pilsēta / pagasts",
+    "region": "Novads / reģions",
+    "country": "Valsts",
+    "postal_code": "Pasta indekss (4 cipari)"
+  },
   "navigation": {
     "main": {
       "header": "Galvenā sadaļa",

@@ -11,9 +11,9 @@ return new class extends Migration {
             $table->id();
             $table->string('address_line1');
             $table->string('address_line2');
-            $table->string('city');
-            $table->unsignedBigInteger('region_id');
-            $table->foreign('region_id')->references('id')->on('regions');
+            $table->string('region');
+            $table->unsignedBigInteger('city_id');
+            $table->foreign('city_id')->references('id')->on('cities');
             $table->string('postal_code');
             $table->timestamps();
         });

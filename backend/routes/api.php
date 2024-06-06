@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CertificateController;
@@ -103,6 +104,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // PDF routes
     Route::get('/reservation/pdf/{reservationId}', [ReservationController::class, 'generatePdf']);
 
+    Route::put('user/change-password', [AuthController::class, 'changePassword']);
+
+    Route::get('user/address', [AddressController::class, 'getAddress']);
+    Route::post('user/address', [AddressController::class, 'setAddress']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

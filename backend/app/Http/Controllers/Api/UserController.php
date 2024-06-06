@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Traits\PaginationTrait;
+use App\Models\City;
 use App\Models\Country;
-use App\Models\Region;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,7 +102,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         $country = Country::firstOrCreate(['name' => $request->country->name]);
-        $region = Region::firstOrCreate(['name' => $request->region->name]);
+        $region = City::firstOrCreate(['name' => $request->region->name]);
         $user->update([
             'address_line1' => $request->address_line1,
             'address_line2' => $request->address_line2,

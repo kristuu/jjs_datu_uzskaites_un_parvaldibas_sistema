@@ -11,17 +11,17 @@ class Address extends Model
     protected $fillable = [
         'address_line1',
         'address_line2',
-        'city',
-        'region_id',
+        'region',
+        'city_id',
         'postal_code',
     ];
 
-    public function region() : BelongsTo
+    public function city(): BelongsTo
     {
-        return $this->belongsTo(Region::class);
+        return $this->belongsTo(City::class);
     }
 
-    public function user() : HasOne
+    public function user(): HasOne
     {
         return $this->hasOne(User::class);
     }

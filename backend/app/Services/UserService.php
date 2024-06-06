@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Country;
-use App\Models\Region;
 use App\Models\User;
 
 class UserService

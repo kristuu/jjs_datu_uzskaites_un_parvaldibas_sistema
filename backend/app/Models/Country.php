@@ -15,8 +15,8 @@ class Country extends Model
         'created_at', 'updated_at'
     ];
 
-    public function region() : HasMany
+    public function region(): HasMany
     {
-        return $this->hasMany(Region::class);
+        return $this->hasMany(City::class);
     }
 }
