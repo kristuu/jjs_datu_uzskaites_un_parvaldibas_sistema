@@ -1,16 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CountryRequest;
-use App\Models\Country;
-use App\Models\Region;
-use App\Http\Requests\UserRequest;
-use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Traits\PaginationTrait;
-use Spatie\Permission\Models\Role;
+use App\Models\Country;
+use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
@@ -18,7 +14,8 @@ class CountryController extends Controller
 
     private array $globalFilterFields = ['name'];
 
-    public function getCountriesColumnNames() {
+    public function getCountriesColumnNames()
+    {
         $model = new Country;
         return $this->sendResponse($this->getColumnNames($model));
     }
@@ -31,10 +28,10 @@ class CountryController extends Controller
     public function getPaginatedCountries(Request $request)
     {
         return $this->getPaginated($request,
-                          Country::class,
-                                   [],
-                                   $request->perPage,
-                                   $this->globalFilterFields);
+            Country::class,
+            [],
+            $request->perPage,
+            $this->globalFilterFields);
     }
 
     public function storeCountry(CountryRequest $request)

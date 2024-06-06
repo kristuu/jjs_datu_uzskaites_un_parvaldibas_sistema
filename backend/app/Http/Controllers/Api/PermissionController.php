@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionRequest;
 use App\Http\Traits\PaginationTrait;
-use Carbon\Carbon;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -22,10 +21,10 @@ class PermissionController extends Controller
     public function getPaginatedPermissions(PermissionRequest $request)
     {
         return $this->getPaginated($request,
-                          Permission::class,
-                                   [],
-                                   $request->perPage,
-                                   $this->globalFilterFields);
+            Permission::class,
+            [],
+            $request->perPage,
+            $this->globalFilterFields);
     }
 
     public function storePermission(PermissionRequest $request)

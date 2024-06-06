@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Certificate;
 use App\Http\Requests\CertificateRequest;
-use App\Models\Category;
-use Illuminate\Http\Request;
 use App\Http\Traits\PaginationTrait;
+use App\Models\Certificate;
 
 class CertificateController extends Controller
 {
@@ -25,10 +23,10 @@ class CertificateController extends Controller
     public function getPaginatedCertificates(CertificateRequest $request)
     {
         return $this->getPaginated($request,
-                          Certificate::class,
-                                   [],
-                                   $request->perPage,
-                                   $this->globalFilterFields);
+            Certificate::class,
+            [],
+            $request->perPage,
+            $this->globalFilterFields);
     }
 
     public function getUnusedCertificates($instructorId)

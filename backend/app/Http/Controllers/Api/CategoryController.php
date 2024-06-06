@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CountryRequest;
-use App\Models\Country;
 use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\CountryRequest;
+use App\Http\Traits\PaginationTrait;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Http\Traits\PaginationTrait;
 
 class CategoryController extends Controller
 {
@@ -24,10 +23,10 @@ class CategoryController extends Controller
     public function getPaginatedCategories(Request $request)
     {
         return $this->getPaginated($request,
-                          Category::class,
-                                   [],
-                                   $request->perPage,
-                                   $this->globalFilterFields);
+            Category::class,
+            [],
+            $request->perPage,
+            $this->globalFilterFields);
     }
 
     public function storeCategory(CountryRequest $request)

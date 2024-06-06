@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InstructorRequest;
@@ -78,7 +78,7 @@ class InstructorController extends Controller
         ]);
 
         $reservation = Reservation::findOrFail($id);
-        
+
         $reservation->status = $request->status;
         $reservation->save();
 

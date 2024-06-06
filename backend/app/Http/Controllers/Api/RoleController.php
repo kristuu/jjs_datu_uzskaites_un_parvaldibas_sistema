@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleRequest;
@@ -14,7 +14,8 @@ class RoleController extends Controller
 
     private array $globalFilterFields = ['name', 'guard_name'];
 
-    public function getRolesColumnNames() {
+    public function getRolesColumnNames()
+    {
         $model = new Role;
         return $this->sendResponse($this->getColumnNames($model));
     }
@@ -27,10 +28,10 @@ class RoleController extends Controller
     public function getPaginatedRoles(RoleRequest $request)
     {
         return $this->getPaginated($request,
-                          Role::class,
-                                   [],
-                                   $request->perPage,
-                                   $this->globalFilterFields);
+            Role::class,
+            [],
+            $request->perPage,
+            $this->globalFilterFields);
     }
 
     public function storeRole(RoleRequest $request)

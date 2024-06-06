@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Region;
 use App\Http\Requests\RegionRequest;
-use Illuminate\Http\Request;
 use App\Http\Traits\PaginationTrait;
+use App\Models\Region;
+use Illuminate\Http\Request;
 
 class RegionController extends Controller
 {
@@ -27,10 +27,10 @@ class RegionController extends Controller
     public function getPaginatedRegions(Request $request)
     {
         return $this->getPaginated($request,
-                          Region::class,
-                                   [],
-                                   $request->perPage,
-                                   $this->globalFilterFields);
+            Region::class,
+            [],
+            $request->perPage,
+            $this->globalFilterFields);
     }
 
     public function storeRegion(RegionRequest $request)
