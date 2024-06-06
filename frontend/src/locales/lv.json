@@ -19,7 +19,10 @@
   "reset_colors": "Atiestatīt krāsas",
   "actions": {
     "login": "Ienākt",
-    "register": "Reģistrēties"
+    "register": "Reģistrēties",
+    "save": "Saglabāt",
+    "cancel": "Atcelt",
+    "cancel_photo_change": "Atcelt fotogrāfijas maiņu"
   },
   "navigation": {
     "main": {

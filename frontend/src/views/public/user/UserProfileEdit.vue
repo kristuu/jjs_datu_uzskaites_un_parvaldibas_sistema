@@ -16,18 +16,6 @@
                     </h1>
                   </div>
                 </div>
-                <div class="col-12">
-                  <div class="p-2 bg-primary lg:bg-white rounded shadow h-full">
-                    <div>
-                      <p class="m-0 fw-bold text-white lg:text-primary">
-                        {{ $t("authorized_as").toLocaleUpperCase() }}
-                      </p>
-                      <p class="m-0 text-white lg:text-primary">
-                        {{ `${authStore.user.name} ${authStore.user.surname}` }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -41,137 +29,154 @@
               <TabPanel :header="$t(`tabpanel.user.info`)">
                 <form
                   id="editUserForm"
-                  class="row gap-3 py-3 text-start needs-validation"
+                  class="row py-3 text-start needs-validation"
                 >
-                  <div class="col-12">
-                    <div class="flex flex-column gap-1">
-                      <label for="name">{{ $t("fields.user.name") }}</label>
-                      <InputText
-                        id="name"
-                        v-model="instance.name"
-                        :disabled="
-                          fetchDataStore.isFetching ||
-                          fetchDataStore.isProcessing
-                        "
-                        :invalid="errorList.name"
-                        maxlength="60"
-                      />
-                      <InputError :errors="errorList.name" />
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="flex flex-column gap-1">
-                      <label for="surname">{{
-                        $t("fields.user.surname")
-                      }}</label>
-                      <InputText
-                        id="surname"
-                        v-model="instance.surname"
-                        :disabled="
-                          fetchDataStore.isFetching ||
-                          fetchDataStore.isProcessing
-                        "
-                        :invalid="errorList.surname"
-                        maxlength="60"
-                      />
-                      <InputError :errors="errorList.surname" />
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="flex flex-column gap-1">
-                      <label for="email">{{ $t("fields.user.email") }}</label>
-                      <InputText
-                        id="email"
-                        v-model="instance.email"
-                        :disabled="
-                          fetchDataStore.isFetching ||
-                          fetchDataStore.isProcessing
-                        "
-                        :invalid="errorList.email"
-                      />
-                      <InputError :errors="errorList.email" />
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="flex flex-column gap-1">
-                      <label for="phone">{{ $t("fields.user.phone") }}</label>
-                      <vue-tel-input
-                        v-model="instance.phone"
-                        :auto-format="true"
-                        autocomplete="off"
-                        mode="international"
-                      >
-                        <template #input="{ props, actions, value, update }">
-                          <InputText
-                            ref="phone"
-                            :disabled="
-                              fetchDataStore.isFetching ||
-                              fetchDataStore.isProcessing
-                            "
-                            :invalid="errorList.phone?.length > 0"
-                            :value="value"
-                            v-bind="props"
-                            @input="update($event.target.value)"
-                            v-on="{ ...actions }"
-                          />
-                        </template>
-                      </vue-tel-input>
-                      <InputError :errors="errorList.phone" />
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="flex flex-column gap-1">
-                      <label for="iban_code">{{
-                        $t(`fields.user.iban_code`)
-                      }}</label>
-                      <InputMask
-                        id="iban_code"
-                        v-model="instance.iban_code"
-                        :disabled="
-                          fetchDataStore.isFetching ||
-                          fetchDataStore.isProcessing
-                        "
-                        :invalid="errorList.iban_code?.length > 0"
-                        mask="aa*************?******************"
-                      />
-                      <InputError :errors="errorList.iban_code" />
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="flex flex-column gap-1">
+                  <div class="col-12 sm:col-4">
+                    <div class="flex flex-column gap-1 align-items-center">
                       <label for="profile_picture">{{
                         $t("fields.user.profile_picture")
                       }}</label>
-                      <img
-                        v-if="previewImage || authStore.user.profile_picture"
-                        :src="previewImage ?? authStore.user.profile_picture"
-                        alt="Profile Picture"
-                        class="mt-2"
-                        style="max-width: 150px"
-                      />
-                      <vue-cropper
-                        v-if="cropperImage"
-                        ref="cropperRef"
-                        :aspect-ratio="2 / 3"
-                        :src="cropperImage"
-                        :view-mode="1"
-                        class="w-10rem"
-                      ></vue-cropper>
+                      <div v-if="showPicture">
+                        <Image
+                          v-if="
+                            !cropperImage &&
+                            (previewImage || authStore.user.profile_picture)
+                          "
+                          :src="previewImage ?? authStore.user.profile_picture"
+                          alt="Profile Picture"
+                          class="mt-2"
+                          preview
+                          width="150px"
+                        />
+                      </div>
+                      <div v-if="showCropper">
+                        <vue-cropper
+                          v-if="cropperImage"
+                          ref="cropperRef"
+                          :aspect-ratio="2 / 3"
+                          :src="cropperImage"
+                          :view-mode="1"
+                        ></vue-cropper>
+                      </div>
                       <FileUpload
                         :chooseLabel="$t(`fields.user.choose_photo`)"
                         accept="image/*"
+                        custom-upload
                         mode="basic"
                         name="profile_picture"
                         style="font-size: 1rem; font-family: Ubuntu, sans-serif"
+                        @remove="onFileRemove"
                         @select="onFileSelect"
+                      />
+                      <Button
+                        v-if="showCropper"
+                        :label="$t(`actions.cancel_photo_change`)"
+                        class="p-button-danger mt-2"
+                        @click="onFileRemove"
                       />
                       <InputError :errors="errorList.profile_picture" />
                     </div>
                   </div>
-                  <div class="col-12">
+                  <div class="col-12 sm:col-8 row">
+                    <div class="col-12 md:col-6">
+                      <div class="flex flex-column gap-1">
+                        <label for="name">{{ $t("fields.user.name") }}</label>
+                        <InputText
+                          id="name"
+                          v-model="instance.name"
+                          :disabled="
+                            fetchDataStore.isFetching ||
+                            fetchDataStore.isProcessing
+                          "
+                          :invalid="errorList.name"
+                          maxlength="60"
+                        />
+                        <InputError :errors="errorList.name" />
+                      </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                      <div class="flex flex-column gap-1">
+                        <label for="surname">{{
+                          $t("fields.user.surname")
+                        }}</label>
+                        <InputText
+                          id="surname"
+                          v-model="instance.surname"
+                          :disabled="
+                            fetchDataStore.isFetching ||
+                            fetchDataStore.isProcessing
+                          "
+                          :invalid="errorList.surname"
+                          maxlength="60"
+                        />
+                        <InputError :errors="errorList.surname" />
+                      </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                      <div class="flex flex-column gap-1">
+                        <label for="email">{{ $t("fields.user.email") }}</label>
+                        <InputText
+                          id="email"
+                          v-model="instance.email"
+                          :disabled="
+                            fetchDataStore.isFetching ||
+                            fetchDataStore.isProcessing
+                          "
+                          :invalid="errorList.email"
+                        />
+                        <InputError :errors="errorList.email" />
+                      </div>
+                    </div>
+                    <div class="col-12 md:col-6">
+                      <div class="flex flex-column gap-1">
+                        <label for="phone">{{ $t("fields.user.phone") }}</label>
+                        <vue-tel-input
+                          v-model="instance.phone"
+                          :auto-format="true"
+                          autocomplete="off"
+                          mode="international"
+                        >
+                          <template #input="{ props, actions, value, update }">
+                            <InputText
+                              ref="phone"
+                              :disabled="
+                                fetchDataStore.isFetching ||
+                                fetchDataStore.isProcessing
+                              "
+                              :invalid="errorList.phone?.length > 0"
+                              :value="value"
+                              v-bind="props"
+                              @input="update($event.target.value)"
+                              v-on="{ ...actions }"
+                            />
+                          </template>
+                        </vue-tel-input>
+                        <InputError :errors="errorList.phone" />
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="flex flex-column gap-1">
+                        <label for="iban_code">{{
+                          $t(`fields.user.iban_code`)
+                        }}</label>
+                        <InputMask
+                          id="iban_code"
+                          v-model="instance.iban_code"
+                          :disabled="
+                            fetchDataStore.isFetching ||
+                            fetchDataStore.isProcessing
+                          "
+                          :invalid="errorList.iban_code?.length > 0"
+                          mask="aa*************?******************"
+                        />
+                        <InputError :errors="errorList.iban_code" />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 text-end">
                     <Button
+                      :label="$t(`actions.save`).toLocaleUpperCase()"
                       :loading="fetchDataStore.isProcessing"
-                      label="Save"
                       @click="saveProfile"
                     />
                   </div>
@@ -245,10 +250,10 @@
                       />
                     </div>
                   </div>
-                  <div class="col-12">
+                  <div class="col-12 text-end">
                     <Button
+                      :label="$t(`actions.save`).toLocaleUpperCase()"
                       :loading="fetchDataStore.isProcessing"
-                      label="Change Password"
                       @click="changePassword"
                     />
                   </div>
@@ -290,6 +295,10 @@ const password = ref({
 
 let previewImage = ref(null);
 let cropperImage = ref(null);
+
+let showPicture = ref(true);
+let showCropper = ref(false);
+
 let baseImage = ref(null);
 
 const cropperRef = ref(null);
@@ -298,9 +307,19 @@ const onFileSelect = (event) => {
   const file = event.files[0];
   const reader = new FileReader();
   reader.onload = (e) => {
+    showCropper.value = true;
+    showPicture.value = false;
     cropperImage.value = e.target.result;
+    previewImage.value = null;
   };
   reader.readAsDataURL(file);
+};
+
+const onFileRemove = () => {
+  cropperImage.value = null;
+  showCropper.value = false;
+  showPicture.value = true;
+  previewImage.value = authStore.user.profile_picture;
 };
 
 const getCroppedImage = () => {
@@ -334,6 +353,7 @@ const saveProfile = async () => {
     if (cropperImage.value) {
       baseImage.value = await getCroppedImage();
       await uploadImage(baseImage.value.split(",")[1]);
+      cropperImage.value = null;
     }
 
     // Save user profile
@@ -359,6 +379,9 @@ const saveProfile = async () => {
     }
   } finally {
     fetchDataStore.setIsProcessing(false);
+    showCropper.value = false;
+    showPicture.value = true;
+    previewImage.value = instance.value.profile_picture;
   }
 };
 
@@ -388,6 +411,7 @@ const changePassword = async () => {
 onBeforeMount(() => {
   fetchDataStore.resetInstance();
   fetchDataStore.instance = authStore.user;
+  previewImage.value = authStore.user.profile_picture;
 });
 
 onMounted(() => {
