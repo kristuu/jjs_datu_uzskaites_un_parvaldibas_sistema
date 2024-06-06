@@ -29,6 +29,9 @@
     "admin": {
       "header": "Administrācija",
       "home": "Panelis",
+      "access": "Piekļuve",
+      "geolocation": "Lokācija",
+      "trainings": "Treniņi",
       "users": "Lietotāji",
       "permissions": "Piekļuves tiesības",
       "roles": "Lomas",

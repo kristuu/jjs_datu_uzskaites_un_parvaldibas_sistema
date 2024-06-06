@@ -69,7 +69,6 @@ a {
 
 .p-tabmenu .p-menuitem-link {
     background: none;
-    padding: 0 1rem;
 }
 
 .p-tabmenu {
@@ -182,15 +181,6 @@ label {
 
 .navbar-overlap, .p-menubar {
     background-color: var(--yrs-primary-shaded-10) !important;
-    padding: 0 !important;
-}
-
-.navbar .p-menuitem-content {
-    border-radius: 0;
-}
-
-.navbar a, .navbar li {
-    margin: 0 !important;
 }
 
 .p-avatar img {
