@@ -32,15 +32,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod)
-{
-    Route::group(['middleware' => ['auth:sanctum', 'can:manage ' . $base]], function () use ($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod) {
-        Route::get("/{$base}", [$controller, $getAllMethod]);
-        Route::get("/{$base}/{id}", [$controller, $getMethod]);
-        Route::middleware('can:create instances')->post("/{$base}", [$controller, $storeMethod]);
-        Route::middleware('can:edit instances')->put("/{$base}/{id}", [$controller, $updateMethod]);
-        Route::middleware('can:delete instances')->delete("/{$base}/{id}", [$controller, $destroyMethod]);
-    });
+if (!function_exists('registerResourceRoutes')) {
+    function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod)
+    {
+        Route::group(['middleware' => ['auth:sanctum', 'can:manage ' . $base]], function () use ($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod) {
+            Route::get("/{$base}", [$controller, $getAllMethod]);
+            Route::get("/{$base}/{id}", [$controller, $getMethod]);
+            Route::middleware('can:create instances')->post("/{$base}", [$controller, $storeMethod]);
+            Route::middleware('can:edit instances')->put("/{$base}/{id}", [$controller, $updateMethod]);
+            Route::middleware('can:delete instances')->delete("/{$base}/{id}", [$controller, $destroyMethod]);
+        });
+    }
 }
 
 Route::get("/events", [EventController::class, 'getAllEvents']);
