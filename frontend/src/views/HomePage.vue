@@ -17,7 +17,9 @@
                     </div>
                   </div>
                   <div class="col-12">
-                    <UserInfo />
+                    <div class="grid">
+                      <UserInfo />
+                    </div>
                   </div>
                 </div>
               </div>

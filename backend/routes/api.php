@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\InstructorAvailabilityController;
 use App\Http\Controllers\Api\InstructorController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\RoleController;
@@ -84,6 +85,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['middleware' => ['permission:manage certificates']], function () {
         Route::get("/certificates_categories", [CategoryController::class, "getAllCategories"]);
     });
+
+    Route::get('/notifications', [NotificationController::class, 'getAllNotifications']);
 
     Route::get('/availabilities/{instructor_id}/{date}', [InstructorAvailabilityController::class, 'getAvailabilitiesByDate']);
     Route::get('/availability-counts/{instructor_id}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);
