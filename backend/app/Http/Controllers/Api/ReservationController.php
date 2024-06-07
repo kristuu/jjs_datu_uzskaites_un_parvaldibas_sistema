@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ReservationRequest;
 use App\Http\Traits\PaginationTrait;
 use App\Models\instructors_availability;
+use App\Models\Notification;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
@@ -72,11 +73,23 @@ class ReservationController extends Controller
         return response()->json(['message' => 'Reservation updated successfully', 'data' => $reservation]);
     }
 
-    public function destroyReservation(int $id)
+    public function cancelReservation(Request $request, $reservationId)
     {
-        $reservation = Reservation::findOrFail($id);
-        $reservation->delete();
-        return response()->json(['message' => 'Reservation deleted successfully']);
+        $request->validate([
+            'reason' => 'required|string|max:255',
+        ]);
+
+        $reservation = Reservation::findOrFail($reservationId);
+        $reservation->status = 'cancelled';
+        $reservation->save();
+
+        Notification::create([
+            'user_person_code' => $reservation->instructor->user->person_code,
+            'short_message' => "Atcelts rezervācijas pieteikums",
+            'long_message' => 'Your reservation has been cancelled. Reason: ' . $request->reason,
+        ]);
+
+        return response()->json(['message' => 'Reservation cancelled and notification sent.']);
     }
 
     public function generatePdf(Request $request, $reservationId)

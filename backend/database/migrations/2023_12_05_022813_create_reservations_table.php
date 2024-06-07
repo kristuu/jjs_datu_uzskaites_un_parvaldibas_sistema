@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->dateTime('start_time');
             $table->dateTime('end_time');
-            $table->enum('status', ['accepted', 'denied', 'submitted']);
+            $table->enum('status', ['accepted', 'denied', 'submitted', 'cancelled'])->default('submitted');
             $table->string('user_person_code', 11);
             $table->foreign('user_person_code')->references('person_code')->on('users')->onUpdate('CASCADE');
             $table->unsignedBigInteger('instructor_id');
