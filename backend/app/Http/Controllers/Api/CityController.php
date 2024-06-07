@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegionRequest;
+use App\Http\Requests\CityRequest;
 use App\Http\Traits\PaginationTrait;
 use App\Models\City;
 use Illuminate\Http\Request;
 
-class RegionController extends Controller
+class CityController extends Controller
 {
     use PaginationTrait;
 
     private array $globalFilterFields = ['name', 'country.name'];
     private array $relationships = ['country'];
 
-    public function getAllRegions()
+    public function getAllCities()
     {
         $relationships = ['country'];
         $hiddenFields = ['country' => ['id']];
@@ -24,7 +24,7 @@ class RegionController extends Controller
         return $this->getAll(City::class, $this->globalFilterFields, $relationships, $hiddenFields);
     }
 
-    public function getPaginatedRegions(Request $request)
+    public function getpaginatedCities(Request $request)
     {
         return $this->getPaginated($request,
             City::class,
@@ -33,22 +33,22 @@ class RegionController extends Controller
             $this->globalFilterFields);
     }
 
-    public function storeRegion(RegionRequest $request)
+    public function storeCity(CityRequest $request)
     {
         return $this->store($request, City::class);
     }
 
-    public function findRegionById(string $id)
+    public function findCityById(string $id)
     {
         return $this->findById(City::class, $id, $this->relationships);
     }
 
-    public function updateRegion(RegionRequest $request, string $id)
+    public function updateCity(CityRequest $request, string $id)
     {
         return $this->update($request, $id, City::class);
     }
 
-    public function destroyRegion(string $id)
+    public function destroyCity(string $id)
     {
         return $this->destroy($id, City::class);
     }

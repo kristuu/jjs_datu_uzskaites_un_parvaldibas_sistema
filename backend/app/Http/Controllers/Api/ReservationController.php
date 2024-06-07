@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReservationRequest;
+use App\Http\Traits\PaginationTrait;
 use App\Models\instructors_availability;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
@@ -11,6 +12,16 @@ use Mpdf\Mpdf;
 
 class ReservationController extends Controller
 {
+    use PaginationTrait;
+
+    private array $globalFilterFields = ['status', 'user_person_code', 'user.name', 'user.surname', 'user.email', 'user.phone', 'user.iban_code'];
+    private array $relationships = ['user', 'instructor', 'instructor.user', 'instructor.certificate.category', 'instructorAvailability'];
+
+    public function getAllReservations()
+    {
+        return $this->getAll(Reservation::class, $this->globalFilterFields, $this->relationships);
+    }
+
     public function getUserReservations(Request $request)
     {
         $user = auth()->user();
@@ -34,7 +45,8 @@ class ReservationController extends Controller
 
             if ($reservation) {
                 return response()->json([
-                    'message' => 'Reservation submitted successfully'
+                    'message' => 'Reservation submitted successfully',
+                    'data' => $reservation
                 ]);
             } else {
                 return response()->json([
@@ -48,9 +60,23 @@ class ReservationController extends Controller
         }
     }
 
+    public function findReservationById($id)
+    {
+        return $this->findById(Reservation::class, $id, $this->relationships);
+    }
+
+    public function updateReservation(ReservationRequest $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->update($request->validated());
+        return response()->json(['message' => 'Reservation updated successfully', 'data' => $reservation]);
+    }
+
     public function destroyReservation(int $id)
     {
-        return $this->destroy($id, Reservation::class);
+        $reservation = Reservation::findOrFail($id);
+        $reservation->delete();
+        return response()->json(['message' => 'Reservation deleted successfully']);
     }
 
     public function generatePdf(Request $request, $reservationId)

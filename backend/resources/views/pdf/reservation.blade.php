@@ -184,8 +184,20 @@
                             <td class="header">
                                 Adrese
                             </td>
+                            @php
+                                $address = $reservation->user->address;
+                                $addressLine1 = $address->address_line1;
+                                $addressLine2 = $address->address_line2 ? $address->address_line2 . ', ' : '';
+                                $cityName = $address->city->name ? $address->city->name . ', ' : '';
+                                $region = $address->region ? $address->region . ', ' : '';
+                                $countryName = $address->city->country->name ? $address->city->country->name . ', ' : '';
+                                $postalCode = $address->postal_code ? $address->postal_code : '';
+                            @endphp
+
                             <td>
-                                Plānupes iela 7, dz. 8<br/>Inčukalns, Siguldas novads, LV-2141
+                                {!!
+                                    "{$addressLine1}, {$addressLine2}<br>{$cityName}{$region}{$countryName}{$postalCode}"
+                                !!}
                             </td>
                         </tr>
                         </tbody>

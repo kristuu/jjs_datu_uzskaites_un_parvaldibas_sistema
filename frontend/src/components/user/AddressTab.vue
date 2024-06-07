@@ -152,7 +152,6 @@ const mapAddressComponents = (addressComponents) => {
 
 const saveAddress = async () => {
   fetchDataStore.setIsProcessing(true);
-  // await axios.get(`/sanctum/csrf-cookie`);
   await axios
     .post("/api/user/address", {
       address_line1: address.value.line1,

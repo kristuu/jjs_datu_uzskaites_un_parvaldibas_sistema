@@ -7,10 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 /* Dependencies for IBAN bank account number and phone number validation */
-use Nembie\IbanRule\ValidIban;
-use libphonenumber\PhoneNumberFormat;
 
-class RegionRequest extends FormRequest
+class CityRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +21,15 @@ class RegionRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255', 'unique:regions,name,' . $this->route('id') ?? null],
+            'name' => ['required', 'string', 'max:255', 'unique:cities,name,' . $this->route('id') ?? null],
             'country_id' => ['required']
         ];
 
         return $rules;
     }
 
-    public function messages() {
+    public function messages()
+    {
         return [
 
         ];

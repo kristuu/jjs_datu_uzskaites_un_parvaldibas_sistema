@@ -49,7 +49,7 @@
       "permissions": "Piekļuves tiesības",
       "roles": "Lomas",
       "countries": "Valstis",
-      "regions": "Reģioni",
+      "cities": "Pilsētas",
       "instructors": "Treneri",
       "certificates": "Sertifikāti",
       "categories": "Kategorijas",
@@ -134,12 +134,12 @@
       "edit country": "Valsts rediģēšana",
       "total": "Kopā {total} valsts (-is)"
     },
-    "regions": {
-      "regions": "Reģioni",
-      "manage regions": "Reģionu pārvaldība",
-      "create region": "Reģiona pievienošana",
-      "edit region": "Reģiona rediģēšana",
-      "total": "Kopā {total} reģions (-i)"
+    "cities": {
+      "cities": "Pilsētas",
+      "manage cities": "Pilsētu pārvaldība",
+      "create city": "Pilsētas pievienošana",
+      "edit city": "Pilsētas rediģēšana",
+      "total": "Kopā {total} pilsēta (-as)"
     },
     "instructors": {
       "instructors": "Treneri",
@@ -160,7 +160,7 @@
       "manage categories": "Kategoriju pārvaldība",
       "create category": "Kategorijas pievienošana",
       "edit category": "Kategorijas rediģēšana",
-      "total": "Kopā {total} kategorija (-s)"
+      "total": "Kopā {total} kategorija (-as)"
     }
   },
   "table": {
@@ -173,7 +173,7 @@
     "countries": {
       "name": "Nosaukums"
     },
-    "regions": {
+    "cities": {
       "name": "Nosaukums",
       "country": {
         "name": "Valsts"
@@ -221,6 +221,14 @@
       "competitions": "Sacensības",
       "horse_capacity": "Staļļu ietilpība (zirgu skaits)"
     },
+    "reservations": {
+      "instructor": "Treneris",
+      "user": "Lietotājs",
+      "category": "Trenera kategorija",
+      "status": "Statuss",
+      "time": "Treniņa laiks",
+      "user_names": "Vārds, uzvārds"
+    },
     "created_at": "Izveidots",
     "updated_at": "Atjaunināts",
     "info": {
@@ -233,10 +241,11 @@
     "role": "Lomas pārskats",
     "permission": "Tiesības pārskats",
     "country": "Valsts pārskats",
-    "region": "Reģiona pārskats",
+    "city": "Pilsētas pārskats",
     "certificate": "Sertifikāta pārskats",
     "category": "Kategorijas pārskats",
-    "location": "Lokācijas pārskats"
+    "location": "Lokācijas pārskats",
+    "reservation": "Rezervācijas pārskats"
   },
   "editor": {
     "bold": "Treknraksts",

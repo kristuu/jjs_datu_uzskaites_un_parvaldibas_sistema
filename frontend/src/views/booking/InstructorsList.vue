@@ -1,6 +1,7 @@
 <script>
-import axios from '@/services/axios';
-let Modal = '';
+import axios from "@/services/axios";
+
+let Modal = "";
 export default {
   name: "InstructorsList",
   data() {
@@ -13,7 +14,7 @@ export default {
       errorList: {},
       isLoading: null,
       smallestDate: null,
-    }
+    };
   },
   methods: {
     async fetchInstructors() {
@@ -33,7 +34,7 @@ export default {
         } else if (e.request) {
           console.log(e.request);
         } else {
-          console.log('Unrecognized error: ', e.message);
+          console.log("Unrecognized error: ", e.message);
         }
         this.isLoading = false;
       }
@@ -42,22 +43,27 @@ export default {
       this.selectedInstructor = { ...instructor };
       console.log(this.selectedInstructor);
       if (this.selectedInstructor.availability.length) {
-        this.availabilitiesByDate = this.selectedInstructor.availability.reduce((grouped, availability) => {
-          let date = availability.start_time.split('T')[0]; // get only the date portion from datetime string
-          (grouped[date] = grouped[date] || []).push(availability); // push into the array under the corresponding date property
+        this.availabilitiesByDate = this.selectedInstructor.availability.reduce(
+          (grouped, availability) => {
+            let date = availability.start_time.split("T")[0]; // get only the date portion from datetime string
+            (grouped[date] = grouped[date] || []).push(availability); // push into the array under the corresponding date property
 
-          // Sort the availabilities for this date by start_time
-          grouped[date].sort((a, b) => {
-            return new Date(a.start_time) - new Date(b.start_time);
-          });
+            // Sort the availabilities for this date by start_time
+            grouped[date].sort((a, b) => {
+              return new Date(a.start_time) - new Date(b.start_time);
+            });
 
-          return grouped;
-        }, {});
-        this.smallestDate = Object.keys(this.availabilitiesByDate).reduce((a, b) => a < b ? a : b);
+            return grouped;
+          },
+          {}
+        );
+        this.smallestDate = Object.keys(this.availabilitiesByDate).reduce(
+          (a, b) => (a < b ? a : b)
+        );
       }
       if (!this.bookModal) {
         this.$nextTick(() => {
-          this.bookModal = new Modal(document.getElementById('bookingModal'));
+          this.bookModal = new Modal(document.getElementById("bookingModal"));
           this.bookModal.show();
         });
       } else {
@@ -66,8 +72,10 @@ export default {
     },
     async attemptBooking() {
       try {
-        var checkedValue = document.querySelector("input[name=availabilityTime]:checked").value;
-        await axios.post('/book', { id: checkedValue });
+        var checkedValue = document.querySelector(
+          "input[name=availabilityTime]:checked"
+        ).value;
+        await axios.post("/book", { id: checkedValue });
         this.resetModal();
         this.bookModal.hide();
         this.fetchInstructors();
@@ -80,7 +88,7 @@ export default {
         } else if (e.request) {
           console.log(e.request);
         } else {
-          console.log('Unrecognized error: ', e.message);
+          console.log("Unrecognized error: ", e.message);
         }
       }
     },
@@ -95,7 +103,7 @@ export default {
       let hours = date.getUTCHours();
       let minutes = ("0" + date.getMinutes()).slice(-2); // add leading zero if needed
       return `${hours}:${minutes}`;
-    }
+    },
   },
   created() {
     this.fetchInstructors();
@@ -103,9 +111,9 @@ export default {
   watch: {
     currentPage() {
       this.fetchInstructors();
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <template>
@@ -113,18 +121,29 @@ export default {
     <h2 class="fw-bold mb-5">Treneru saraksts</h2>
     <div class="container-fluid">
       <div class="row g-3">
-        <div class="col-12" v-if="this.isLoading">
+        <div v-if="this.isLoading" class="col-12">
           <h3>Notiek ielāde...</h3>
         </div>
-        <div class="col-md-4" v-else v-for="(instructor) in this.instructors" :key="instructor.id">
+        <div
+          v-for="instructor in this.instructors"
+          v-else
+          :key="instructor.id"
+          class="col-md-4"
+        >
           <div class="card text-start">
             <div class="card-body">
-              <h5 class="card-title">{{ instructor.user.name + " " + instructor.user.surname }}</h5>
-              <h6 class="card-subtitle mb-2 text-body-secondary">{{ instructor.certificate.category.name }}</h6>
-              <div style="height: 100px;">
+              <h5 class="card-title">
+                {{ instructor.user.name + " " + instructor.user.surname }}
+              </h5>
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                {{ instructor.certificate.category.name }}
+              </h6>
+              <div style="height: 100px">
                 <p class="card-text">{{ instructor.short_description }}</p>
               </div>
-              <a class="btn btn-primary" @click="openBookingModal(instructor)">Pieteikt rezervāciju</a>
+              <a class="btn btn-primary" @click="openBookingModal(instructor)"
+                >Pieteikt rezervāciju</a
+              >
             </div>
           </div>
         </div>
@@ -133,52 +152,113 @@ export default {
   </div>
 
   <!--  Pop-up modal for booking reservation (detailed instructor page) -->
-  <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
+  <div
+    id="bookingModal"
+    aria-hidden="true"
+    aria-labelledby="bookingModalLabel"
+    class="modal fade"
+    role="dialog"
+    tabindex="-1"
+  >
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <a class="navbar-brand" href="/"><img src="../../assets/logo-red.svg" height="45" /></a>
-          <h5 class="modal-title mx-auto" id="bookingModalLabel">Trenera profils</h5>
-          <button type="button" class="btn-close" data-dismiss="modal" @click="this.bookModal.hide()" aria-label="Close">
-          </button>
+          <a class="navbar-brand" href="/frontend/src/views/public"
+            ><img height="45" src="../../assets/logo-red.svg"
+          /></a>
+          <h5 id="bookingModalLabel" class="modal-title mx-auto">
+            Trenera profils
+          </h5>
+          <button
+            aria-label="Close"
+            class="btn-close"
+            data-dismiss="modal"
+            type="button"
+            @click="this.bookModal.hide()"
+          ></button>
         </div>
         <div class="modal-body">
           <div class="row g-3">
             <div class="col-12">
-              <h5>{{ this.selectedInstructor?.user?.name + " " + this.selectedInstructor?.user?.surname }}</h5>
-              <h6 class="text-body-secondary">{{ this.selectedInstructor?.certificate?.category?.name }}</h6>
+              <h5>
+                {{
+                  this.selectedInstructor?.user?.name +
+                  " " +
+                  this.selectedInstructor?.user?.surname
+                }}
+              </h5>
+              <h6 class="text-body-secondary">
+                {{ this.selectedInstructor?.certificate?.category?.name }}
+              </h6>
               <p>{{ this.selectedInstructor?.description }}</p>
             </div>
             <div class="col-12">
-              <div id="availabilityCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel"
-              v-if="this.selectedInstructor?.availability?.length">
+              <div
+                v-if="this.selectedInstructor?.availability?.length"
+                id="availabilityCarousel"
+                class="carousel carousel-dark slide"
+                data-bs-ride="carousel"
+              >
                 <h6 class="text-start fw-bold">Pieejamība:</h6>
                 <div class="carousel-inner">
-                  <div class="carousel-item" v-for="(availabilities, date) in this.availabilitiesByDate"
-                       :class="{ 'active': date === this.smallestDate }" :key="date">
+                  <div
+                    v-for="(availabilities, date) in this.availabilitiesByDate"
+                    :key="date"
+                    :class="{ active: date === this.smallestDate }"
+                    class="carousel-item"
+                  >
                     <h3 class="mb-3">{{ date }}</h3>
                     <div class="row g-3 mb-5">
-                      <div class="col" v-for="(availability, index) in availabilities" :key="index">
+                      <div
+                        v-for="(availability, index) in availabilities"
+                        :key="index"
+                        class="col"
+                      >
                         <div>
-                          <input type="radio" class="btn-check"
-                                 :value="availability.id"
-                                 v-model="this.selectedTime"
-                                 :id="`time-${date}-${index}`"
-                                 name="availabilityTime">
-                          <label :for="`time-${date}-${index}`" class="btn btn-sm btn-primary">{{ formatTime(availability.start_time) + " - " + formatTime(availability.end_time) }}</label>
+                          <input
+                            :id="`time-${date}-${index}`"
+                            v-model="this.selectedTime"
+                            :value="availability.id"
+                            class="btn-check"
+                            name="availabilityTime"
+                            type="radio"
+                          />
+                          <label
+                            :for="`time-${date}-${index}`"
+                            class="btn btn-sm btn-primary"
+                            >{{
+                              formatTime(availability.start_time) +
+                              " - " +
+                              formatTime(availability.end_time)
+                            }}</label
+                          >
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <button class="carousel-control-prev" type="button"
-                        data-bs-target="#availabilityCarousel" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <button
+                  class="carousel-control-prev"
+                  data-bs-slide="prev"
+                  data-bs-target="#availabilityCarousel"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="carousel-control-prev-icon"
+                  ></span>
                   <span class="visually-hidden">Iepriekšējā diena</span>
                 </button>
-                <button class="carousel-control-next" type="button"
-                        data-bs-target="#availabilityCarousel" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <button
+                  class="carousel-control-next"
+                  data-bs-slide="next"
+                  data-bs-target="#availabilityCarousel"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="carousel-control-next-icon"
+                  ></span>
                   <span class="visually-hidden">Nākamā diena</span>
                 </button>
               </div>
@@ -187,10 +267,19 @@ export default {
               </div>
             </div>
           </div>
-          <form @submit.prevent="attemptBooking" class="row g-3 text-start" v-if="this.selectedInstructor?.availability?.length">
-            <button type="submit" class="btn btn-primary col-6 m-auto">Apstiprināt rezervācijas pieteikšanu</button>
-            <p class="mt-5 px-3"><strong>UZMANĪBAI!</strong> Pārliecinieties, ka Jūsu kontaktinformācija ir aktualizēta.
-            Pēc rezervācijas pieteikšanas treneris var Jums zvanīt, lai precizētu informāciju.</p>
+          <form
+            v-if="this.selectedInstructor?.availability?.length"
+            class="row g-3 text-start"
+            @submit.prevent="attemptBooking"
+          >
+            <button class="btn btn-primary col-6 m-auto" type="submit">
+              Apstiprināt rezervācijas pieteikšanu
+            </button>
+            <p class="mt-5 px-3">
+              <strong>UZMANĪBAI!</strong> Pārliecinieties, ka Jūsu
+              kontaktinformācija ir aktualizēta. Pēc rezervācijas pieteikšanas
+              treneris var Jums zvanīt, lai precizētu informāciju.
+            </p>
           </form>
         </div>
       </div>
@@ -198,6 +287,4 @@ export default {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

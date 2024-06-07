@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CertificateController;
+use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\EventCategoryController;
 use App\Http\Controllers\Api\EventController;
@@ -14,7 +15,6 @@ use App\Http\Controllers\Api\InstructorAvailabilityController;
 use App\Http\Controllers\Api\InstructorController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\PermissionController;
-use App\Http\Controllers\Api\RegionController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
@@ -57,7 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     registerResourceRoutes('permissions', PermissionController::class, 'getAllPermissions', 'findPermissionById', 'storePermission', 'updatePermission', 'destroyPermission');
     registerResourceRoutes('roles', RoleController::class, 'getAllRoles', 'findRoleById', 'storeRole', 'updateRole', 'destroyRole');
     registerResourceRoutes('countries', CountryController::class, 'getAllCountries', 'findCountryById', 'storeCountry', 'updateCountry', 'destroyCountry');
-    registerResourceRoutes('regions', RegionController::class, 'getAllRegions', 'findRegionById', 'storeRegion', 'updateRegion', 'destroyRegion');
+    registerResourceRoutes('cities', CityController::class, 'getAllCities', 'findCityById', 'storeCity', 'updateCity', 'destroyCity');
     registerResourceRoutes('instructors', InstructorController::class, 'getAllInstructors', 'findInstructorById', 'storeInstructor', 'updateInstructor', 'destroyInstructor');
     registerResourceRoutes('certificates', CertificateController::class, 'getAllCertificates', 'findCertificateById', 'storeCertificate', 'updateCertificate', 'destroyCertificate');
     registerResourceRoutes('categories', CategoryController::class, 'getAllCategories', 'findCategoryById', 'storeCategory', 'updateCategory', 'destroyCategory');
@@ -91,7 +91,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/instructor/reservations', [InstructorController::class, 'getReservations']);
     Route::post('/instructor/reservation/{id}', [InstructorController::class, 'manageReservation']);
 
+    Route::get('/reservations', [ReservationController::class, 'getAllReservations']);
     Route::post('/reservations', [ReservationController::class, 'storeReservation']);
+    Route::get('/reservations/{id}', [ReservationController::class, 'findReservationById']);
 
     Route::get('/getAllReservations', [HomeController::class, 'getAllReservations']);
     Route::delete('/personal_reservations/{id}', [ReservationController::class, 'destroyReservation']);

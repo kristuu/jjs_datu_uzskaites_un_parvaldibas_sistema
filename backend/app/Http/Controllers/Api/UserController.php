@@ -35,7 +35,7 @@ class UserController extends Controller
     {
         return $this->getPaginated($request,
             User::class,
-            ['address', 'address.region', 'address.region.country'],
+            ['address', 'address.city', 'address.city.country'],
             $request->perPage,
             $this->globalFilterFields);
     }
@@ -108,7 +108,7 @@ class UserController extends Controller
             'address_line2' => $request->address_line2,
             'postal_code' => $request->postal_code,
             'city' => $request->city,
-            'region' => $region->id,
+            'city' => $region->id,
             'country' => $country->id
         ]);
 

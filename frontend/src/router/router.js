@@ -1,56 +1,60 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import HomePage from "../views/HomePage.vue";
-import UserList from "@/views/user/UserList.vue";
-import CreateUser from "../views/user/CreateUser.vue";
-import EditUser from "../views/user/EditUser.vue";
+import UserList from "@/views/admin/user/UserList.vue";
+import CreateUser from "../views/admin/user/CreateUser.vue";
+import EditUser from "../views/admin/user/EditUser.vue";
 import LoginPage from "../views/auth/LoginPage.vue";
 import RegisterPage from "../views/auth/RegisterPage.vue";
 
-import MaugloCompute from "@/views/calculateReportDiapazone.vue";
+import MaugloCompute from "@/views/admin/calculateReportDiapazone.vue";
 import ErrorView from "@/views/error/ErrorView.vue";
-import PermissionList from "@/views/permission/PermissionList.vue";
-import CreatePermission from "@/views/permission/CreatePermission.vue";
-import EditPermission from "@/views/permission/EditPermission.vue";
-import RoleList from "@/views/role/RoleList.vue";
-import CreateRole from "@/views/role/CreateRole.vue";
-import EditRole from "@/views/role/EditRole.vue";
-import CountryList from "@/views/country/CountryList.vue";
-import CreateCountry from "@/views/country/CreateCountry.vue";
-import EditCountry from "@/views/country/EditCountry.vue";
-import RegionList from "@/views/region/RegionList.vue";
-import CreateRegion from "@/views/region/CreateRegion.vue";
-import EditRegion from "@/views/region/EditRegion.vue";
-import InstructorList from "@/views/instructor/InstructorList.vue";
-import CreateInstructor from "@/views/instructor/CreateInstructor.vue";
-import EditInstructor from "@/views/instructor/EditInstructor.vue";
+import PermissionList from "@/views/admin/permission/PermissionList.vue";
+import CreatePermission from "@/views/admin/permission/CreatePermission.vue";
+import EditPermission from "@/views/admin/permission/EditPermission.vue";
+import RoleList from "@/views/admin/role/RoleList.vue";
+import CreateRole from "@/views/admin/role/CreateRole.vue";
+import EditRole from "@/views/admin/role/EditRole.vue";
+import CountryList from "@/views/admin/country/CountryList.vue";
+import CreateCountry from "@/views/admin/country/CreateCountry.vue";
+import EditCountry from "@/views/admin/country/EditCountry.vue";
+import CityList from "@/views/admin/city/CityList.vue";
+import CreateCity from "@/views/admin/city/CreateCity.vue";
+import EditCity from "@/views/admin/city/EditCity.vue";
+import InstructorList from "@/views/admin/instructor/InstructorList.vue";
+import CreateInstructor from "@/views/admin/instructor/CreateInstructor.vue";
+import EditInstructor from "@/views/admin/instructor/EditInstructor.vue";
 
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import { useErrorStore } from "@/stores/errorStore";
 import { useAuthStore } from "@/stores/authStore";
-import CertificateList from "@/views/certificate/CertificateList.vue";
-import CreateCertificate from "@/views/certificate/CreateCertificate.vue";
-import EditCertificate from "@/views/certificate/EditCertificate.vue";
-import CategoryList from "@/views/category/CategoryList.vue";
-import CreateCategory from "@/views/category/CreateCategory.vue";
-import EditCategory from "@/views/category/EditCategory.vue";
+import CertificateList from "@/views/admin/certificate/CertificateList.vue";
+import CreateCertificate from "@/views/admin/certificate/CreateCertificate.vue";
+import EditCertificate from "@/views/admin/certificate/EditCertificate.vue";
+import CategoryList from "@/views/admin/category/CategoryList.vue";
+import CreateCategory from "@/views/admin/category/CreateCategory.vue";
+import EditCategory from "@/views/admin/category/EditCategory.vue";
 import Container from "@/views/admin/Container.vue";
 import Dashboard from "@/views/admin/Dashboard.vue";
-import EventList from "@/views/event/EventList.vue";
-import CreateEvent from "@/views/event/CreateEvent.vue";
-import EditEvent from "@/views/event/EditEvent.vue";
-import EventCategoryList from "@/views/eventCategory/EventCategoryList.vue";
-import CreateEventCategory from "@/views/eventCategory/CreateEventCategory.vue";
-import EditEventCategory from "@/views/eventCategory/EditEventCategory.vue";
-import EventTypeList from "@/views/eventType/EventTypeList.vue";
-import CreateEventType from "@/views/eventType/CreateEventType.vue";
-import EditEventType from "@/views/eventType/EditEventType.vue";
-import LocationList from "@/views/location/LocationList.vue";
-import CreateLocation from "@/views/location/CreateLocation.vue";
-import EditLocation from "@/views/location/EditLocation.vue";
+import EventList from "@/views/admin/event/EventList.vue";
+import CreateEvent from "@/views/admin/event/CreateEvent.vue";
+import EditEvent from "@/views/admin/event/EditEvent.vue";
+import EventCategoryList from "@/views/admin/eventCategory/EventCategoryList.vue";
+import CreateEventCategory from "@/views/admin/eventCategory/CreateEventCategory.vue";
+import EditEventCategory from "@/views/admin/eventCategory/EditEventCategory.vue";
+import EventTypeList from "@/views/admin/eventType/EventTypeList.vue";
+import CreateEventType from "@/views/admin/eventType/CreateEventType.vue";
+import EditEventType from "@/views/admin/eventType/EditEventType.vue";
+import LocationList from "@/views/admin/location/LocationList.vue";
+import CreateLocation from "@/views/admin/location/CreateLocation.vue";
+import EditLocation from "@/views/admin/location/EditLocation.vue";
+
 import BookingList from "@/views/booking/BookingList.vue";
 import BookingInstructor from "@/views/booking/BookingInstructor.vue";
 import UserProfileEdit from "@/views/public/user/UserProfileEdit.vue";
+import ReservationList from "@/views/admin/reservation/ReservationList.vue";
+import EditReservation from "@/views/admin/reservation/EditReservation.vue";
+import CreateReservation from "@/views/admin/reservation/CreateReservation.vue";
 
 const routes = [
   {
@@ -189,21 +193,21 @@ const routes = [
       },
 
       {
-        path: "regions",
-        name: "RegionList",
-        component: RegionList,
+        path: "cities",
+        name: "CityList",
+        component: CityList,
         meta: { public: false },
       },
       {
-        path: "regions/create",
-        name: "CreateRegion",
-        component: CreateRegion,
+        path: "cities/create",
+        name: "CreateCity",
+        component: CreateCity,
         meta: { public: false },
       },
       {
-        path: "regions/:id/edit",
-        name: "EditRegion",
-        component: EditRegion,
+        path: "cities/:id/edit",
+        name: "EditCity",
+        component: EditCity,
         meta: { public: false },
       },
 
@@ -223,6 +227,25 @@ const routes = [
         path: "instructors/:id/edit",
         name: "EditInstructor",
         component: EditInstructor,
+        meta: { public: false },
+      },
+
+      {
+        path: "reservations",
+        name: "ReservationList",
+        component: ReservationList,
+        meta: { public: false },
+      },
+      {
+        path: "reservations/create",
+        name: "CreateReservation",
+        component: CreateReservation,
+        meta: { public: false },
+      },
+      {
+        path: "reservations/:id/edit",
+        name: "EditReservation",
+        component: EditReservation,
         meta: { public: false },
       },
 

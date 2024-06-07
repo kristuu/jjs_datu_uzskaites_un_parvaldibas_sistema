@@ -118,9 +118,9 @@ const menuItems = ref([
             command: () => router.push({ name: "CountryList" }),
           },
           {
-            label: t("navigation.admin.regions"),
+            label: t("navigation.admin.cities"),
             icon: "pi pi-map",
-            command: () => router.push({ name: "RegionList" }),
+            command: () => router.push({ name: "CityList" }),
           },
         ],
       },
