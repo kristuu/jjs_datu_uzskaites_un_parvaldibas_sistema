@@ -76,7 +76,7 @@
     dismissableMask
     modal
     position="top"
-    style="background: none"
+    style="background: none; max-width: 900px"
   >
     <template #container="{ closeCallback }">
       <div class="grid mt-2">
@@ -103,7 +103,7 @@
             </div>
             <Divider />
             <div style="max-height: 50vh; overflow: hidden auto">
-              {{ chosenNotification.long_message }}
+              <div v-html="chosenNotification.long_message" />
             </div>
           </div>
         </div>

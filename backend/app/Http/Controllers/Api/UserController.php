@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Traits\PaginationTrait;
-use App\Models\City;
-use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,26 +93,6 @@ class UserController extends Controller
             // Catch all other exceptions and send an error response
             return $this->sendResponse(['error' => $e->getMessage()], 500);
         }
-    }
-
-    public function setAddress(Request $request)
-    {
-        $user = auth()->user();
-
-        $country = Country::firstOrCreate(['name' => $request->country->name]);
-        $region = City::firstOrCreate(['name' => $request->region->name]);
-        $user->update([
-            'address_line1' => $request->address_line1,
-            'address_line2' => $request->address_line2,
-            'postal_code' => $request->postal_code,
-            'city' => $request->city,
-            'city' => $region->id,
-            'country' => $country->id
-        ]);
-
-        return response()->json([
-            'message' => 'Address updated succesfully'
-        ], 200);
     }
 
     public function destroyUser(string $person_code)

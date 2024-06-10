@@ -7,7 +7,7 @@
       <img
         :src="reservation.instructor.user.profile_picture"
         class="block xl:block mx-auto border-round w-full"
-        style="border-radius: 0.375rem 0.375rem 0 0"
+        style="border-radius: 0.375rem 0 0"
       />
       <Tag
         v-if="!isLoading"
@@ -72,9 +72,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex flex-column justify-content-between md:align-items-end gap-5"
-      >
+      <div class="flex flex-column justify-content-between md:align-items-end">
         <div v-if="isLoading" class="w-100">
           <Skeleton height="2rem" width="75%" />
           <Skeleton class="mt-2" height="2rem" width="100%" />
@@ -98,24 +96,24 @@
             }}</span>
           </div>
         </div>
-        <div
-          v-if="!['accepted', 'denied'].includes(reservation.status)"
-          class="flex flex-row-reverse md:flex-row gap-2"
-        >
+        <div class="flex flex-row gap-2 mt-2 flex-wrap">
           <Button
+            v-if="isEligibleForPDF(reservation)"
+            :label="$t(`print_pdf`).toLocaleUpperCase()"
+            class="button-auto-width"
+            size="small"
+            @click="generatePDF(reservation)"
+          />
+          <Button
+            v-if="!['accepted', 'denied'].includes(reservation.status)"
             :label="t('reservations.cancel').toLocaleUpperCase()"
-            class="flex-auto md:flex-initial white-space-nowrap"
+            class="button-auto-width"
             outlined
             size="small"
             text
             @click="emitCancel($event, reservation)"
           />
         </div>
-        <Button
-          v-if="isEligibleForPDF(reservation)"
-          @click="generatePDF(reservation)"
-          >{{ t("print_pdf") }}
-        </Button>
       </div>
     </div>
   </div>
@@ -167,10 +165,7 @@ const formatTimeRange = (startTimeString, endTimeString) => {
 };
 
 const isEligibleForPDF = (reservation) => {
-  return (
-    reservation.status === "accepted" &&
-    new Date(reservation.instructor_availability.end_time) <= new Date()
-  );
+  return ["accepted", "submitted"].includes(reservation.status);
 };
 
 const generatePDF = async (reservation) => {
@@ -198,4 +193,14 @@ const emitCancel = async (event, reservation) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.button-auto-width {
+  flex-shrink: 1;
+  flex-grow: 1;
+  white-space: nowrap;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+</style>

@@ -22,10 +22,17 @@
             </div>
           </div>
           <div class="col-12 lg:col-9">
-            <ReservationList
+            <UserReservationList
               :reservations="usersReservations"
-              @showAllReservations="showAllReservations"
+              @showAllReservations="showAllUserReservations"
               @update:reservations="usersReservations = $event"
+            />
+          </div>
+          <div class="col-12 lg:col-9">
+            <InstructorReservationList
+              :reservations="instructorReservations"
+              @showAllReservations="showAllInstructorReservations"
+              @update:reservations="instructorReservations = $event"
             />
           </div>
         </div>
@@ -111,6 +118,7 @@
                     class="w-full pb-4"
                     maxlength="255"
                   />
+                  <InputError :errors="errorList.reason" />
                   <span
                     class="text-sm absolute right-0 bottom-0 p-2 text-secondary"
                     >{{ cancelReservationCharactersRemaining }}</span
@@ -119,7 +127,11 @@
               </div>
             </div>
             <div class="text-end">
-              <Button :label="`Atcelt`.toLocaleUpperCase()" class="mt-4" />
+              <Button
+                :label="`Atcelt`.toLocaleUpperCase()"
+                class="mt-4"
+                @click="submitReservationCancellation"
+              />
             </div>
           </div>
         </div>
@@ -133,14 +145,18 @@ import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import axios from "@/services/axios";
 import UserInfo from "@/components/UserInfo.vue";
-import ReservationList from "@/components/ReservationList.vue";
 import AllReservationsDialog from "@/components/AllReservationsDialog.vue";
 import { useAuthStore } from "@/stores/authStore";
 import Button from "primevue/button";
 import moment from "moment/moment";
+import { useErrorStore } from "@/stores/errorStore";
+import InputError from "@/components/error/inputError.vue";
 
 const fetchDataStore = useFetchDataStore();
 const authStore = useAuthStore();
+const errorStore = useErrorStore();
+
+let errorList = computed(() => errorStore.errorList);
 
 let time = ref(new Date().toLocaleTimeString());
 let timer = null;
@@ -152,7 +168,10 @@ const competitionsPercentage = ref(0);
 
 const competitions = ref([]);
 const seminars = ref([]);
+
 const usersReservations = ref([]);
+const instructorReservations = ref([]);
+
 const allReservationsVisible = ref(false);
 const allReservations = ref([]);
 const isFetchingAllReservations = ref(false);
@@ -175,11 +194,24 @@ const formatTimeRange = (startTimeString, endTimeString) => {
   return `${startTime} - ${endTime}`;
 };
 
-const showAllReservations = async () => {
+const showAllUserReservations = async () => {
   try {
     isFetchingAllReservations.value = true;
     allReservationsVisible.value = true;
-    const response = await axios.get("/api/getAllReservations");
+    const response = await axios.get("/api/getAllUserReservations");
+    allReservations.value = response.data;
+  } catch (error) {
+    console.error("Error fetching all reservations:", error);
+  } finally {
+    isFetchingAllReservations.value = false;
+  }
+};
+
+const showAllInstructorReservations = async () => {
+  try {
+    isFetchingAllReservations.value = true;
+    allReservationsVisible.value = true;
+    const response = await axios.get("/api/getAllInstructorReservations");
     allReservations.value = response.data;
   } catch (error) {
     console.error("Error fetching all reservations:", error);
@@ -216,10 +248,10 @@ onBeforeMount(async () => {
       fetchDataStore.showComponents();
     });
 
-  await fetchReservationData();
+  await fetchUserReservationData();
 });
 
-const fetchReservationData = async () => {
+const fetchUserReservationData = async () => {
   usersReservations.value = [];
   fetchDataStore.setIsFetching(true);
   await axios
@@ -236,7 +268,43 @@ const fetchReservationData = async () => {
     });
 };
 
-const submitReservationCancellation = async () => {};
+const fetchInstructorReservationData = async () => {
+  instructorReservations.value = [];
+  fetchDataStore.setIsFetching(true);
+  await axios
+    .get(`api/instructorReservations`)
+    .then((response) => {
+      instructorReservations.value = response.data;
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
+      fetchDataStore.showComponents();
+      fetchDataStore.setIsFetching(false);
+    });
+};
+
+const submitReservationCancellation = async () => {
+  await axios
+    .patch(`/api/cancel-reservation/${chosenCancelReservation.value.id}`, {
+      reason: chosenCancelReservation.value.reason,
+    })
+    .then((response) => {
+      console.log(response);
+      cancelConfirmationVisible.value = false;
+    })
+    .catch((error) => {
+      console.log(error.response);
+      console.log(chosenCancelReservation.value.reason);
+      if (error.response.status === 422) {
+        errorStore.setErrorList(error.response.data);
+        console.log("inside");
+      } else {
+        console.error(error);
+      }
+    });
+};
 
 onMounted(() => {
   timer = setInterval(() => {

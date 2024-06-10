@@ -76,17 +76,24 @@ class ReservationController extends Controller
     public function cancelReservation(Request $request, $reservationId)
     {
         $request->validate([
-            'reason' => 'required|string|max:255',
+            'reason' => ['required', 'string', 'max:255', 'min: 5'],
         ]);
 
         $reservation = Reservation::findOrFail($reservationId);
+        $reservation->load('instructor.user');
+
         $reservation->status = 'cancelled';
         $reservation->save();
+
+        $longMessage = view('reservation.reservation_cancelled', [
+            'reservation' => $reservation,
+            'reason' => $request->reason,
+        ])->render();
 
         Notification::create([
             'user_person_code' => $reservation->instructor->user->person_code,
             'short_message' => "Atcelts rezervācijas pieteikums",
-            'long_message' => 'Your reservation has been cancelled. Reason: ' . $request->reason,
+            'long_message' => $longMessage,
         ]);
 
         return response()->json(['message' => 'Reservation cancelled and notification sent.']);

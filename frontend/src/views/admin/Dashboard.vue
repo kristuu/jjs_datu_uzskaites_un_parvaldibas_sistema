@@ -188,6 +188,8 @@ import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import axios from "@/services/axios";
 import router from "@/router/router";
+import EventCountThisYearChart from "@/components/admin/charts/EventCountThisYearChart.vue";
+import EventsByMonthChart from "@/components/admin/charts/EventsByMonthChart.vue";
 
 let time = ref(new Date().toLocaleTimeString());
 let timer = null;

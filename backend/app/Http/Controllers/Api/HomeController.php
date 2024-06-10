@@ -30,7 +30,7 @@ class HomeController extends Controller
         return $this->sendResponse($reservations);
     }
 
-    public function getAllReservations()
+    public function getAllUserReservations()
     {
         $user = auth()->user();
 
@@ -40,6 +40,24 @@ class HomeController extends Controller
             'instructorAvailability'
         ])
             ->where('user_person_code', $user->person_code)
+            ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
+            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc')
+            ->get(['reservations.*']);
+
+        return $this->sendResponse($reservations);
+    }
+
+    public function getAllInstructorReservations()
+    {
+        $user = auth()->user();
+        $user->load('instructor');
+
+        $reservations = Reservation::with([
+            'instructor.user',
+            'instructor.certificate.category',
+            'instructorAvailability'
+        ])
+            ->where('instructor_id', $user->instructor->id)
             ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
             ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc')
             ->get(['reservations.*']);

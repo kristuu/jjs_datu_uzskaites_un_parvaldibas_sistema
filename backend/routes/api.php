@@ -98,9 +98,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservations', [ReservationController::class, 'getAllReservations']);
     Route::post('/reservations', [ReservationController::class, 'storeReservation']);
     Route::get('/reservations/{id}', [ReservationController::class, 'findReservationById']);
+    Route::patch('/cancel-reservation/{reservationId}', [ReservationController::class, 'cancelReservation']);
 
-    Route::get('/getAllReservations', [HomeController::class, 'getAllReservations']);
-    Route::delete('/personal_reservations/{id}', [ReservationController::class, 'destroyReservation']);
+    Route::get('/getAllUserReservations', [HomeController::class, 'getAllUserReservations']);
+    Route::get('/getAllInstructorReservations', [HomeController::class, 'getAllInstructorReservations']);
+
+    Route::delete('/personal_reservations/{id}', [ReservationController::class, 'destroyReservation']); // parbaudit so un citus route vrb nemaz neizmanto
+
     Route::get('/homeData', [HomeController::class, 'index']);
 
     Route::post('/upload-image', [ImageController::class, 'uploadToImgur']);
