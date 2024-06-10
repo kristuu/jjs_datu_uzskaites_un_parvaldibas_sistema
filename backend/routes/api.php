@@ -87,6 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/notifications', [NotificationController::class, 'getAllNotifications']);
+    Route::patch('/read-notification/{notificationId}', [NotificationController::class, 'markAsRead']);
 
     Route::get('/availabilities/{instructor_id}/{date}', [InstructorAvailabilityController::class, 'getAvailabilitiesByDate']);
     Route::get('/availability-counts/{instructor_id}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);

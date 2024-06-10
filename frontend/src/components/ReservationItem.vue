@@ -102,14 +102,13 @@
           v-if="!['accepted', 'denied'].includes(reservation.status)"
           class="flex flex-row-reverse md:flex-row gap-2"
         >
-          <ConfirmPopup></ConfirmPopup>
           <Button
             :label="t('reservations.cancel').toLocaleUpperCase()"
             class="flex-auto md:flex-initial white-space-nowrap"
             outlined
             size="small"
             text
-            @click="confirmCancel($event, reservation.id)"
+            @click="emitCancel($event, reservation)"
           />
         </div>
         <Button
@@ -124,9 +123,6 @@
 
 <script setup>
 import { computed } from "vue";
-import { useToast } from "primevue/usetoast";
-import { useConfirm } from "primevue/useconfirm";
-import ConfirmPopup from "primevue/confirmpopup";
 import Skeleton from "primevue/skeleton";
 import Tag from "primevue/tag";
 import Button from "primevue/button";
@@ -135,16 +131,16 @@ import axios from "@/services/axios";
 import moment from "moment";
 
 const { t } = useI18n();
-const emit = defineEmits(["reservation-cancelled"]);
+const emit = defineEmits([
+  "reservation-cancelled",
+  "close-all-reservations-open-cancel",
+]);
 
 const props = defineProps({
   reservation: Object,
   index: Number,
   isLoading: Boolean,
 });
-
-const toast = useToast();
-const confirm = useConfirm();
 
 const statusSeverity = computed(() => {
   return props.reservation.status === "submitted"
@@ -197,31 +193,9 @@ const generatePDF = async (reservation) => {
   }
 };
 
-const confirmCancel = (event, reservationID) => {
-  confirm.require({
-    target: event.currentTarget,
-    message: t("confirm_cancel_message"),
-    icon: "pi pi-exclamation-triangle",
-    accept: async () => {
-      await axios
-        .delete(`/api/personal_reservations/${reservationID}`)
-        .then(() => {
-          toast.add({
-            severity: "success",
-            summary: t("cancel_success_summary"),
-            detail: t("cancel_success_detail"),
-            life: 3000,
-          });
-          emit("reservation-cancelled");
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-  });
+const emitCancel = async (event, reservation) => {
+  emit("close-all-reservations-open-cancel", reservation);
 };
 </script>
 
-<style scoped>
-/* Your styles here */
-</style>
+<style scoped></style>

@@ -201,6 +201,7 @@
         style: 'backdrop-filter: blur(4px)',
       },
     }"
+      class="container-sm"
       dismissableMask
       modal
       position="top"

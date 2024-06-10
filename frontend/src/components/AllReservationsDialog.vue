@@ -37,6 +37,11 @@
                     :index="index"
                     :isLoading="isLoading"
                     :reservation="item"
+                    @close-all-reservations-open-cancel="
+                      (reservation) => {
+                        closeAllReservationsOpenCancel(reservation);
+                      }
+                    "
                   />
                 </div>
               </template>
@@ -107,10 +112,17 @@ const props = defineProps({
   isLoading: Boolean,
 });
 
-const emit = defineEmits(["update:visible"]);
+const emit = defineEmits([
+  "update:visible",
+  "close-all-reservations-open-cancel",
+]);
 
 const updateVisible = (value) => {
   emit("update:visible", value);
+};
+
+const closeAllReservationsOpenCancel = (reservation) => {
+  emit("close-all-reservations-open-cancel", reservation);
 };
 </script>
 

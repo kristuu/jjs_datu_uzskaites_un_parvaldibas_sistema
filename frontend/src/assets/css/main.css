@@ -170,6 +170,10 @@ label {
     font-weight: bold;
 }
 
+.p-dialog {
+    box-shadow: none;
+}
+
 .navbar .dropdown-menu {
     z-index: 1050;
     position: absolute;

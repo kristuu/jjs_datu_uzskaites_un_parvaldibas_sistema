@@ -18,15 +18,26 @@ class NotificationController extends Controller
 
             $userPersonCode = $user->person_code;
             $notifications = Notification::where('user_person_code', $userPersonCode)->get();
+            $unreadNotificationsCount = $notifications->where('read', false)->count();
 
-            if ($notifications->isEmpty()) {
-                return response()->json(['message' => 'No notifications found'], 204);
-            }
-
-            return response()->json(['notifications' => $notifications], 200);
+            return response()->json(['notifications' => $notifications, 'unread_count' => $unreadNotificationsCount], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Internal Server Error', 'error' => $e->getMessage()], 500);
         }
+    }
+
+    public function markAsRead(int $notificationId)
+    {
+        $notification = Notification::find($notificationId);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        $notification->read = true;
+        $notification->save();
+
+        return response()->json(['message' => 'Notification marked as read'], 200);
     }
 
 
