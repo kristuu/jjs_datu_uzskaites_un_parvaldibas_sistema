@@ -1,78 +1,85 @@
 <template>
-  <div>
-    <h2>{{ $t("address.edit_address") }}</h2>
-    <vue-google-autocomplete
-      id="map"
-      :debounce="300"
-      :placeholder="$t('address.enter_address')"
-      class="p-inputtext p-component"
-      @placechanged="getAddressData"
-    />
+  <div class="mt-3">
+    <div class="grid">
+      <div class="col-12">
+        <vue-google-autocomplete
+          id="map"
+          :debounce="300"
+          :placeholder="$t('address.enter_address')"
+          class="p-inputtext p-component w-100"
+          @placechanged="getAddressData"
+        />
+      </div>
+    </div>
     <form @submit.prevent="saveAddress">
-      <div class="form-group">
-        <label for="address_line1">{{ $t("address.address_line1") }}</label>
-        <InputText
-          id="address_line1"
-          v-model="address.line1"
-          :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
-          class="p-inputtext p-component"
-          required
+      <div class="grid">
+        <div class="form-group col-12 sm:col-6">
+          <label for="address_line1">{{ $t("address.address_line1") }}</label>
+          <InputText
+            id="address_line1"
+            v-model="address.line1"
+            :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
+            class="w-100"
+            required
+          />
+        </div>
+        <div class="form-group col-12 sm:col-6">
+          <label for="address_line2">{{ $t("address.address_line2") }}</label>
+          <InputText
+            id="address_line2"
+            v-model="address.line2"
+            :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
+            class="w-100"
+          />
+        </div>
+        <div class="form-group col-12 md:col-4 sm:col-6">
+          <label for="city">{{ $t("address.city") }}</label>
+          <InputText
+            id="city"
+            v-model="address.city"
+            :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
+            class="w-100"
+            required
+          />
+        </div>
+        <div class="form-group col-12 md:col-4 sm:col-6">
+          <label for="region">{{ $t("address.region") }}</label>
+          <InputText
+            id="region"
+            v-model="address.region"
+            :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
+            class="w-100"
+            required
+          />
+        </div>
+        <div class="form-group col-12 md:col-4 sm:col-6">
+          <label for="country">{{ $t("address.country") }}</label>
+          <InputText
+            id="country"
+            v-model="address.country"
+            :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
+            class="w-100"
+            required
+          />
+        </div>
+        <div class="form-group col-12 md:col-4 sm:col-6">
+          <label for="postal_code">{{ $t("address.postal_code") }}</label>
+          <InputText
+            id="postal_code"
+            v-model="address.postal_code"
+            :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
+            class="w-100"
+            required
+          />
+        </div>
+      </div>
+      <div class="text-end">
+        <Button
+          :label="$t('actions.save').toLocaleUpperCase()"
+          class="w-100 md:w-auto mt-5 md:mt-3"
+          type="submit"
         />
       </div>
-      <div class="form-group">
-        <label for="address_line2">{{ $t("address.address_line2") }}</label>
-        <InputText
-          id="address_line2"
-          v-model="address.line2"
-          :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
-          class="p-inputtext p-component"
-        />
-      </div>
-      <div class="form-group">
-        <label for="city">{{ $t("address.city") }}</label>
-        <InputText
-          id="city"
-          v-model="address.city"
-          :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
-          class="p-inputtext p-component"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="region">{{ $t("address.region") }}</label>
-        <InputText
-          id="region"
-          v-model="address.region"
-          :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
-          class="p-inputtext p-component"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="country">{{ $t("address.country") }}</label>
-        <InputText
-          id="country"
-          v-model="address.country"
-          :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
-          class="p-inputtext p-component"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="postal_code">{{ $t("address.postal_code") }}</label>
-        <InputText
-          id="postal_code"
-          v-model="address.postal_code"
-          :disabled="fetchDataStore.isFetching || fetchDataStore.isProcessing"
-          class="p-inputtext p-component"
-          required
-        />
-      </div>
-      <Button
-        :label="$t('actions.save')"
-        class="p-button p-component p-button-primary"
-        type="submit"
-      />
     </form>
   </div>
 </template>
@@ -175,12 +182,14 @@ const saveAddress = async () => {
 onBeforeMount(async () => {
   fetchDataStore.setIsFetching(true);
   const response = await axios.get("/api/user/address");
-  address.value.line1 = response.data.address_line1;
-  address.value.line2 = response.data.address_line2;
-  address.value.region = response.data.region;
-  address.value.city = response.data.city.name;
-  address.value.country = response.data.city.country.name;
-  address.value.postal_code = response.data.postal_code;
+  if (response.status !== 204) {
+    address.value.line1 = response.data.address_line1;
+    address.value.line2 = response.data.address_line2;
+    address.value.region = response.data.region;
+    address.value.city = response.data.city.name;
+    address.value.country = response.data.city.country.name;
+    address.value.postal_code = response.data.postal_code;
+  }
   fetchDataStore.setIsFetching(false);
 });
 </script>

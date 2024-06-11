@@ -1,7 +1,7 @@
 <template>
   <form
     id="changePasswordForm"
-    class="row gap-3 py-3 text-start needs-validation"
+    class="row gap-3 mt-3 text-start needs-validation"
   >
     <div class="col-12">
       <div class="flex flex-column gap-1">
@@ -94,7 +94,11 @@ const changePassword = async () => {
       life: 3000,
     });
   } catch (error) {
-    console.error(error);
+    if (error.response.status === 422) {
+      errorStore.setErrorList(error.response.data);
+    } else {
+      console.error(error);
+    }
   } finally {
     fetchDataStore.setIsProcessing(false);
   }

@@ -22,19 +22,113 @@
             </div>
           </div>
           <div class="col-12 lg:col-9">
-            <UserReservationList
-              :reservations="usersReservations"
-              @showAllReservations="showAllUserReservations"
-              @update:reservations="usersReservations = $event"
-            />
+            <div class="grid">
+              <div class="col-12">
+                <UserReservationList
+                  :reservations="usersReservations"
+                  @showAllReservations="showAllUserReservations"
+                  @update:reservations="usersReservations = $event"
+                />
+              </div>
+              <div
+                v-if="
+                  is('dressage instructor') || is('show jumping instructor')
+                "
+                class="col-12"
+              >
+                <InstructorReservationList
+                  :reservations="instructorReservations"
+                  @showAllReservations="showAllInstructorReservations"
+                  @update:reservations="instructorReservations = $event"
+                />
+              </div>
+              <div class="col-12 mt-3">
+                <div class="grid">
+                  <div class="col-12 xl:col-6">
+                    <div class="p-3 bg-white rounded shadow h-full">
+                      <div
+                        class="flex justify-content-between align-items-center"
+                      >
+                        <h2 class="m-0 text-primary">
+                          {{ $t(`competitions`).toLocaleUpperCase() }}
+                        </h2>
+                      </div>
+                      <Divider class="mt-2" />
+                      <Timeline :value="competitions">
+                        <template #opposite="slotProps">
+                          <small class="hidden lg:block p-text-secondary">{{
+                            slotProps.item.start + ` - ` + slotProps.item.end
+                          }}</small>
+                        </template>
+                        <template #content="slotProps">
+                          <div class="mb-4">
+                            <small class="p-text-secondary block lg:hidden">{{
+                              slotProps.item.start + ` - ` + slotProps.item.end
+                            }}</small>
+                            <p class="m-0">
+                              <strong>{{ slotProps.item.name }}</strong>
+                            </p>
+                            <p class="m-0">
+                              {{ slotProps.item.event_category.name }}
+                            </p>
+                          </div>
+                        </template>
+                      </Timeline>
+                    </div>
+                  </div>
+                  <div class="col-12 xl:col-6">
+                    <div class="p-3 bg-white rounded shadow h-full">
+                      <div
+                        class="flex justify-content-between align-items-center"
+                      >
+                        <h2 class="m-0 text-primary">
+                          {{ $t(`seminars`).toLocaleUpperCase() }}
+                        </h2>
+                      </div>
+                      <Divider class="mt-2" />
+                      <Timeline :value="seminars">
+                        <template #opposite="slotProps">
+                          <small class="hidden lg:block p-text-secondary">{{
+                            slotProps.item.start + ` - ` + slotProps.item.end
+                          }}</small>
+                        </template>
+                        <template #content="slotProps">
+                          <div class="mb-4">
+                            <small class="p-text-secondary block lg:hidden">{{
+                              slotProps.item.start + ` - ` + slotProps.item.end
+                            }}</small>
+                            <p class="m-0">
+                              <strong>{{ slotProps.item.name }}</strong>
+                            </p>
+                            <p class="m-0">
+                              {{ slotProps.item.event_category.name }}
+                            </p>
+                          </div>
+                        </template>
+                      </Timeline>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div
+                      class="bg-white rounded shadow p-3 fw-bold text-center text-primary"
+                    >
+                      <p class="m-0">
+                        Lai skatītu aktuālāko pilna sacensību saraksta versiju,
+                        <a
+                          class="text-decoration-underline"
+                          href="https://www.leflatvia.lv/web/?id=400053"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                          >spied šeit</a
+                        >
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="col-12 lg:col-9">
-            <InstructorReservationList
-              :reservations="instructorReservations"
-              @showAllReservations="showAllInstructorReservations"
-              @update:reservations="instructorReservations = $event"
-            />
-          </div>
+          <div class="col-12 lg:col-9"></div>
         </div>
       </div>
     </div>
@@ -106,7 +200,7 @@
             </div>
             <Divider />
             <div style="max-height: 50vh; overflow: hidden auto">
-              <div>
+              <div class="mb-3">
                 <p class="m-0 mb-2">
                   Lai atceltu izvēlēto rezervācijas pieteikumu, nepieciešams
                   ievadīt tā atcelšanas iemeslu:
@@ -249,6 +343,22 @@ onBeforeMount(async () => {
     });
 
   await fetchUserReservationData();
+  await fetchInstructorReservationData();
+
+  useFetchDataStore().isFetching = true;
+  await axios
+    .get("/api/upcoming_events")
+    .then((response) => {
+      console.log(response);
+      competitions.value = response.data.competitions;
+      seminars.value = response.data.seminars;
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
+      useFetchDataStore().isFetching = false;
+    });
 });
 
 const fetchUserReservationData = async () => {

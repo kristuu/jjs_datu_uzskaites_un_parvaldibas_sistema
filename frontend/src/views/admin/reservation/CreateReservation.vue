@@ -105,7 +105,7 @@ onMounted(async () => {
   users.value = await fetchDataStore.fetchDatabaseData("users");
   instructors.value = await fetchDataStore.fetchDatabaseData("instructors");
   availabilities.value = await fetchDataStore.fetchDatabaseData(
-    "instructors_availability"
+    "InstructorAvailability"
   );
 });
 </script>

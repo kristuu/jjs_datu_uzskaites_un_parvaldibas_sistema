@@ -20,11 +20,11 @@ class AddressController extends Controller
         $user = auth()->user();
 
         if (!$user->address_id) {
-            return response()->json(['message' => 'No address found for this user.'], 404);
+            return response()->json(['message' => 'No address found for this user.'], 204);
         }
 
         $address = Address::with(['city.country'])->find($user->address_id);
-        
+
         if (!$address) {
             return response()->json(['message' => 'Address not found.'], 404);
         }

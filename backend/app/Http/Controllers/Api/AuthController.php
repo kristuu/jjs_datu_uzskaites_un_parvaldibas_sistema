@@ -41,15 +41,15 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'Ievadīta neeksistējoša e-pasta adrese vai nesaderīga e-pasta un paroles kombinācija'
             ], 401);
-        } else {
-            if (Auth::attempt($credentials)) {
-                $request->session()->regenerate();
-
-                return response()->json(['user' => $user]);
-            }
         }
 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
+            return response()->json(['user' => $user]);
+        }
+
+        return response()->json(['message' => 'Authentication failed'], 401);
     }
 
     public function logout(Request $request)
@@ -73,7 +73,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
-            'new_password' => 'required|string|min:6|confirmed',
+            'new_password' => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -81,10 +81,10 @@ class AuthController extends Controller
         }
 
         if (!Hash::check($request->old_password, $user->password)) {
-            return response()->json(['error' => 'Old password does not match'], 400);
+            return response()->json(['old_password' => 'Ievadītā vecā parole neatbilst sistēmas ierakstiem'], 422);
         }
 
-        $user->password = Hash::make($request->new_password);
+        $user->password = $request->new_password;
         $user->save();
 
         return response()->json(['message' => 'Password changed successfully'], 200);

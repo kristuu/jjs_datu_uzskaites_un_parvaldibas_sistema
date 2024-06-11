@@ -14,17 +14,24 @@
     </div>
   </div>
   <div class="col-12">
-    <div class="p-2 bg-white rounded shadow w-100 relative">
+    <div class="p-2 bg-white rounded shadow w-100">
       <div class="text-center text-primary">
-        <i
-          :class="
-            unreadNotificationsCount > 0 ? 'bi bi-bell-fill' : 'bi bi-bell'
-          "
-          class="left-0 absolute ms-3"
-        />
-        <h3 class="m-0">
-          {{ $t(`notifications`).toLocaleUpperCase() }}
-        </h3>
+        <div class="flex justify-content-between mx-1">
+          <i
+            :class="
+              unreadNotificationsCount > 0 ? 'bi bi-bell-fill' : 'bi bi-bell'
+            "
+          />
+          <h3 class="m-0">
+            {{ $t(`notifications`).toLocaleUpperCase() }}
+          </h3>
+          <Button
+            class="p-0"
+            icon="bi bi-arrow-clockwise"
+            text
+            @click="fetchNotifications"
+          />
+        </div>
         <Divider class="my-2" />
         <div v-if="isFetchingNotifications" class="px-2">
           <Skeleton class="mb-1" height="1rem" />
@@ -104,6 +111,22 @@
             <Divider />
             <div style="max-height: 50vh; overflow: hidden auto">
               <div v-html="chosenNotification.long_message" />
+              <Divider />
+              <div class="text-end">
+                <Button
+                  label="ATZĪMĒT KĀ NELASĪTU"
+                  outlined
+                  size="small"
+                  text
+                  @click="markNotificationAsUnread"
+                />
+                <Button
+                  class="ms-2"
+                  label="DZĒST"
+                  size="small"
+                  @click="deleteNotification"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -136,14 +159,43 @@ const openNotificationDetails = (notification) => {
     notification.read = true;
     unreadNotificationsCount.value -= 1;
 
-    axios.patch(`/api/read-notification/${notification.id}`).catch((error) => {
+    axios.patch(`/api/read_notification/${notification.id}`).catch((error) => {
       console.error("Error marking notification as read:", error);
     });
   }
   notificationDetailsVisible.value = true;
 };
 
-onBeforeMount(async () => {
+const markNotificationAsUnread = async () => {
+  await axios
+    .patch(`/api/unread_notification/${chosenNotification.value.id}`)
+    .then((response) => {
+      console.log(response);
+      notificationDetailsVisible.value = false;
+      chosenNotification.value = null;
+      fetchNotifications();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const deleteNotification = async () => {
+  await axios
+    .delete(`/api/delete_notification/${chosenNotification.value.id}`)
+    .then((response) => {
+      console.log(response);
+      notificationDetailsVisible.value = false;
+      chosenNotification.value = null;
+      fetchNotifications();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const fetchNotifications = async () => {
+  notifications.value = [];
   isFetchingNotifications.value = true;
   await axios
     .get(`/api/notifications`)
@@ -158,6 +210,10 @@ onBeforeMount(async () => {
     .finally(() => {
       isFetchingNotifications.value = false;
     });
+};
+
+onBeforeMount(async () => {
+  await fetchNotifications();
 });
 
 onMounted(() => {

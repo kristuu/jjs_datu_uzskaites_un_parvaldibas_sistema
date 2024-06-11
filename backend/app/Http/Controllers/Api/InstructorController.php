@@ -37,6 +37,15 @@ class InstructorController extends Controller
         );
     }
 
+    public function getAllInstructorsForBookingList()
+    {
+        return $this->getAll(
+            Instructor::class,
+            $this->globalFilterFields,
+            $this->relationships,
+        );
+    }
+
     public function getPaginatedInstructors(Request $request)
     {
         //
@@ -83,6 +92,23 @@ class InstructorController extends Controller
         $reservation->save();
 
         return response()->json(['message' => 'Reservation updated successfully']);
+    }
+
+    public function updateDescriptions(Request $request, $id)
+    {
+        $request->validate([
+            'short_description' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        $instructor = Instructor::findOrFail($id);
+
+        $instructor->short_description = strip_tags($request->short_description);
+        $instructor->description = strip_tags($request->description);
+
+        $instructor->save();
+
+        return response()->json(['message' => 'Descriptions updated successfully']);
     }
 
     private function getResponseWithMessage(string $message, int $status)

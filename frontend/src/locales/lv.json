@@ -261,13 +261,25 @@
     "submitted": "Pieteikts",
     "accepted": "Apstiprināts",
     "denied": "Noraidīts",
+    "cancelled": "Atcelts",
     "cancel": "Atcelt pieteikumu"
   },
   "tabpanel": {
     "user": {
       "info": "Personīgā informācija",
-      "change_password": "Paroles maiņa"
+      "change_password": "Paroles maiņa",
+      "address": "Adreses pārvaldība"
     }
+  },
+  "field": {
+    "name": "Vārds (-i)",
+    "surname": "Uzvārds (-i)",
+    "birthdate": "Dzimšanas datums",
+    "person_code": "Personas kods",
+    "email": "E-pasta adrese",
+    "phone": "Telefona numurs",
+    "password": "Parole",
+    "password_confirmation": "Paroles apstiprinājums"
   },
   "This action is unauthorized.": "Jums nav tiesību veikt šo darbību.",
   "user_details_not_editable": "Lietotāja detaļas šajā skatā rediģēt nav iespējams.",

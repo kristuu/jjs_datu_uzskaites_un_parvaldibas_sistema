@@ -3,7 +3,7 @@
     :class="{ 'border-top-1 surface-border': index !== 0 }"
     class="flex flex-column sm:flex-row p-3 gap-3 w-full"
   >
-    <div class="md:w-7rem relative">
+    <div class="w-10rem md:w-7rem align-self-center relative">
       <img
         :src="reservation.instructor.user.profile_picture"
         class="block xl:block mx-auto border-round w-full"
@@ -127,6 +127,7 @@ import Button from "primevue/button";
 import { useI18n } from "vue-i18n";
 import axios from "@/services/axios";
 import moment from "moment";
+import { useFetchDataStore } from "@/stores/fetchDataStore";
 
 const { t } = useI18n();
 const emit = defineEmits([
@@ -137,15 +138,20 @@ const emit = defineEmits([
 const props = defineProps({
   reservation: Object,
   index: Number,
-  isLoading: Boolean,
 });
+
+const fetchDataStore = useFetchDataStore();
+
+let isLoading = computed(() => fetchDataStore.isFetching);
 
 const statusSeverity = computed(() => {
   return props.reservation.status === "submitted"
     ? "info"
     : props.reservation.status === "accepted"
     ? "success"
-    : "danger";
+    : props.reservation.status === "denied"
+    ? "danger"
+    : "secondary";
 });
 
 const statusText = computed(() => {

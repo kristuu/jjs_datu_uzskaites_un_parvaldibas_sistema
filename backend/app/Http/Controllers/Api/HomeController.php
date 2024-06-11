@@ -30,6 +30,31 @@ class HomeController extends Controller
         return $this->sendResponse($reservations);
     }
 
+    public function getInstructorReservations()
+    {
+        $user = auth()->user();
+        $user->load('instructor');
+
+        $instructorIds = $user->instructor->pluck('id')->toArray();
+
+        $reservations = Reservation::with([
+            'instructor.user',
+            'instructor.certificate.category',
+            'instructorAvailability'
+        ])
+            ->whereIn('reservation.instructor_id', $instructorIds)
+            ->where('status', '!=', 'denied')
+            ->whereHas('instructorAvailability', function ($query) {
+                $query->where('end_time', '>=', now());
+            })
+            ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
+            ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc')
+            ->take(3)
+            ->get(['reservations.*']);
+
+        return $this->sendResponse($reservations);
+    }
+
     public function getAllUserReservations()
     {
         $user = auth()->user();
@@ -52,12 +77,14 @@ class HomeController extends Controller
         $user = auth()->user();
         $user->load('instructor');
 
+        $instructorIds = $user->instructor->pluck('id')->toArray();
+
         $reservations = Reservation::with([
             'instructor.user',
             'instructor.certificate.category',
             'instructorAvailability'
         ])
-            ->where('instructor_id', $user->instructor->id)
+            ->whereIn('reservations.instructor_id', $instructorIds)
             ->join('instructors_availabilities', 'reservations.instructor_availability_id', '=', 'instructors_availabilities.id')
             ->orderBy(DB::raw('instructors_availabilities.start_time'), 'asc')
             ->get(['reservations.*']);

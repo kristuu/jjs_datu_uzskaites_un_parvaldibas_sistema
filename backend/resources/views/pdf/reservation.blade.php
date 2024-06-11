@@ -248,23 +248,43 @@
     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: center;">
         <thead>
         <tr>
-            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Nosaukums</th>
-            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Daudzums</th>
-            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Norises datums</th>
-            <th style="border-bottom: 1px solid #ddd; padding: 8px;">Sākuma - Beigu laiks</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">NOSAUKUMS</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">DAUDZUMS (GAB.)</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">NORISES DATUMS</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">NORISES LAIKS</th>
+            <th style="border-bottom: 1px solid #ddd; padding: 8px;">CENA (EUR)</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="h1 text-center">
+        <tr class="">
             <td style="border-bottom: 1px solid #ddd; padding: 8px;" class="fw-bold">Jāšanas treniņš</td>
             <td style="border-bottom: 1px solid #ddd; padding: 8px;">1</td>
-            <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->instructorAvailability->start_time->format('d.m.Y') }}</td>
-            <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->instructorAvailability->start_time->format('H.i') }}
-                - {{ $reservation->instructorAvailability->end_time->format('H.i') }}</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->InstructorAvailability->start_time->format('d.m.Y') }}</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->InstructorAvailability->start_time->format('H.i') }}
+                - {{ $reservation->InstructorAvailability->end_time->format('H.i') }}</td>
+            <td style="border-bottom: 1px solid #ddd; padding: 8px;">{{ $reservation->InstructorAvailability->price }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td style="padding: 8px; font-weight: bold; text-align: right; background-color: #ddd;">
+                KOPĀ APMAKSAI:
+            </td>
+            <td style="padding: 8px; font-weight: bold; background-color: #ddd;">{{ $reservation->instructorAvailability->price }}</td>
         </tr>
         </tbody>
     </table>
     <div style="margin-top: 20px;">
+        <p><span style="font-weight: bold;">MAKSĀJUMA UZDEVUMĀ norādāms:</span> RĒĶINA Nr. {{ $reservation->id }}
+            apmaksa</p>
+        <p><span style="font-weight: bold;">UZMANĪBU!</span><br>
+            Rēķina apmaksas termiņa kavējuma gadījumā treniņš var
+            tikt automātiski atcelts, par to nebrīdinot!<br>
+            Ja vairāki treniņa pieteikumi tiek atcelti maksājumu kavējumu, neobjektīva pamatojuma vai citu nepamatotu
+            iemeslu dēļ,
+            Jauno Jātnieku skola patur tiesības uz nenoteiktu laiku liegt turpmāku treniņu pieteikšanu!
+        </p>
         <p style="text-align: right; font-family: 'Courier New', monospace;">Rēķins sagatavots
             elektroniski un derīgs bez
             paraksta</p>

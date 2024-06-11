@@ -1,7 +1,7 @@
 <template>
   <div class="navbar-overlap navbar navbar-container">
     <div class="container-xl">
-      <Menubar :model="menuItems">
+      <Menubar :model="computedMenuItems">
         <template #start>
           <img
             class="h-2rem"
@@ -12,6 +12,7 @@
         </template>
         <template #item="{ item, props, hasSubmenu, root }">
           <a
+            v-if="item.visible !== false"
             v-ripple
             class="flex align-items-center h-full"
             v-bind="props.action"
@@ -41,11 +42,6 @@
         </template>
         <template #end>
           <div class="flex align-items-center gap-2">
-            <!--            <InputText-->
-            <!--              class="w-8rem sm:w-auto"-->
-            <!--              placeholder="Search"-->
-            <!--              type="text"-->
-            <!--            />-->
             <Avatar
               :image="authStore.user?.profile_picture"
               class="cursor-pointer"
@@ -63,119 +59,190 @@
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/authStore";
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 const router = useRouter();
 const { t } = useI18n();
 const authStore = useAuthStore();
 
-const menuItems = ref([
-  {
-    label: t("navigation.main.home").toLocaleUpperCase(),
-    class: "fw-bold",
-    command: () => router.push({ name: "HomePage" }),
+const hasPermission = (permission) => {
+  return authStore.permissions.includes(permission);
+};
+
+const hasRole = (role) => {
+  return authStore.roles.includes(role);
+};
+
+const categories = computed(() => authStore.user?.categories ?? []);
+
+const getMenuItems = () => {
+  return [
+    {
+      label: t("navigation.main.home").toLocaleUpperCase(),
+      class: "fw-bold",
+      command: () => router.push({ name: "HomePage" }),
+    },
+    {
+      label: `Trenera profils`.toLocaleUpperCase(),
+      class: "fw-bold",
+      visible:
+        categories.value.length > 0 &&
+        (hasRole("dressage instructor") || hasRole("show jumping instructor")),
+      items:
+        categories.value.length > 0
+          ? categories.value.map((category) => ({
+              label: category.name,
+              class: "fw-normal",
+              command: () =>
+                router.push({
+                  name: "InstructorProfile",
+                  params: { id: category.instructor_id },
+                }),
+            }))
+          : [{ label: t("navigation.loading"), disabled: true }],
+    },
+    {
+      label: t("navigation.admin.header").toLocaleUpperCase(),
+      class: "fw-bold",
+      visible: hasPermission("access admin dashboard"),
+      items: [
+        {
+          label: t("navigation.admin.home"),
+          icon: "bi bi-house-gear-fill",
+          class: "fw-normal",
+          command: () => router.push({ name: "AdminDashboard" }),
+        },
+        {
+          label: t("navigation.admin.access"),
+          icon: "bi bi-people-fill",
+          class: "fw-normal",
+          visible:
+            hasPermission("manage users") ||
+            hasPermission("manage permissions") ||
+            hasPermission("manage roles"),
+          items: [
+            {
+              label: t("navigation.admin.users"),
+              icon: "pi pi-users",
+              command: () => router.push({ name: "UserList" }),
+              visible: hasPermission("manage users"),
+            },
+            {
+              label: t("navigation.admin.permissions"),
+              icon: "pi pi-key",
+              command: () => router.push({ name: "PermissionList" }),
+              visible: hasPermission("manage permissions"),
+            },
+            {
+              label: t("navigation.admin.roles"),
+              icon: "pi pi-briefcase",
+              command: () => router.push({ name: "RoleList" }),
+              visible: hasPermission("manage roles"),
+            },
+          ],
+        },
+        {
+          label: t("navigation.admin.geolocation"),
+          icon: "bi bi-compass-fill",
+          class: "fw-normal",
+          visible:
+            hasPermission("manage countries") || hasPermission("manage cities"),
+          items: [
+            {
+              label: t("navigation.admin.countries"),
+              icon: "pi pi-globe",
+              command: () => router.push({ name: "CountryList" }),
+              visible: hasPermission("manage countries"),
+            },
+            {
+              label: t("navigation.admin.cities"),
+              icon: "pi pi-map",
+              command: () => router.push({ name: "CityList" }),
+              visible: hasPermission("manage cities"),
+            },
+          ],
+        },
+        {
+          label: t("navigation.admin.trainings"),
+          icon: "bi bi-suitcase-lg-fill",
+          class: "fw-normal",
+          visible:
+            hasPermission("manage instructors") ||
+            hasPermission("manage certificates") ||
+            hasPermission("manage categories"),
+          items: [
+            {
+              label: t("navigation.admin.instructors"),
+              icon: "bi bi-person-badge",
+              command: () => router.push({ name: "InstructorList" }),
+              visible: hasPermission("manage instructors"),
+            },
+            {
+              label: t("navigation.admin.certificates"),
+              icon: "bi bi-patch-check",
+              command: () => router.push({ name: "CertificateList" }),
+              visible: hasPermission("manage certificates"),
+            },
+            {
+              label: t("navigation.admin.categories"),
+              icon: "bi bi-tags",
+              command: () => router.push({ name: "CategoryList" }),
+              visible: hasPermission("manage categories"),
+            },
+          ],
+        },
+        {
+          label: t("navigation.admin.events"),
+          icon: "bi bi-calendar-event-fill",
+          class: "fw-normal",
+          visible:
+            hasPermission("manage events") ||
+            hasPermission("manage event categories") ||
+            hasPermission("manage event types") ||
+            hasPermission("manage locations"),
+          items: [
+            {
+              label: t("navigation.admin.events"),
+              icon: "pi pi-calendar",
+              command: () => router.push({ name: "EventList" }),
+              visible: hasPermission("manage events"),
+            },
+            {
+              label: t("navigation.admin.event_categories"),
+              icon: "pi pi-sitemap",
+              command: () => router.push({ name: "EventCategoryList" }),
+              visible: hasPermission("manage event categories"),
+            },
+            {
+              label: t("navigation.admin.event_types"),
+              icon: "pi pi-sliders-h",
+              command: () => router.push({ name: "EventTypeList" }),
+              visible: hasPermission("manage event types"),
+            },
+            {
+              label: t("navigation.admin.locations"),
+              icon: "pi pi-map-marker",
+              command: () => router.push({ name: "LocationList" }),
+              visible: hasPermission("manage locations"),
+            },
+          ],
+        },
+      ].filter((item) => item.visible !== false),
+    },
+  ];
+};
+
+const menuItems = ref(getMenuItems());
+
+watch(
+  () => [authStore.permissions, authStore.roles, categories.value],
+  () => {
+    menuItems.value = getMenuItems();
   },
-  {
-    label: t("navigation.admin.header").toLocaleUpperCase(),
-    class: "fw-bold",
-    items: [
-      {
-        label: t("navigation.admin.home"),
-        icon: "bi bi-house-gear-fill",
-        class: "fw-normal",
-        command: () => router.push({ name: "AdminDashboard" }),
-      },
-      {
-        label: t("navigation.admin.access"),
-        icon: "bi bi-people-fill",
-        class: "fw-normal",
-        items: [
-          {
-            label: t("navigation.admin.users"),
-            icon: "pi pi-users",
-            command: () => router.push({ name: "UserList" }),
-          },
-          {
-            label: t("navigation.admin.permissions"),
-            icon: "pi pi-key",
-            command: () => router.push({ name: "PermissionList" }),
-          },
-          {
-            label: t("navigation.admin.roles"),
-            icon: "pi pi-briefcase",
-            command: () => router.push({ name: "RoleList" }),
-          },
-        ],
-      },
-      {
-        label: t("navigation.admin.geolocation"),
-        icon: "bi bi-compass-fill",
-        class: "fw-normal",
-        items: [
-          {
-            label: t("navigation.admin.countries"),
-            icon: "pi pi-globe",
-            command: () => router.push({ name: "CountryList" }),
-          },
-          {
-            label: t("navigation.admin.cities"),
-            icon: "pi pi-map",
-            command: () => router.push({ name: "CityList" }),
-          },
-        ],
-      },
-      {
-        label: t("navigation.admin.trainings"),
-        icon: "bi bi-suitcase-lg-fill",
-        class: "fw-normal",
-        items: [
-          {
-            label: t("navigation.admin.instructors"),
-            icon: "bi bi-person-badge",
-            command: () => router.push({ name: "InstructorList" }),
-          },
-          {
-            label: t("navigation.admin.certificates"),
-            icon: "bi bi-patch-check",
-            command: () => router.push({ name: "CertificateList" }),
-          },
-          {
-            label: t("navigation.admin.categories"),
-            icon: "bi bi-tags",
-            command: () => router.push({ name: "CategoryList" }),
-          },
-        ],
-      },
-      {
-        label: t("navigation.admin.events"),
-        icon: "bi bi-calendar-event-fill",
-        class: "fw-normal",
-        items: [
-          {
-            label: t("navigation.admin.events"),
-            icon: "pi pi-calendar",
-            command: () => router.push({ name: "EventList" }),
-          },
-          {
-            label: t("navigation.admin.event_categories"),
-            icon: "pi pi-sitemap",
-            command: () => router.push({ name: "EventCategoryList" }),
-          },
-          {
-            label: t("navigation.admin.event_types"),
-            icon: "pi pi-sliders-h",
-            command: () => router.push({ name: "EventTypeList" }),
-          },
-          {
-            label: t("navigation.admin.locations"),
-            icon: "pi pi-map-marker",
-            command: () => router.push({ name: "LocationList" }),
-          },
-        ],
-      },
-    ],
-  },
-]);
+  { deep: true }
+);
+
+const computedMenuItems = computed(() => menuItems.value);
 </script>
 
 <style scoped>

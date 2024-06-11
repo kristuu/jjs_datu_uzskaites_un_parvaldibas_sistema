@@ -1,30 +1,32 @@
 <template>
-  <form id="editUserForm" class="row py-3 text-start needs-validation">
+  <form id="editUserForm" class="row mt-3 text-start needs-validation">
     <div class="col-12 sm:col-4">
       <div class="flex flex-column gap-1 align-items-center">
         <label for="profile_picture">{{
           $t("fields.user.profile_picture")
         }}</label>
-        <div v-if="showPicture">
-          <Image
-            v-if="
-              !cropperImage && (previewImage || authStore.user.profile_picture)
-            "
+        <div
+          v-if="
+            !cropperImage && (previewImage || authStore.user.profile_picture)
+          "
+        >
+          <img
             :src="previewImage ?? authStore.user.profile_picture"
             alt="Profile Picture"
-            class="mt-2"
-            preview
-            width="150px"
+            class="mt-2 profile-image"
+            height="200"
+            style="border-radius: 10px; object-fit: cover"
+            width="150"
           />
         </div>
-        <div v-if="showCropper">
-          <vue-cropper
-            v-if="cropperImage"
-            ref="cropperRef"
-            :aspect-ratio="2 / 3"
+        <div v-if="cropperImage">
+          <img
+            ref="cropperImageRef"
             :src="cropperImage"
-            :view-mode="1"
-          ></vue-cropper>
+            alt="To be cropped"
+            class="cropper"
+            @load="initializeCropper"
+          />
         </div>
         <FileUpload
           :chooseLabel="$t(`fields.user.choose_photo`)"
@@ -37,12 +39,11 @@
           @select="onFileSelect"
         />
         <Button
-          v-if="showCropper"
+          v-if="cropperImage"
           :label="$t(`actions.cancel_photo_change`)"
           class="p-button-danger mt-2"
           @click="onFileRemove"
         />
-        <InputError :errors="errorList.profile_picture" />
       </div>
     </div>
     <div class="col-12 sm:col-8 row">
@@ -135,14 +136,14 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import { useErrorStore } from "@/stores/errorStore";
 import { useAuthStore } from "@/stores/authStore";
 import axios from "@/services/axios";
 import FileUpload from "primevue/fileupload";
-import InputError from "@/components/error/inputError.vue";
-import VueCropper from "vue-cropperjs";
+import Cropper from "cropperjs";
+import "cropperjs/dist/cropper.css"; // Import Cropper.js CSS
 import { useToast } from "primevue/usetoast";
 
 const fetchDataStore = useFetchDataStore();
@@ -155,20 +156,14 @@ const errorList = computed(() => errorStore.errorList);
 
 let previewImage = ref(null);
 let cropperImage = ref(null);
+let cropperInstance = ref(null);
 
-let showPicture = ref(true);
-let showCropper = ref(false);
-
-let baseImage = ref(null);
-
-const cropperRef = ref(null);
+const cropperImageRef = ref(null);
 
 const onFileSelect = (event) => {
   const file = event.files[0];
   const reader = new FileReader();
   reader.onload = (e) => {
-    showCropper.value = true;
-    showPicture.value = false;
     cropperImage.value = e.target.result;
     previewImage.value = null;
   };
@@ -177,21 +172,36 @@ const onFileSelect = (event) => {
 
 const onFileRemove = () => {
   cropperImage.value = null;
-  showCropper.value = false;
-  showPicture.value = true;
+  if (cropperInstance.value) {
+    cropperInstance.value.destroy();
+    cropperInstance.value = null;
+  }
   previewImage.value = authStore.user.profile_picture;
+};
+
+const initializeCropper = () => {
+  if (cropperInstance.value) {
+    cropperInstance.value.destroy();
+  }
+  cropperInstance.value = new Cropper(cropperImageRef.value, {
+    aspectRatio: 2 / 3,
+    viewMode: 1,
+    autoCrop: true,
+    background: false,
+  });
 };
 
 const getCroppedImage = () => {
   return new Promise((resolve) => {
-    const cropper = cropperRef.value.cropper;
-    cropper.getCroppedCanvas().toBlob((blob) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        resolve(e.target.result);
-      };
-      reader.readAsDataURL(blob);
-    });
+    if (cropperInstance.value) {
+      cropperInstance.value.getCroppedCanvas().toBlob((blob) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          resolve(e.target.result);
+        };
+        reader.readAsDataURL(blob);
+      });
+    }
   });
 };
 
@@ -200,7 +210,7 @@ const uploadImage = async (base64Image) => {
     const imageResponse = await axios.post("/api/upload-image", {
       image: base64Image,
     });
-    instance.value.profile_picture = imageResponse.data.data.link; // Assuming Imgur returns the image link in `data.data.link`
+    instance.value.profile_picture = imageResponse.data.data.link;
   } catch (error) {
     console.error("Error uploading image:", error);
   }
@@ -211,12 +221,15 @@ const saveProfile = async () => {
 
   try {
     if (cropperImage.value) {
-      baseImage.value = await getCroppedImage();
-      await uploadImage(baseImage.value.split(",")[1]);
+      const baseImage = await getCroppedImage();
+      await uploadImage(baseImage.split(",")[1]);
       cropperImage.value = null;
+      if (cropperInstance.value) {
+        cropperInstance.value.destroy();
+        cropperInstance.value = null;
+      }
     }
 
-    // Save user profile
     await axios.put("/api/user/profile", {
       name: instance.value.name,
       surname: instance.value.surname,
@@ -239,9 +252,20 @@ const saveProfile = async () => {
     }
   } finally {
     fetchDataStore.setIsProcessing(false);
-    showCropper.value = false;
-    showPicture.value = true;
     previewImage.value = instance.value.profile_picture;
   }
 };
+
+onBeforeUnmount(() => {
+  if (cropperInstance.value) {
+    cropperInstance.value.destroy();
+  }
+});
 </script>
+
+<style scoped>
+.cropper {
+  width: 100%;
+  height: auto;
+}
+</style>

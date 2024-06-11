@@ -17,7 +17,7 @@ class NotificationController extends Controller
             }
 
             $userPersonCode = $user->person_code;
-            $notifications = Notification::where('user_person_code', $userPersonCode)->get();
+            $notifications = Notification::where('user_person_code', $userPersonCode)->orderBy('created_at', 'desc')->get();
             $unreadNotificationsCount = $notifications->where('read', false)->count();
 
             return response()->json(['notifications' => $notifications, 'unread_count' => $unreadNotificationsCount], 200);
@@ -38,6 +38,37 @@ class NotificationController extends Controller
         $notification->save();
 
         return response()->json(['message' => 'Notification marked as read'], 200);
+    }
+
+    public function markAsUnread(int $notificationId)
+    {
+        $notification = Notification::find($notificationId);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        $notification->read = false;
+        $notification->save();
+
+        return response()->json(['message' => 'Notification marked as read'], 200);
+    }
+
+    public function deleteNotification(int $notificationId)
+    {
+        $user = auth()->user();
+
+        $notification = Notification::find($notificationId);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        if ($notification->user_person_code === $user->person_code) {
+            $notification->delete();
+        }
+
+        return response()->json(['message' => 'Notification deleted'], 200);
     }
 
 

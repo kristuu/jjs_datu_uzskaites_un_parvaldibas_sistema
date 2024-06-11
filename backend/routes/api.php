@@ -87,10 +87,14 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/notifications', [NotificationController::class, 'getAllNotifications']);
-    Route::patch('/read-notification/{notificationId}', [NotificationController::class, 'markAsRead']);
+    Route::patch('/read_notification/{notificationId}', [NotificationController::class, 'markAsRead']);
+    Route::patch('/unread_notification/{notificationId}', [NotificationController::class, 'markAsUnread']);
+    Route::delete('/delete_notification/{notificationId}', [NotificationController::class, 'deleteNotification']);
 
     Route::get('/availabilities/{instructor_id}/{date}', [InstructorAvailabilityController::class, 'getAvailabilitiesByDate']);
-    Route::get('/availability-counts/{instructor_id}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);
+    Route::get('/availability-counts/{instructorId}', [InstructorAvailabilityController::class, 'getAvailabilityCounts']);
+
+    Route::delete('/delete_availability/{availabilityId}', [InstructorAvailabilityController::class, 'deleteAvailability']);
 
     Route::get('/instructor/reservations', [InstructorController::class, 'getReservations']);
     Route::post('/instructor/reservation/{id}', [InstructorController::class, 'manageReservation']);
@@ -105,7 +109,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::delete('/personal_reservations/{id}', [ReservationController::class, 'destroyReservation']); // parbaudit so un citus route vrb nemaz neizmanto
 
+    Route::get('/instructorReservations', [HomeController::class, 'getInstructorReservations']);
     Route::get('/homeData', [HomeController::class, 'index']);
+
+    Route::get('/instructor_profile/{id}', [InstructorController::class, 'findInstructorById']);
+    Route::patch('/instructor_descriptions/{id}', [InstructorController::class, 'updateDescriptions']);
+    Route::post('/instructor/{id}/add_availability', [InstructorAvailabilityController::class, 'addNewAvailability']);
 
     Route::post('/upload-image', [ImageController::class, 'uploadToImgur']);
 
@@ -116,15 +125,37 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('user/change-password', [AuthController::class, 'changePassword']);
 
-    Route::get('user/address', [AddressController::class, 'getAddress']);
-    Route::post('user/address', [AddressController::class, 'setAddress']);
+    Route::get('/user/address', [AddressController::class, 'getAddress']);
+    Route::post('/user/address', [AddressController::class, 'setAddress']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
+    Route::get('/user', function () {
+        $user = auth()->user();
+
+        $categoriesWithInstructorIds = DB::table('categories')
+            ->join('certificates', 'categories.id', '=', 'certificates.category_id')
+            ->join('instructors', 'certificates.id', '=', 'instructors.certificate_id')
+            ->where('instructors.user_person_code', $user->person_code)
+            ->select('categories.name as category_name', 'instructors.id as instructor_id')
+            ->get();
+
+        $categories = $categoriesWithInstructorIds->map(function ($item) {
+            return [
+                'name' => $item->category_name,
+                'instructor_id' => $item->instructor_id,
+            ];
+        })->unique()->values();
+
+        $userArray = $user->toArray();
+        $response = array_merge($userArray, [
+            'categories' => $categories,
+        ]);
+
+        return response()->json($response);
     });
 });
+
 
 Route::get('/get-permissions', function () {
     return auth('api')->check() ? auth('api')->user()->jsPermissions() : [];

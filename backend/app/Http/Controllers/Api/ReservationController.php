@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReservationRequest;
 use App\Http\Traits\PaginationTrait;
-use App\Models\instructors_availability;
+use App\Models\InstructorAvailability as InstructorAvailability;
 use App\Models\Notification;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class ReservationController extends Controller
     use PaginationTrait;
 
     private array $globalFilterFields = ['status', 'user_person_code', 'user.name', 'user.surname', 'user.email', 'user.phone', 'user.iban_code'];
-    private array $relationships = ['user', 'instructor', 'instructor.user', 'instructor.certificate.category', 'instructorAvailability'];
+    private array $relationships = ['user', 'instructor', 'instructor.user', 'instructor.certificate.category', 'InstructorAvailability'];
 
     public function getAllReservations()
     {
@@ -30,11 +30,11 @@ class ReservationController extends Controller
         return $this->sendResponse($reservations);
     }
 
-    public function storeReservation(ReservationRequest $request)
+    public function storeReservation(Request $request)
     {
         $user = auth()->user();
 
-        $instructorAvailability = instructors_availability::find($request->instructor_availability_id);
+        $instructorAvailability = InstructorAvailability::find($request->instructor_availability_id);
 
         if ($instructorAvailability) {
             $reservation = Reservation::create([
@@ -75,6 +75,8 @@ class ReservationController extends Controller
 
     public function cancelReservation(Request $request, $reservationId)
     {
+        $user = auth()->user();
+
         $request->validate([
             'reason' => ['required', 'string', 'max:255', 'min: 5'],
         ]);
@@ -88,10 +90,11 @@ class ReservationController extends Controller
         $longMessage = view('reservation.reservation_cancelled', [
             'reservation' => $reservation,
             'reason' => $request->reason,
+            'toInstructor' => !($reservation->instructor->user->person_code === $user->person_code) // Pārbaude, vai paziņojums nosūtāms trenerim vai parastam klientam
         ])->render();
 
         Notification::create([
-            'user_person_code' => $reservation->instructor->user->person_code,
+            'user_person_code' => $reservation->instructor->user->person_code === $user->person_code ? $reservation->user_person_code : $reservation->instructor->user->person_code,
             'short_message' => "Atcelts rezervācijas pieteikums",
             'long_message' => $longMessage,
         ]);

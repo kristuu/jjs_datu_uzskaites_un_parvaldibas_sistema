@@ -55,13 +55,14 @@ import UserProfileEdit from "@/views/public/user/UserProfileEdit.vue";
 import ReservationList from "@/views/admin/reservation/ReservationList.vue";
 import EditReservation from "@/views/admin/reservation/EditReservation.vue";
 import CreateReservation from "@/views/admin/reservation/CreateReservation.vue";
+import InstructorProfile from "@/views/instructor/InstructorProfile.vue";
 
 const routes = [
   {
     path: "/",
     name: "HomePage",
     component: HomePage,
-    meta: { public: true },
+    meta: { public: false },
   },
   {
     path: "/booking",
@@ -86,6 +87,13 @@ const routes = [
     name: "RegisterPage",
     component: RegisterPage,
     meta: { public: true },
+  },
+  {
+    path: "/instructor-profile/:id",
+    name: "InstructorProfile",
+    component: InstructorProfile,
+    props: true,
+    meta: { public: false },
   },
   {
     path: "/mauglo",

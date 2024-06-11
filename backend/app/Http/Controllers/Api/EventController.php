@@ -126,17 +126,14 @@ class EventController extends Controller
     public function storeEvent(EventRequest $request)
     {
         try {
-            $requestData = $request->validated(); // Extracting validated data
+            $requestData = $request->validated();
 
-            // Parsing and modifying the dates
             $start = Carbon::parse($requestData['start'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
             $end = Carbon::parse($requestData['end'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
 
-            // Replace the old dates with the modified ones
             $requestData['start'] = $start;
             $requestData['end'] = $end;
 
-            // Create the event
             $instance = Event::create($requestData);
 
             if ($instance) {
@@ -160,17 +157,14 @@ class EventController extends Controller
 
     public function updateEvent(EventRequest $request, string $id)
     {
-        $requestData = $request->validated(); // Extracting validated data
+        $requestData = $request->validated();
 
-        // Parsing and modifying the dates
         $start = Carbon::parse($requestData['start'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
         $end = Carbon::parse($requestData['end'])->setTimezone('Europe/Riga')->format('Y-m-d H:i:s');
 
-        // Replace the old dates with the modified ones
         $requestData['start'] = $start;
         $requestData['end'] = $end;
 
-        // Create the event
         $instance = Event::find($id);
 
         if ($instance) {

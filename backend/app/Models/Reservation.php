@@ -37,6 +37,6 @@ class Reservation extends Model
 
     public function instructorAvailability(): BelongsTo
     {
-        return $this->belongsTo(instructors_availability::class, 'instructor_availability_id', 'id');
+        return $this->belongsTo(InstructorAvailability::class, 'instructor_availability_id', 'id');
     }
 }

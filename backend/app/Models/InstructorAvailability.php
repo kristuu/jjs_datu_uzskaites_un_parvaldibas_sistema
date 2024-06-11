@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class instructors_availability extends Model
+class InstructorAvailability extends Model
 {
     protected $table = 'instructors_availabilities';
 
     protected $fillable = [
         'start_time',
         'end_time',
+        'price',
         'instructor_id',
     ];
 
@@ -25,12 +26,12 @@ class instructors_availability extends Model
         'created_at', 'updated_at'
     ];
 
-    public function instructor() : BelongsTo
+    public function instructor(): BelongsTo
     {
         return $this->belongsTo(Instructor::class);
     }
 
-    public function reservation() : HasOne
+    public function reservation(): HasOne
     {
         return $this->hasOne(Reservation::class, 'instructor_availability_id', 'id');
     }

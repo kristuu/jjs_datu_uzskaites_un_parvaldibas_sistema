@@ -52,7 +52,7 @@ class Instructor extends Model
 
     public function availabilities()
     {
-        return $this->hasMany(instructors_availability::class);
+        return $this->hasMany(InstructorAvailability::class);
     }
 
     public function reservation(): HasMany
