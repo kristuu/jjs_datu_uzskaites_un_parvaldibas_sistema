@@ -48,6 +48,7 @@
               shape="circle"
               @click="$router.push({ name: `UserProfile` })"
             />
+            <Button class="bg-white text-primary" label="IZIET" rounded />
           </div>
         </template>
       </Menubar>
@@ -66,11 +67,11 @@ const { t } = useI18n();
 const authStore = useAuthStore();
 
 const hasPermission = (permission) => {
-  return authStore.permissions.includes(permission);
+  return authStore.permissions?.includes(permission) ?? false;
 };
 
 const hasRole = (role) => {
-  return authStore.roles.includes(role);
+  return authStore.roles?.includes(role) ?? false;
 };
 
 const categories = computed(() => authStore.user?.categories ?? []);

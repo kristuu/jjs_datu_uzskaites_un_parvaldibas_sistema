@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Lietotāju autentifikācijas procesu pārvaldība
+ * Funkcijas ietver:
+ * - reģistrācija: validē lietotāja ievadītos datus un izveido jaunu lietotāju datubāzē
+ * - pieteikšanās: pārbauda lietotāja ievadītos autentifikācijas datus un, ja tie ir pareizi, piešķir sesiju
+ * - atteikšanās: izbeidz lietotāja sesiju un atjauno sesijas validāciju
+ * - paroles maiņa: validē un maina lietotāja paroli, ja ievadītā vecā parole ir pareiza, kā arī jaunā parole un tās apstiprinājums sakrīt
+ */
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;

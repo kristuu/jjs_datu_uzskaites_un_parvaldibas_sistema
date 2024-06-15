@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * Modelis pārvalda lietotājus un relācijas
+ * Attiecības:
+ * - ir viena adrese
+ * - ir daudz atļauju līmeņu
+ * - ir daudz treneru
+ * - ir daudz rezervāciju
+ */
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

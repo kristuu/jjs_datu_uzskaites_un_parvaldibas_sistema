@@ -27,7 +27,9 @@
         "
       >
         <template #header>
-          <div class="d-flex justify-content-between flex-wrap mb-2 mt-2">
+          <div
+            class="d-flex flex-column-reverse gap-2 sm:flex-row justify-content-between flex-wrap mb-2 mt-2"
+          >
             <Button
               v-if="can('create instances')"
               icon="bi bi-plus-lg"
@@ -36,15 +38,23 @@
               @click="router.push({ name: 'CreateEvent' })"
             >
             </Button>
-            <IconField iconPosition="left">
-              <InputIcon>
-                <i class="bi bi-search" />
-              </InputIcon>
-              <InputText
-                v-model="filters['global'].value"
-                :placeholder="$t(`table.search`)"
+            <div class="flex flex-column sm:flex-row gap-2">
+              <Button
+                icon="pi pi-external-link"
+                label="Eksportēt CSV"
+                @click="exportCSV($event)"
               />
-            </IconField>
+              <IconField iconPosition="left">
+                <InputIcon>
+                  <i class="bi bi-search" />
+                </InputIcon>
+                <InputText
+                  v-model="filters['global'].value"
+                  :placeholder="$t(`table.search`)"
+                  class="w-100"
+                />
+              </IconField>
+            </div>
           </div>
         </template>
         <template #empty>
@@ -126,7 +136,7 @@
               icon="bi bi-trash-fill"
               outlined
               rounded
-              @click="fetchDataStore.deleteInstance(`permissions`, data.id)"
+              @click="fetchDataStore.deleteInstance(`events`, data.id)"
             />
           </template>
         </Column>
@@ -212,6 +222,7 @@
               <router-link
                 v-if="instance.id"
                 :to="{ name: `EditEvent`, params: { id: instance.id } }"
+                @click="visible = false"
               >
                 <span class="font-bold"
                   ><i class="bi bi-pencil-fill" /> {{ $t(`table.edit`) }}</span

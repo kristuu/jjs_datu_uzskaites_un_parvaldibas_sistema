@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * API maršrutēšana, atbilstošās kontrolieru funkcijas
+ * Papildus vēl maršrutā '/user' atgūst lietotāja trenera sertifikāta kategorijas, ja tādas ir, lai noteiktu, vai parādīt
+ * navigācijas sadaļu "TRENERA PROFILS"
+ */
+
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
@@ -22,17 +28,6 @@ use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 if (!function_exists('registerResourceRoutes')) {
     function registerResourceRoutes($base, $controller, $getAllMethod, $getMethod, $storeMethod, $updateMethod, $destroyMethod)

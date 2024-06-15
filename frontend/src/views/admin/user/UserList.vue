@@ -11,11 +11,12 @@
       <DataTable
         ref="dt"
         v-model:filters="filters"
+        :exportFilename="exportFilename"
         :globalFilterFields="globalFilterFields"
         :rowClass="rowClass"
         :rows="10"
         :rowsPerPageOptions="[10, 15, 20, 50]"
-        :value="instances"
+        :value="formattedInstances"
         csvSeparator=";"
         filterDisplay="menu"
         paginator
@@ -23,14 +24,12 @@
         selectionMode="single"
         size="small"
         stripedRows
-        @rowSelect="
-          (e) => {
-            onRowSelect(e);
-          }
-        "
+        @rowSelect="onRowSelect"
       >
         <template #header>
-          <div class="d-flex justify-content-between flex-wrap mb-2 mt-2">
+          <div
+            class="d-flex flex-column-reverse gap-2 sm:flex-row justify-content-between flex-wrap mb-2 mt-2"
+          >
             <Button
               v-if="can('create instances')"
               icon="bi bi-plus-lg"
@@ -39,11 +38,11 @@
               @click="router.push({ name: 'CreateUser' })"
             >
             </Button>
-            <div class="flex gap-2">
+            <div class="flex flex-column sm:flex-row gap-2">
               <Button
                 icon="pi pi-external-link"
                 label="Eksportēt CSV"
-                @click="exportCSV($event)"
+                @click="exportCSV"
               />
               <IconField iconPosition="left">
                 <InputIcon>
@@ -52,6 +51,7 @@
                 <InputText
                   v-model="filters['global'].value"
                   :placeholder="$t(`table.search`)"
+                  class="w-100"
                 />
               </IconField>
             </div>
@@ -105,12 +105,34 @@
             <InputText v-model="filterModel.value" type="text" />
           </template>
         </Column>
+        <Column :header="$t('table.users.birthdate')" field="birthdate" hidden>
+          <template #body="{ data }">
+            {{ data.birthdate }}
+          </template>
+        </Column>
         <Column :header="$t(`table.users.email`)" field="email" sortable>
           <template #body="{ data }">
             {{ data.email }}
           </template>
           <template #filter="{ filterModel }">
             <InputText v-model="filterModel.value" type="text" />
+          </template>
+        </Column>
+        <Column :header="$t('table.users.phone')" field="phone" hidden>
+          <template #body="{ data }">
+            {{ data.phone }}
+          </template>
+        </Column>
+        <Column :header="$t('table.users.iban_code')" field="iban_code" hidden>
+          <template #body="{ data }">
+            {{ data.iban_code }}
+          </template>
+        </Column>
+        <Column :header="$t('table.users.address')" field="address" hidden>
+          <template #body="{ data }">
+            <div v-if="data.address !== null">
+              {{ formatAddress(data.address) }}
+            </div>
           </template>
         </Column>
         <Column :exportable="false">
@@ -248,6 +270,9 @@ import { FilterMatchMode, FilterOperator } from "primevue/api";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import router from "@/router/router";
 
+import { format } from "date-fns";
+import { lv } from "date-fns/locale";
+
 const fetchDataStore = useFetchDataStore();
 
 const instance = computed(() => fetchDataStore.instance);
@@ -270,6 +295,31 @@ const dt = ref();
 const exportCSV = () => {
   dt.value.exportCSV();
 };
+
+const exportFilename = computed(() => {
+  return `JJS_export_-_Lietotaji_-_${format(new Date(), "dd.MM.yyyy_HH.mm.ss", {
+    locale: lv,
+  })}`;
+});
+
+const formatAddress = (address) => {
+  return `${address.address_line1}, ${
+    address.address_line2 ? address.address_line2 + ", " : ""
+  }${address.city.name}, ${address.region ? address.region + ", " : ""}${
+    address.city.country.name
+  }, ${address.postal_code}`;
+};
+
+const formattedInstances = computed(() => {
+  return instances.value.map((instance) => ({
+    ...instance,
+    person_code: `${instance.person_code?.slice(
+      0,
+      6
+    )}-${instance.person_code?.slice(6, 12)}`,
+    address: instance.address ? formatAddress(instance.address) : null,
+  }));
+});
 
 const initfilters = () => {
   const defaultTextContainsFilter = () => ({

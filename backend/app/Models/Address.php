@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Modelis pārvalda ar adresēm saistītu informāciju un relācijas
+ * Attiecības:
+ * - pieder vienai pilsētai
+ * - ir viena lietotāja adrese
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

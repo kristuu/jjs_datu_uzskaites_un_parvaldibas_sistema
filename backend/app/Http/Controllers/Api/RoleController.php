@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Lomu pārvaldība
+ * Funkcijas ietver:
+ * - visu lomu iegūšana
+ * - lomu saraksta parādīšana ar pagination
+ * - CRUD operācijas ar lomām
+ */
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;

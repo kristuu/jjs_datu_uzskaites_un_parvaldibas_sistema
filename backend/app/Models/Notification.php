@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * Modelis pārvalda paziņojumus un relācijas
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

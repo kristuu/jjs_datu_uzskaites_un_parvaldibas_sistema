@@ -1,5 +1,12 @@
 <?php
 
+
+/*
+ * Modelis pārvalda piekļuves līmeņus un relācijas
+ * Attiecības:
+ * - ir daudz lietotāju
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -12,11 +19,11 @@ class Permission_Level extends Model
         'name',
     ];
 
-    public function users() : BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class,
-        'users_permission_levels',
-        'permission_level_id',
-        'user_person_code');
+            'users_permission_levels',
+            'permission_level_id',
+            'user_person_code');
     }
 }

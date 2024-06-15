@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Modelis pārvalda treneru pieejamības un relācijas
+ * Attiecības:
+ * - pieder vienam trenerim
+ * - ir viena rezervācija
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

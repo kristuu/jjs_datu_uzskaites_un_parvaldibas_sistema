@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Rezervāciju pārvaldība
+ * Funkcijas ietver:
+ * - rezervāciju veikšana
+ * - rezervāciju atcelšana
+ * - rezervāciju PDF ģenerēšana: ģenerē PDF dokumentus ar rezervāciju informāciju, izmantojot speciālu PDF ģenerēšanas bibliotēku
+ * - CRUD operācijas ar rezervācijām
+ */
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;

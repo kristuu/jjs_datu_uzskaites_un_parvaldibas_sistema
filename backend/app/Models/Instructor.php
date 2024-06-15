@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Modelis pārvalda trenerus un relācijas
+ * Attiecības:
+ * - pieder vienam lietotājam
+ * - pieder vienam sertifikātam
+ * - ir daudz pieejamību
+ * - ir daudz rezervāciju
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -11,11 +20,6 @@ class Instructor extends Model
 
     protected $table = 'instructors';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'job_start_date',
         'user_person_code',
@@ -24,11 +28,6 @@ class Instructor extends Model
         'description'
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'job_start_date' => 'date:d.m.Y',
     ];
@@ -36,10 +35,7 @@ class Instructor extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
-
-    /**
-     * Get the user that is the instructor.
-     */
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_person_code', 'person_code');

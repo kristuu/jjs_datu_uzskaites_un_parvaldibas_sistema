@@ -2,6 +2,14 @@
 
 namespace App\Models;
 
+/*
+ * Modelis pārvalda pasākumus un relācijas
+ * Attiecības:
+ * - pieder vienai pasākumu kategorijai
+ * - pieder vienam pasākuma veidam
+ * - pieder vienai lokācijai
+ */
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

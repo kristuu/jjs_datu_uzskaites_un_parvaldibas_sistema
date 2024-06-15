@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Lietotāju pārvaldība
+ * Funkcijas ietver:
+ * - visu lietotāju iegūšana
+ * - lietotāju saraksta parādīšana ar pagination
+ * - CRUD operācijas ar lietotājiem
+ */
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -26,7 +34,7 @@ class UserController extends Controller
 
     public function getAllUsers()
     {
-        return $this->getAll(User::class, $this->globalFilterFields);
+        return $this->getAll(User::class, $this->globalFilterFields, ['address.city.country']);
     }
 
     public function getPaginatedUsers(Request $request)

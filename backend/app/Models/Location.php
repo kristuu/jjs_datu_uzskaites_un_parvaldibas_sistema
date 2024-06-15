@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Modelis pārvalda lokācijas un relācijas
+ * Attiecības:
+ * - ir daudz pasākumu
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +20,7 @@ class Location extends Model
         'horse_capacity',
     ];
 
-    public function events() : HasMany
+    public function events(): HasMany
     {
         return $this->hasMany(Event::class, 'location_id');
     }

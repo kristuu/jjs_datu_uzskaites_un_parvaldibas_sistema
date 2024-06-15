@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * Vispārējas funkcionalitātes kontrolieris
+ * Nodrošina dažādas palīgfunkcijas un atbildes formēšanas metodes
+ * Funkcijas ietver:
+ * - atbildes nosūtīšana
+ * - kolonnu nosaukumu iegūšana no modeļiem
+ * - CRUD operāciju palīgmetodes
+ */
+
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Http\FormRequest;
@@ -11,7 +19,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\User;
 
 class Controller extends BaseController
 {
@@ -24,19 +31,11 @@ class Controller extends BaseController
         // add your more messages here
     ];
 
-    protected function sendResponse($data = null, int $status = 200, array $headers = [])
-    {
-        if (!is_null($data)) {
-            $response = $data;
-        }
-
-        return response()->json($response, $status, $headers);
-    }
-
     /**
      * Retrieve the column names and translated headers for a given model.
      */
-    protected function getColumnNames($model) {
+    protected function getColumnNames($model)
+    {
         $tableName = $model->getTable();
 
         $allColumns = DB::getSchemaBuilder()->getColumnListing($tableName);
@@ -63,16 +62,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Check if the given class name exists and is a subclass of the Model class.
-     */
-    protected function checkClassExistence(string $className)
-    {
-        if (!is_subclass_of($className, Model::class)) {
-            throw new \InvalidArgumentException("$className is not a valid model class");
-        }
-    }
-
-    /**
      * Retrieve all instances of the given class and append global filter fields (searchable on front-end).
      */
     protected function getAll(string $className, array $globalFilterFields = [], array $relationships = [], array $fieldsToHide = [])
@@ -85,12 +74,12 @@ class Controller extends BaseController
         $query = $className::query();
 
         if (!empty($relationships)) {
-            foreach($relationships as $relation => $fields) {
-                if(is_numeric($relation)) {
+            foreach ($relationships as $relation => $fields) {
+                if (is_numeric($relation)) {
                     $query->with($fields);
-                } elseif(is_array($fields)) {
+                } elseif (is_array($fields)) {
                     $query->with([
-                        $relation => function($query) use ($fields, $model, $relation){
+                        $relation => function ($query) use ($fields, $model, $relation) {
                             $relatedModel = $model->$relation()->getRelated();
                             $primaryKey = $relatedModel->getKeyName();
                             $query->select(array_merge([$primaryKey], $fields));
@@ -107,7 +96,7 @@ class Controller extends BaseController
         $instances = $query->get();
 
         $instances = $instances->map(function ($instance) use ($fieldsToHide) {
-            foreach($fieldsToHide as $relation => $fields) {
+            foreach ($fieldsToHide as $relation => $fields) {
                 if ($instance->$relation) {
                     if (is_array($fields)) {
                         foreach ($fields as $nestedrelation => $nestedfields) {
@@ -139,6 +128,25 @@ class Controller extends BaseController
                 ])
             ], 404);
         }
+    }
+
+    /**
+     * Check if the given class name exists and is a subclass of the Model class.
+     */
+    protected function checkClassExistence(string $className)
+    {
+        if (!is_subclass_of($className, Model::class)) {
+            throw new \InvalidArgumentException("$className is not a valid model class");
+        }
+    }
+
+    protected function sendResponse($data = null, int $status = 200, array $headers = [])
+    {
+        if (!is_null($data)) {
+            $response = $data;
+        }
+
+        return response()->json($response, $status, $headers);
     }
 
     /**

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Modelis pārvalda pasākumu kategorijas un relācijas
+ * Attiecības:
+ * - ir daudz pasākumu
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;

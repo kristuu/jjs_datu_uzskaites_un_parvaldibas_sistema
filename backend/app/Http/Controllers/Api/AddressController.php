@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Ar adresēm saistītu darbību pārvaldība
+ * Funkcijas ietver:
+ * - visu adrešu iegūšana: izmanto Address modeli, lai iegūtu visas adreses no datubāzes
+ * - lietotāja adrešu iegūšana: pārbauda lietotāja autentifikāciju un iegūst lietotāja adresi, ja tāda pastāv
+ * - adrešu uzstādīšana: validē lietotāja ievadītos datus un izveido jaunu adresi, ja tāda nepastāv
+ */
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;

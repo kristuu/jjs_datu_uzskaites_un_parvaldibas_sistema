@@ -2,6 +2,14 @@
 
 namespace App\Models;
 
+
+/*
+ * Modelis pārvalda sertifikātus un relācijas
+ * Attiecības:
+ * - pieder vienai kategorijai
+ * - ir viens instruktors
+ */
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -10,21 +18,11 @@ class Certificate extends Model
 {
     protected $table = 'certificates';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'expiration_date',
         'category_id',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'expiration_date' => 'date:d.m.Y',
     ];
@@ -35,15 +33,12 @@ class Certificate extends Model
 
     protected $with = ['category'];
 
-    /**
-     * Get the category that the certificate belongs to.
-     */
-    public function category() : BelongsTo
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function instructor() : HasOne
+    public function instructor(): HasOne
     {
         return $this->hasOne(Instructor::class);
     }

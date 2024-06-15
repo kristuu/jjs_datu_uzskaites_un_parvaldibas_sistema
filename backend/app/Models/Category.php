@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Modelis pārvalda kategorijas un relācijas
+ * Attiecības:
+ * - ir daudz sertifikātu
+ */
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +23,7 @@ class Category extends Model
         'created_at', 'updated_at'
     ];
 
-    public function certificates() : HasMany
+    public function certificates(): HasMany
     {
         return $this->hasMany(Certificate::class);
     }

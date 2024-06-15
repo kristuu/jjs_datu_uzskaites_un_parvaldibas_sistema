@@ -1,87 +1,137 @@
 <template>
   <div>
     <AdminTable
-        v-show="can('manage permissions')"
-        :page-name="$t(`pageHeadings.permissions.manage permissions`)"
-        :database-table="'permissions'"
-        :model-name="'Permission'"
-        :instance-id-column="'id'"
-        :short-desc="$t(`pageHeadings.permissions.total`, {total: totalInstances})"
+      v-show="can('manage permissions')"
+      :database-table="'permissions'"
+      :instance-id-column="'id'"
+      :model-name="'Permission'"
+      :page-name="$t(`pageHeadings.permissions.manage permissions`)"
+      :short-desc="
+        $t(`pageHeadings.permissions.total`, { total: totalInstances })
+      "
     >
       <div class="p-1">
-        <Message
-            :closable="false"
-            severity="warn"
-        >
+        <Message :closable="false" severity="warn">
           <small>Piekļuves tiesību integritātes nolūkos</small>
-          <br/>Tabulas saturs pieejams un apstrādājams <strong>TIKAI angļu valodā</strong>!</Message>
+          <br />Tabulas saturs pieejams un apstrādājams
+          <strong>TIKAI angļu valodā</strong>!
+        </Message>
       </div>
-      <DataTable :value="instances" size="small" stripedRows removableSort
-                 paginator :rows="10" :rowsPerPageOptions="[10, 15, 20, 50]"
-                 v-model:filters="filters" filterDisplay="menu" :globalFilterFields="globalFilterFields"
-                 selectionMode="single" @rowSelect="(e) => { onRowSelect(e) }">
+      <DataTable
+        v-model:filters="filters"
+        :globalFilterFields="globalFilterFields"
+        :rows="10"
+        :rowsPerPageOptions="[10, 15, 20, 50]"
+        :value="instances"
+        filterDisplay="menu"
+        paginator
+        removableSort
+        selectionMode="single"
+        size="small"
+        stripedRows
+        @rowSelect="
+          (e) => {
+            onRowSelect(e);
+          }
+        "
+      >
         <template #header>
-          <div class="d-flex justify-content-between flex-wrap mb-2 mt-2">
-            <Button v-if="can('create instances')"
-                    icon="bi bi-plus-lg"
-                    rounded raised
-                    @click="router.push({ name: 'CreatePermission' })">
+          <div
+            class="d-flex flex-column-reverse gap-2 sm:flex-row justify-content-between flex-wrap mb-2 mt-2"
+          >
+            <Button
+              v-if="can('create instances')"
+              icon="bi bi-plus-lg"
+              raised
+              rounded
+              @click="router.push({ name: 'CreatePermission' })"
+            >
             </Button>
-            <IconField iconPosition="left">
-              <InputIcon>
-                <i class="bi bi-search" />
-              </InputIcon>
-              <InputText v-model="filters['global'].value" :placeholder="$t(`table.search`)" />
-            </IconField>
+            <div class="flex flex-column sm:flex-row gap-2">
+              <Button
+                icon="pi pi-external-link"
+                label="Eksportēt CSV"
+                @click="exportCSV($event)"
+              />
+              <IconField iconPosition="left">
+                <InputIcon>
+                  <i class="bi bi-search" />
+                </InputIcon>
+                <InputText
+                  v-model="filters['global'].value"
+                  :placeholder="$t(`table.search`)"
+                  class="w-100"
+                />
+              </IconField>
+            </div>
           </div>
         </template>
         <template #empty>
-          <div class="d-flex flex-column gap-2" v-if="fetchDataStore.isFetching">
+          <div
+            v-if="fetchDataStore.isFetching"
+            class="d-flex flex-column gap-2"
+          >
             <template v-for="i in [1, 2, 3, 4]">
               <Skeleton height="2rem" />
-              <Divider class="m-0"/>
+              <Divider class="m-0" />
             </template>
             <Skeleton height="2rem" />
           </div>
-          <div class="text-center" v-else>
+          <div v-else class="text-center">
             <span>{{ $t(`table.empty`) }}</span>
           </div>
         </template>
-        <Column field="id" :header="$t('table.id')">
+        <Column :header="$t('table.id')" field="id">
           <template #body="{ data }">
             {{ data.id }}
           </template>
           <template #filter="{ filterModel }">
-            <InputText
-                type="text"
-                v-model="filterModel.value"/>
+            <InputText v-model="filterModel.value" type="text" />
           </template>
         </Column>
-        <Column field="name" :header="$t('table.permissions.name')" sortable>
+        <Column :header="$t('table.permissions.name')" field="name" sortable>
           <template #body="{ data }">
             {{ data.name }}
           </template>
           <template #filter="{ filterModel }">
-            <InputText
-                type="text"
-                v-model="filterModel.value"/>
+            <InputText v-model="filterModel.value" type="text" />
           </template>
         </Column>
         <Column :exportable="false">
           <template #body="{ data }">
-            <Button icon="bi bi-trash-fill" @click="fetchDataStore.deleteInstance(`permissions`, data.id)" outlined rounded />
+            <Button
+              icon="bi bi-trash-fill"
+              outlined
+              rounded
+              @click="fetchDataStore.deleteInstance(`permissions`, data.id)"
+            />
           </template>
         </Column>
       </DataTable>
     </AdminTable>
 
-    <Sidebar v-model:visible="visible" position="bottom" style="height:20rem; max-height: 90vh;">
+    <Sidebar
+      v-model:visible="visible"
+      position="bottom"
+      style="height: 20rem; max-height: 90vh"
+    >
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full container">
-          <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
+          <div
+            class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0"
+          >
             <img src="@/assets/logo-red.svg" width="50" />
-            <span class="font-semibold text-2xl text-primary">Piekļuves tiesības apskate</span>
-            <Button type="button" @click="closeCallback" icon="pi pi-times" rounded outlined class="h-2rem w-2rem"></Button>
+            <span class="font-semibold text-2xl text-primary"
+              >Piekļuves tiesības apskate</span
+            >
+            <Button
+              class="h-2rem w-2rem"
+              icon="pi pi-times"
+              outlined
+              rounded
+              type="button"
+              @click="closeCallback"
+            ></Button>
           </div>
           <Divider />
           <div class="overflow-y-auto w-100">
@@ -99,10 +149,25 @@
           <div class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border" />
             <div class="m-3 flex justify-content-between gap-3 text-primary">
-              <router-link v-if="instance.id" :to="{ name: `EditPermission`, params: { id: instance.id } }">
-                <span class="font-bold"><i class="bi bi-pencil-fill"/> {{ $t(`table.edit`) }}</span>
+              <router-link
+                v-if="instance.id"
+                :to="{ name: `EditPermission`, params: { id: instance.id } }"
+                @click="visible = false"
+              >
+                <span class="font-bold"
+                  ><i class="bi bi-pencil-fill" /> {{ $t(`table.edit`) }}</span
+                >
               </router-link>
-              <span class="font-bold cursor-pointer" @click="() => { fetchDataStore.deleteInstance(`permissions`, instance.id); visible = false; }">{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"/></span>
+              <span
+                class="font-bold cursor-pointer"
+                @click="
+                  () => {
+                    fetchDataStore.deleteInstance(`permissions`, instance.id);
+                    visible = false;
+                  }
+                "
+                >{{ $t(`table.delete`) }} <i class="bi bi-trash-fill"
+              /></span>
             </div>
           </div>
         </div>
@@ -112,34 +177,33 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, ref} from 'vue';
-import AdminTable from '@/components/AdminTable.vue';
-import {FilterMatchMode, FilterOperator} from "primevue/api";
+import { computed, onBeforeMount, ref } from "vue";
+import AdminTable from "@/components/AdminTable.vue";
+import { FilterMatchMode, FilterOperator } from "primevue/api";
 
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import router from "@/router/router";
+
 const fetchDataStore = useFetchDataStore();
 
 const instance = computed(() => fetchDataStore.instance);
 const instances = computed(() => fetchDataStore.allInstances);
 const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
 
-const globalFilterFields = ref([
-  'id', 'name',
-]);
+const globalFilterFields = ref(["id", "name"]);
 const filters = ref();
 
 const initFilters = () => {
   const defaultTextContainsFilter = () => ({
     operator: FilterOperator.AND,
-    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }]
+    constraints: [{ value: null, matchMode: FilterMatchMode.CONTAINS }],
   });
 
   filters.value = {
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    "id": defaultTextContainsFilter(),
-    "name": defaultTextContainsFilter(),
-  }
+    id: defaultTextContainsFilter(),
+    name: defaultTextContainsFilter(),
+  };
 };
 
 initFilters();
@@ -147,7 +211,7 @@ initFilters();
 const onRowSelect = async (event) => {
   await fetchDataStore.fetchInstance("permissions", event.data.id);
   visible.value = true;
-}
+};
 
 let visible = ref(false);
 
@@ -161,7 +225,8 @@ p {
   margin: 0;
 }
 
-th, h5 {
+th,
+h5 {
   font-weight: bold;
 }
 
@@ -169,4 +234,3 @@ nav ul {
   margin-bottom: 0 !important;
 }
 </style>
-

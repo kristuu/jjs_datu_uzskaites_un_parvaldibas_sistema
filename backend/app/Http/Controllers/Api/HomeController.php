@@ -18,7 +18,7 @@ class HomeController extends Controller
             'instructorAvailability'
         ])
             ->where('user_person_code', $user->person_code)
-            ->where('status', '!=', 'denied')
+            ->whereNotIn('status', ['denied', 'cancelled'])
             ->whereHas('instructorAvailability', function ($query) {
                 $query->where('end_time', '>=', now());
             })
@@ -43,7 +43,7 @@ class HomeController extends Controller
             'instructorAvailability'
         ])
             ->whereIn('reservation.instructor_id', $instructorIds)
-            ->where('status', '!=', 'denied')
+            ->whereNotIn('status', ['denied', 'cancelled'])
             ->whereHas('instructorAvailability', function ($query) {
                 $query->where('end_time', '>=', now());
             })
