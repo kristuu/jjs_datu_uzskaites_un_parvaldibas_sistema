@@ -74,16 +74,11 @@
         </template>
         <Column
           :header="$t('table.users.person_code')"
-          field="person_code"
+          field="formatted_person_code"
           sortable
         >
           <template #body="{ data }">
-            {{
-              `${data.person_code?.slice(0, 6)}-${data.person_code?.slice(
-                6,
-                12
-              )}`
-            }}
+            {{ data.formatted_person_code }}
           </template>
           <template #filter="{ filterModel }">
             <InputText v-model="filterModel.value" type="text" />
@@ -131,7 +126,7 @@
         <Column :header="$t('table.users.address')" field="address" hidden>
           <template #body="{ data }">
             <div v-if="data.address !== null">
-              {{ formatAddress(data.address) }}
+              {{ data.formatted_address }}
             </div>
           </template>
         </Column>
@@ -141,7 +136,7 @@
               icon="bi bi-trash-fill"
               outlined
               rounded
-              @click="fetchDataStore.deleteInstance(`users`, data.person_code)"
+              @click="fetchDataStore.deleteInstance('users', data.person_code)"
             />
           </template>
         </Column>
@@ -266,10 +261,8 @@
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import AdminTable from "@/components/AdminTable.vue";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
-
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import router from "@/router/router";
-
 import { format } from "date-fns";
 import { lv } from "date-fns/locale";
 
@@ -313,11 +306,13 @@ const formatAddress = (address) => {
 const formattedInstances = computed(() => {
   return instances.value.map((instance) => ({
     ...instance,
-    person_code: `${instance.person_code?.slice(
+    formatted_person_code: `${instance.person_code?.slice(
       0,
       6
     )}-${instance.person_code?.slice(6, 12)}`,
-    address: instance.address ? formatAddress(instance.address) : null,
+    formatted_address: instance.address
+      ? formatAddress(instance.address)
+      : null,
   }));
 });
 
@@ -348,7 +343,7 @@ const initfilters = () => {
 initfilters();
 
 const onRowSelect = async (event) => {
-  await fetchDataStore.fetchInstance(`users`, event.data.person_code);
+  await fetchDataStore.fetchInstance("users", event.data.person_code);
   visible.value = true;
 };
 let visible = ref(false);
