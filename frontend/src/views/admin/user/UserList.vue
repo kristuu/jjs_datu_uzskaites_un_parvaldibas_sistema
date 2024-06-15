@@ -123,11 +123,13 @@
             {{ data.iban_code }}
           </template>
         </Column>
-        <Column :header="$t('table.users.address')" field="address" hidden>
+        <Column
+          :header="$t('table.users.address')"
+          field="formatted_address"
+          hidden
+        >
           <template #body="{ data }">
-            <div v-if="data.address !== null">
-              {{ data.formatted_address }}
-            </div>
+            {{ data.formatted_address }}
           </template>
         </Column>
         <Column :exportable="false">
