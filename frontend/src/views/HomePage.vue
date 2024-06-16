@@ -45,7 +45,9 @@
               >
                 <InstructorReservationList
                   :reservations="instructorReservations"
-                  @showAllReservations="showAllInstructorReservations"
+                  @showAllInstructorsReservations="
+                    showAllInstructorReservations
+                  "
                   @update:reservations="instructorReservations = $event"
                   @close-all-reservations-open-cancel="
                     (reservation) => {
@@ -156,6 +158,21 @@
     @close-all-reservations-open-cancel="
       (reservation) => {
         allReservationsVisible = false;
+        chosenCancelReservation = reservation;
+        chosenCancelReservation.reason = '';
+        cancelConfirmationVisible = true;
+      }
+    "
+  />
+
+  <AllInstructorsReservationsDialog
+    :isLoading="isFetchingAllReservations"
+    :reservations="allInstructorsReservations"
+    :visible="allInstructorsReservationsVisible"
+    @update:visible="allInstructorsReservationsVisible = $event"
+    @close-all-reservations-open-cancel="
+      (reservation) => {
+        allInstructorsReservationsVisible = false;
         chosenCancelReservation = reservation;
         chosenCancelReservation.reason = '';
         cancelConfirmationVisible = true;
@@ -281,6 +298,7 @@ const usersReservations = ref([]);
 const instructorReservations = ref([]);
 
 const allReservationsVisible = ref(false);
+const allInstructorsReservationsVisible = ref(false);
 const allReservations = ref([]);
 const isFetchingAllReservations = ref(false);
 
@@ -318,7 +336,7 @@ const showAllUserReservations = async () => {
 const showAllInstructorReservations = async () => {
   try {
     isFetchingAllReservations.value = true;
-    allReservationsVisible.value = true;
+    allInstructorsReservationsVisible.value = true;
     const response = await axios.get("/api/getAllInstructorReservations");
     allReservations.value = response.data;
   } catch (error) {

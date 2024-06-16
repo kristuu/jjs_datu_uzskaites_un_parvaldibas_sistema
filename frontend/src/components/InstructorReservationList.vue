@@ -87,7 +87,7 @@
         class="mt-3 w-full sm:w-auto"
         label="SKATĪT VISAS"
         size="small"
-        @click="$emit('showAllReservations')"
+        @click="$emit('showAllInstructorsReservations')"
       >
       </Button>
     </div>
@@ -105,7 +105,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits([
-  "showAllReservations",
+  "showAllInstructorsReservations",
   "close-all-reservations-open-cancel",
 ]);
 const fetchDataStore = useFetchDataStore();
