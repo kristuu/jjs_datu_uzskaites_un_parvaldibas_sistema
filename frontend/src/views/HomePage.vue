@@ -28,6 +28,13 @@
                   :reservations="usersReservations"
                   @showAllReservations="showAllUserReservations"
                   @update:reservations="usersReservations = $event"
+                  @close-all-reservations-open-cancel="
+                    (reservation) => {
+                      chosenCancelReservation = reservation;
+                      chosenCancelReservation.reason = '';
+                      cancelConfirmationVisible = true;
+                    }
+                  "
                 />
               </div>
               <div
@@ -40,6 +47,13 @@
                   :reservations="instructorReservations"
                   @showAllReservations="showAllInstructorReservations"
                   @update:reservations="instructorReservations = $event"
+                  @close-all-reservations-open-cancel="
+                    (reservation) => {
+                      chosenCancelReservation = reservation;
+                      chosenCancelReservation.reason = '';
+                      cancelConfirmationVisible = true;
+                    }
+                  "
                 />
               </div>
               <div class="col-12 mt-3">
@@ -212,17 +226,17 @@
                     class="w-full pb-4"
                     maxlength="255"
                   />
-                  <InputError :errors="errorList.reason" />
                   <span
                     class="text-sm absolute right-0 bottom-0 p-2 text-secondary"
                     >{{ cancelReservationCharactersRemaining }}</span
                   >
                 </div>
+                <InputError :errors="errorList.reason" />
               </div>
             </div>
             <div class="text-end">
               <Button
-                :label="`Atcelt`.toLocaleUpperCase()"
+                :label="`Apstiprināt atcelšanu`.toLocaleUpperCase()"
                 class="mt-4"
                 @click="submitReservationCancellation"
               />

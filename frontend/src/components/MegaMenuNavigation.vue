@@ -41,14 +41,19 @@
           </a>
         </template>
         <template #end>
-          <div class="flex align-items-center gap-2">
+          <div v-if="authStore.user" class="flex align-items-center gap-2">
             <Avatar
               :image="authStore.user?.profile_picture"
               class="cursor-pointer"
               shape="circle"
               @click="$router.push({ name: `UserProfile` })"
             />
-            <Button class="bg-white text-primary" label="IZIET" rounded />
+            <Button
+              class="bg-white text-primary hover-black"
+              label="IZIET"
+              rounded
+              @click="authStore.logout()"
+            />
           </div>
         </template>
       </Menubar>

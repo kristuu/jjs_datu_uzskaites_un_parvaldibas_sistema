@@ -5,7 +5,7 @@
   >
     <div class="w-10rem md:w-7rem align-self-center relative">
       <img
-        :src="reservation.instructor.user.profile_picture"
+        :src="reservation.user.profile_picture"
         class="block xl:block mx-auto border-round w-full"
         style="border-radius: 0.375rem 0 0"
       />
@@ -28,47 +28,13 @@
             <Skeleton height="1rem" width="100px" />
           </div>
           <span v-else class="font-medium text-secondary text-sm">{{
-            reservation.instructor.certificate.category.name
+            `Kategorija: ${reservation.instructor.certificate.category.name}`
           }}</span>
           <div v-if="isLoading" class="w-100">
             <Skeleton class="mt-2" height="2rem" width="100%" />
           </div>
           <div v-else class="text-lg font-medium text-900 mt-2">
-            {{
-              `${reservation.instructor.user.name} ${reservation.instructor.user.surname}`
-            }}
-          </div>
-        </div>
-        <div>
-          <div v-if="isLoading" class="w-100">
-            <Skeleton height="1.5rem" width="136px" />
-          </div>
-          <div
-            v-else
-            class="surface-100 p-1 w-full"
-            style="border-radius: 0.375rem"
-          >
-            <div
-              class="surface-0 flex align-items-center gap-1 justify-content-center py-1 px-3"
-              style="
-                border-radius: 0.375rem;
-                box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04),
-                  0px 1px 2px 0px rgba(0, 0, 0, 0.06);
-              "
-            >
-              <template v-for="star in 5">
-                <i
-                  v-if="star <= reservation.instructor.rating"
-                  :key="'filled-' + star"
-                  class="pi pi-star-fill text-primary"
-                ></i>
-                <i
-                  v-else
-                  :key="'empty-' + star"
-                  class="pi pi-star text-primary"
-                ></i>
-              </template>
-            </div>
+            {{ `${reservation.user.name} ${reservation.user.surname}` }}
           </div>
         </div>
       </div>

@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,11 +64,16 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard("web")->logout();
+        Auth::guard('web')->logout();
 
         $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        // return json response with the default 200 HTTP status code
+        $cookies = $request->cookies->all();
+        foreach ($cookies as $name => $value) {
+            Cookie::queue(Cookie::forget($name));
+        }
+
         return response()->json(['message' => 'Autentifikācijas sesija beigta']);
     }
 

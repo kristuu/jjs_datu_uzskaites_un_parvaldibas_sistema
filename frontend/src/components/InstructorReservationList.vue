@@ -66,7 +66,7 @@
           </div>
         </div>
       </div>
-      <ReservationItem
+      <InstructorReservationItem
         v-for="(item, index) in reservations"
         :key="index"
         :index="index"
@@ -74,6 +74,11 @@
         :reservation="item"
         class="w-full"
         @reservation-cancelled="fetchReservations"
+        @close-all-reservations-open-cancel="
+          (reservation) => {
+            closeAllReservationsOpenCancel(reservation);
+          }
+        "
       />
     </div>
     <Divider class="m-0" />
@@ -93,14 +98,16 @@
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import Button from "primevue/button";
 import Divider from "primevue/divider";
-import ReservationItem from "./ReservationItem.vue";
 import axios from "@/services/axios";
 
 const props = defineProps({
   reservations: Array,
 });
 
-const emit = defineEmits(["showAllReservations"]);
+const emit = defineEmits([
+  "showAllReservations",
+  "close-all-reservations-open-cancel",
+]);
 const fetchDataStore = useFetchDataStore();
 
 const fetchReservations = async () => {
@@ -113,6 +120,10 @@ const fetchReservations = async () => {
   } finally {
     fetchDataStore.setIsFetching(false);
   }
+};
+
+const closeAllReservationsOpenCancel = (reservation) => {
+  emit("close-all-reservations-open-cancel", reservation);
 };
 </script>
 

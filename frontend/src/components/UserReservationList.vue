@@ -75,6 +75,11 @@
         :index="index"
         :reservation="item"
         class="w-full"
+        @close-all-reservations-open-cancel="
+          (reservation) => {
+            closeAllReservationsOpenCancel(reservation);
+          }
+        "
         @reservation-cancelled="fetchReservations"
       />
     </div>
@@ -102,7 +107,10 @@ const props = defineProps({
   reservations: Array,
 });
 
-const emit = defineEmits(["showAllReservations"]);
+const emit = defineEmits([
+  "showAllReservations",
+  "close-all-reservations-open-cancel",
+]);
 const fetchDataStore = useFetchDataStore();
 
 const fetchReservations = async () => {
@@ -115,6 +123,10 @@ const fetchReservations = async () => {
   } finally {
     fetchDataStore.setIsFetching(false);
   }
+};
+
+const closeAllReservationsOpenCancel = (reservation) => {
+  emit("close-all-reservations-open-cancel", reservation);
 };
 </script>
 

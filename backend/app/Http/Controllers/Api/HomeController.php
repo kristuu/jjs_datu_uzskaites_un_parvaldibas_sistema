@@ -38,11 +38,12 @@ class HomeController extends Controller
         $instructorIds = $user->instructor->pluck('id')->toArray();
 
         $reservations = Reservation::with([
+            'user',
             'instructor.user',
             'instructor.certificate.category',
             'instructorAvailability'
         ])
-            ->whereIn('reservation.instructor_id', $instructorIds)
+            ->whereIn('reservations.instructor_id', $instructorIds)
             ->whereNotIn('status', ['denied', 'cancelled'])
             ->whereHas('instructorAvailability', function ($query) {
                 $query->where('end_time', '>=', now());

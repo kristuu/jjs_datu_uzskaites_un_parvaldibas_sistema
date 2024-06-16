@@ -104,11 +104,32 @@ export const useAuthStore = defineStore({
         await axios.get("/api/logout");
         this.authorized = false;
         this.user = null;
+        this.permissions = null;
+        this.roles = null;
+        this.clearCookies();
       } catch (error) {
         console.error("Error occurred on logging out: ", error);
       } finally {
         await router.push({ name: "LoginPage" });
       }
+    },
+    clearCookies() {
+      const cookies = document.cookie.split("; ");
+      cookies.forEach((cookie) => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        const paths = ["/"];
+        const domains = [
+          window.location.hostname,
+          `.${window.location.hostname}`,
+        ];
+        paths.forEach((path) => {
+          domains.forEach((domain) => {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};domain=${domain};secure;SameSite=None`;
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};domain=${domain}`;
+          });
+        });
+      });
     },
   },
 });
