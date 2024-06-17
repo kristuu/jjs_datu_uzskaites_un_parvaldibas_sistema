@@ -70,16 +70,15 @@
             size="small"
             @click="generatePDF(reservation)"
           />
-          <Button
+          <Dropdown
             v-if="
               !['accepted', 'denied', 'cancelled'].includes(reservation.status)
             "
-            :label="t('reservations.cancel').toLocaleUpperCase()"
-            class="button-auto-width"
-            outlined
-            size="small"
-            text
-            @click="emitCancel($event, reservation)"
+            :modelValue="reservation.status"
+            :options="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            @update:modelValue="updateStatus"
           />
         </div>
       </div>
@@ -92,6 +91,7 @@ import { computed } from "vue";
 import Skeleton from "primevue/skeleton";
 import Tag from "primevue/tag";
 import Button from "primevue/button";
+import Dropdown from "primevue/dropdown";
 import { useI18n } from "vue-i18n";
 import axios from "@/services/axios";
 import moment from "moment";
@@ -161,6 +161,33 @@ const generatePDF = async (reservation) => {
     console.error("Error generating PDF:", error);
   }
 };
+
+const updateStatus = async (newStatus) => {
+  try {
+    const response = await axios.put(
+      `/api/reservation/${props.reservation.id}/status`,
+      {
+        status: newStatus,
+      }
+    );
+    props.reservation.status = newStatus;
+  } catch (error) {
+    console.error("Error updating status:", error);
+  }
+};
+
+const statusOptions = [
+  {
+    label: t("reservations.submitted").toLocaleUpperCase(),
+    value: "submitted",
+  },
+  { label: t("reservations.accepted").toLocaleUpperCase(), value: "accepted" },
+  { label: t("reservations.denied").toLocaleUpperCase(), value: "denied" },
+  {
+    label: t("reservations.cancelled").toLocaleUpperCase(),
+    value: "cancelled",
+  },
+];
 
 const emitCancel = async (event, reservation) => {
   emit("close-all-reservations-open-cancel", reservation);
