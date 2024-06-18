@@ -218,7 +218,7 @@ class ReservationController extends Controller
         }
     }
 
-    public function getRating(Request $request, $instructorId)
+    public function getRating($instructorId)
     {
         $user = auth()->user();
         $ratingFilePath = "ratings/instructor_{$instructorId}.json";
@@ -237,7 +237,6 @@ class ReservationController extends Controller
     {
         $user = auth()->user();
 
-        // Validate the rating input
         $request->validate([
             'rating' => 'required|min:1|max:5',
         ]);
@@ -245,27 +244,22 @@ class ReservationController extends Controller
         $submittedRating = floatval($request->input('rating'));
         $ratingFilePath = "ratings/instructor_{$instructorId}.json";
 
-        // Ensure the ratings directory exists
         if (!Storage::exists('ratings')) {
             Storage::makeDirectory('ratings');
         }
 
-        // Load existing ratings from the JSON file
         $ratings = [];
         if (Storage::exists($ratingFilePath)) {
             $ratings = json_decode(Storage::get($ratingFilePath), true);
         }
 
-        // Save the rating
         $ratings[$user->person_code] = $submittedRating;
         Storage::put($ratingFilePath, json_encode($ratings));
 
-        // Calculate the new rating
         $totalRating = array_sum($ratings);
         $ratingCount = count($ratings);
         $newRating = $totalRating / $ratingCount;
 
-        // Update the instructor's rating
         $instructor = Instructor::findOrFail($instructorId);
         $instructor->rating = $newRating;
         $instructor->save();
