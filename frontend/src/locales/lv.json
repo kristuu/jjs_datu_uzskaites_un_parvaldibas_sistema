@@ -111,6 +111,12 @@
       "category": "Kategorija",
       "location": "Galvenā norises vieta",
       "comment": "Komentārs"
+    },
+    "event_categories": {
+      "name": "Nosaukums"
+    },
+    "event_types": {
+      "name": "Nosaukums"
     }
   },
   "check_email": "Lūdzu, pārliecinieties, ka ievadītā e-pasta adrese ir pareiza.",
@@ -125,10 +131,10 @@
     },
     "permissions": {
       "permissions": "Piekļuves tiesības",
-      "manage permissions": "Piekļuves pārvaldība",
-      "create permission": "Tiesību pievienošana",
-      "edit permission": "Tiesību rediģēšana",
-      "total": "Kopā {total} tiesība (-s)"
+      "manage permissions": "Piekļuves tiesību pārvaldība",
+      "create permission": "Piekļuves tiesības pievienošana",
+      "edit permission": "Piekļuves tiesības rediģēšana",
+      "total": "Kopā {total} piekļuves tiesība (-s)"
     },
     "roles": {
       "roles": "Piekļuves lomas",
@@ -186,12 +192,19 @@
       "edit event": "Pasākuma rediģēšana",
       "total": "Kopā {total} pasākums (-i)"
     },
-    "eventTypes": {
-      "events": "Pasākumi",
-      "manage events": "Pasākumu pārvaldība",
-      "create event": "Pasākuma pievienošana",
-      "edit event": "Pasākuma rediģēšana",
-      "total": "Kopā {total} pasākums (-i)"
+    "event_types": {
+      "event_types": "Pasākumu tipi",
+      "manage event_types": "Pasākumu tipu pārvaldība",
+      "create event_type": "Pasākumu tipa pievienošana",
+      "edit event_type": "Pasākumu tipa rediģēšana",
+      "total": "Kopā {total} pasākumu tipi"
+    },
+    "event_categories": {
+      "event_categories": "Pasākumu kategorijas",
+      "manage event_categories": "Pasākumu kategoriju pārvaldība",
+      "create event_category": "Pasākumu kategorijas pievienošana",
+      "edit event_category": "Pasākumu kategorijas rediģēšana",
+      "total": "Kopā {total} pasākumu kategorijas"
     }
   },
   "table": {
@@ -209,6 +222,10 @@
       "country": {
         "name": "Valsts"
       }
+    },
+    "permissions": {
+      "name": "Nosaukums",
+      "guard_name": "Autentifikācijas aizsargs"
     },
     "roles": {
       "name": "Nosaukums",
@@ -267,6 +284,12 @@
       "category": "Kategorija",
       "type": "Tips"
     },
+    "event_types": {
+      "name": "Nosaukums"
+    },
+    "event_categories": {
+      "name": "Nosaukums"
+    },
     "created_at": "Izveidots",
     "updated_at": "Atjaunināts",
     "info": {
@@ -283,7 +306,10 @@
     "certificate": "Sertifikāta pārskats",
     "category": "Kategorijas pārskats",
     "location": "Lokācijas pārskats",
-    "reservation": "Rezervācijas pārskats"
+    "reservation": "Rezervācijas pārskats",
+    "event": "Pasākuma pārskats",
+    "event_type": "Pasākuma tipa pārskats",
+    "event_category": "Pasākuma kategorijas pārskats"
   },
   "editor": {
     "bold": "Treknraksts",

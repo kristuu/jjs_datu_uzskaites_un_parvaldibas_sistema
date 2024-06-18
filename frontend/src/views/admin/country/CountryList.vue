@@ -114,25 +114,22 @@
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full container">
           <div
-            class="flex align-items-center justify-content-between px-4 py-3 flex-shrink-0"
+            class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0"
           >
-            <span class="inline-flex align-items-center gap-2">
-              <img src="@/assets/logo-red.svg" width="50" />
-              <span class="font-semibold text-2xl text-primary ml-3"
-                >Valsts apskate</span
-              >
-            </span>
-            <span>
-              <Button
-                class="h-2rem w-2rem"
-                icon="pi pi-times"
-                outlined
-                rounded
-                type="button"
-                @click="closeCallback"
-              ></Button>
-            </span>
+            <img src="../../../assets/logo-red.svg" width="50" />
+            <span class="font-semibold text-2xl text-primary">{{
+              $t(`details_sidebar.country`)
+            }}</span>
+            <Button
+              class="h-2rem w-2rem"
+              icon="pi pi-times"
+              outlined
+              rounded
+              type="button"
+              @click="closeCallback"
+            ></Button>
           </div>
+          <Divider />
           <div class="overflow-y-auto w-100">
             <div class="row gap-3 container-fluid mx-auto">
               <div class="d-flex flex-column col-12 sm:col-6 lg:col-3">

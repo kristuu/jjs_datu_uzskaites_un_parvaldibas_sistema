@@ -130,9 +130,9 @@
             class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0"
           >
             <img src="../../../assets/logo-red.svg" width="50" />
-            <span class="font-semibold text-2xl text-primary"
-              >Piekļuves tiesības apskate</span
-            >
+            <span class="font-semibold text-2xl text-primary">{{
+              $t(`details_sidebar.certificate`)
+            }}</span>
             <Button
               class="h-2rem w-2rem"
               icon="pi pi-times"

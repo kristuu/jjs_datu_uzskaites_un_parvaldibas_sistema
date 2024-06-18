@@ -217,13 +217,13 @@ const getMenuItems = () => {
               label: t("navigation.admin.event_categories"),
               icon: "pi pi-sitemap",
               command: () => router.push({ name: "EventCategoryList" }),
-              visible: hasPermission("manage event categories"),
+              visible: hasPermission("manage event_categories"),
             },
             {
               label: t("navigation.admin.event_types"),
               icon: "pi pi-sliders-h",
               command: () => router.push({ name: "EventTypeList" }),
-              visible: hasPermission("manage event types"),
+              visible: hasPermission("manage event_types"),
             },
             {
               label: t("navigation.admin.locations"),
