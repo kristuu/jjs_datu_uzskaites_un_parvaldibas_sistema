@@ -502,7 +502,14 @@ const submitReservation = async () => {
 };
 
 onBeforeMount(async () => {
-  await fetchDataStore.fetchInstance("instructors", route.params.id);
+  await axios
+      .get(`/api/booking_instructor/${route.params.id}`)
+      .then((response) => {
+        fetchDataStore.setInstance(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   fetchAvailabilityCounts();
   fetchDataStore.showComponents();
 });

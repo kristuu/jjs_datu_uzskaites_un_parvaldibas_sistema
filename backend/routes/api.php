@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/booking_instructors', [InstructorController::class, 'getAllInstructors']);
+    Route::get('/booking_instructor/{id}', [InstructorController::class, 'findInstructorById']);
 
     Route::get('/notifications', [NotificationController::class, 'getAllNotifications']);
     Route::patch('/read_notification/{notificationId}', [NotificationController::class, 'markAsRead']);
