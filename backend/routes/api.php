@@ -67,10 +67,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/events/{id}', [EventController::class, 'updateEvent']);
         Route::delete('/events/{id}', [EventController::class, 'destroyEvent']);
 
-        Route::get('/event/categories', [EventCategoryController::class, 'getAllEventCategories']);
-        Route::get('/event/types', [EventTypeController::class, 'getAllEventTypes']);
-        Route::get('/event/locations', [LocationController::class, 'getAllLocations']);
-
     });
 
     Route::group(['middleware' => ['permission:manage instructors|manage certificates']], function () {
