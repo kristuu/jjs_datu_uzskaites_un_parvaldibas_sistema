@@ -238,19 +238,18 @@ class ReservationController extends Controller
     {
         $user = auth()->user();
 
-
         $request->validate([
             'rating' => 'required|min:1|max:5',
         ]);
 
-        $submittedRating = floatval($request->input('rating'));
-        $ratingFilePath = "ratings/instructor_{$instructorId}.json";
+        $submittedRating = floatval($request->rating);
 
         if (!Storage::exists('ratings')) {
             Storage::makeDirectory('ratings');
         }
 
         $ratings = [];
+        $ratingFilePath = "ratings/instructor_{$instructorId}.json";
         if (Storage::exists($ratingFilePath)) {
             $ratings = json_decode(Storage::get($ratingFilePath), true);
         }
@@ -258,11 +257,18 @@ class ReservationController extends Controller
         $ratings[$user->person_code] = $submittedRating;
         Storage::put($ratingFilePath, json_encode($ratings));
 
-        $totalRating = array_sum($ratings);
-        $ratingCount = count($ratings);
-        $newRating = $totalRating / $ratingCount;
-
         $instructor = Instructor::findOrFail($instructorId);
+        $currentRating = $instructor->rating;
+        $uniqueUsersCount = Reservation::where('instructor_id', $instructorId)
+            ->where('status', 'accepted')
+            ->whereHas('instructorAvailability', function ($query) {
+                $query->where('end_time', '<', now());
+            })
+            ->distinct('user_person_code')
+            ->count('user_person_code');
+
+        $newRating = (($currentRating * $uniqueUsersCount) + $submittedRating) / ($uniqueUsersCount + 1);
+
         $instructor->rating = $newRating;
         $instructor->save();
 

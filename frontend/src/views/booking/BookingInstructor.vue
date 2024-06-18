@@ -529,9 +529,9 @@ const fetchRating = async () => {
   }
 };
 
-const rateInstructor = async (value) => {
+const rateInstructor = async (event) => {
   try {
-    const response = await axios.post(`/api/instructors/${instance.value.id}/rate`, {rating: value});
+    const response = await axios.post(`/api/instructors/${instance.value.id}/rate`, {rating: event.value});
     console.log('Rating submitted successfully', response.data);
     isRatingDisabled.value = true;
   } catch (error) {
