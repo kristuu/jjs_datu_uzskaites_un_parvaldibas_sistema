@@ -14,10 +14,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReservationRequest;
 use App\Http\Traits\PaginationTrait;
+use App\Models\Instructor;
 use App\Models\InstructorAvailability as InstructorAvailability;
 use App\Models\Notification;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Mpdf\Mpdf;
 
 class ReservationController extends Controller
@@ -196,5 +198,78 @@ class ReservationController extends Controller
         return response()->streamDownload(function () use ($mpdf) {
             echo $mpdf->Output('', 'S');
         }, $filename);
+    }
+
+    public function hasAtleastOneSuccessfulReservation()
+    {
+        $user = auth()->user();
+
+        $successfulReservationCount = Reservation::where('user_person_code', $user->person_code)
+            ->where('status', 'accepted')
+            ->whereHas('instructorAvailability', function ($query) {
+                $query->where('end_time', '<', now());
+            })
+            ->count();
+
+        if ($successfulReservationCount > 0) {
+            return response()->json(['hasSuccessfulReservation' => true], 200);
+        } else {
+            return response()->json(['hasSuccessfulReservation' => false], 200);
+        }
+    }
+
+    public function getRating(Request $request, $instructorId)
+    {
+        $user = auth()->user();
+        $ratingFilePath = "ratings/instructor_{$instructorId}.json";
+
+        if (Storage::exists($ratingFilePath)) {
+            $ratings = json_decode(Storage::get($ratingFilePath), true);
+            if (isset($ratings[$user->person_code])) {
+                return response()->json(['rating' => $ratings[$user->person_code]], 200);
+            }
+        }
+
+        return response()->json(['rating' => null], 200);
+    }
+
+    public function rateInstructor(Request $request, $instructorId)
+    {
+        $user = auth()->user();
+
+        // Validate the rating input
+        $request->validate([
+            'rating' => 'required|min:1|max:5',
+        ]);
+
+        $submittedRating = floatval($request->input('rating'));
+        $ratingFilePath = "ratings/instructor_{$instructorId}.json";
+
+        // Ensure the ratings directory exists
+        if (!Storage::exists('ratings')) {
+            Storage::makeDirectory('ratings');
+        }
+
+        // Load existing ratings from the JSON file
+        $ratings = [];
+        if (Storage::exists($ratingFilePath)) {
+            $ratings = json_decode(Storage::get($ratingFilePath), true);
+        }
+
+        // Save the rating
+        $ratings[$user->person_code] = $submittedRating;
+        Storage::put($ratingFilePath, json_encode($ratings));
+
+        // Calculate the new rating
+        $totalRating = array_sum($ratings);
+        $ratingCount = count($ratings);
+        $newRating = $totalRating / $ratingCount;
+
+        // Update the instructor's rating
+        $instructor = Instructor::findOrFail($instructorId);
+        $instructor->rating = $newRating;
+        $instructor->save();
+
+        return response()->json(['message' => 'Rating submitted successfully', 'newRating' => $newRating], 200);
     }
 }

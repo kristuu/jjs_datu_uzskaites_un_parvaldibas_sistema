@@ -23,7 +23,7 @@ class Reservation extends Model
         'user_person_code',
         'instructor_id',
         'start_time',
-        'end_time'
+        'end_time',
     ];
 
     protected $casts = [

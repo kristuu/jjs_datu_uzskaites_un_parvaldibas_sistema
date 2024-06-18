@@ -25,7 +25,8 @@ class Instructor extends Model
         'user_person_code',
         'certificate_id',
         'short_description',
-        'description'
+        'description',
+        'rating'
     ];
 
     protected $casts = [
@@ -35,7 +36,7 @@ class Instructor extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_person_code', 'person_code');

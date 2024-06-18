@@ -110,12 +110,14 @@
                   />
                 </div>
               </div>
-              <div class="text-right bottom-0">
+              <div v-if="hasAtleastOneSuccessfulReservation" class="text-right bottom-0">
                 <span class="fw-bold">Novērtē treneri:</span>
                 <Rating
-                    v-model="instance.rating"
+                    v-model="submittedRating"
                     :cancel="false"
+                    :disabled="isRatingDisabled"
                     class="justify-content-end mt-1"
+                    @change="rateInstructor"
                 ></Rating>
               </div>
             </div>
@@ -347,6 +349,10 @@ let selectedTime = ref(null);
 const disabledDates = ref([]);
 const eventDates = ref([]);
 
+let hasAtleastOneSuccessfulReservation = ref(false);
+let isRatingDisabled = ref(false);
+let submittedRating = ref(null);
+
 const selectTime = (time) => {
   availableTimes.value.forEach((t) => (t.selected = false));
   time.selected = true;
@@ -501,6 +507,38 @@ const submitReservation = async () => {
   }
 };
 
+const checkAtleastOneSuccessfulReservation = async () => {
+  await axios.get(`/api/successful_reservations`)
+      .then((response) => {
+        hasAtleastOneSuccessfulReservation.value = !!response.data.hasSuccessfulReservation;
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+}
+
+const fetchRating = async () => {
+  try {
+    const response = await axios.get(`/api/instructors/${instance.value.id}/rating`);
+    if (response.data.rating !== null) {
+      submittedRating.value = response.data.rating;
+      isRatingDisabled.value = true;
+    }
+  } catch (error) {
+    console.error('Error fetching rating', error);
+  }
+};
+
+const rateInstructor = async (value) => {
+  try {
+    const response = await axios.post(`/api/instructors/${instance.value.id}/rate`, {rating: value});
+    console.log('Rating submitted successfully', response.data);
+    isRatingDisabled.value = true;
+  } catch (error) {
+    console.error('Error submitting rating', error);
+  }
+};
+
 onBeforeMount(async () => {
   await axios
       .get(`/api/booking_instructor/${route.params.id}`)
@@ -510,6 +548,8 @@ onBeforeMount(async () => {
       .catch((error) => {
         console.error(error);
       });
+  await checkAtleastOneSuccessfulReservation();
+  await fetchRating();
   fetchAvailabilityCounts();
   fetchDataStore.showComponents();
 });
