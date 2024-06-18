@@ -1,5 +1,5 @@
 <script setup>
-import {computed} from "vue";
+import { computed } from "vue";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import { useErrorStore } from "@/stores/errorStore";
 
@@ -14,117 +14,147 @@ let errorList = computed(() => errorStore.errorList);
 </script>
 
 <template>
-<AdminForm :page-name="$t(`pageHeadings.users.users`)"
-           :short-desc="$t(`pageHeadings.users.create user`)"
-           :model-name="`User`"
-           :database-table="`users`"
-           @update-error-list="handleErrorListUpdate">
-  <form id="createUserForm" class="row gap-3 py-3 text-start needs-validation">
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="name">{{ $t(`table.users.name`) }}</label>
-        <InputText v-model="instance.name"
-                   maxlength="60"
-                   pattern="A:[A-ž\s\-]:multiple"
-                   :invalid="errorList.name"
-                   id="name"/>
-        <InputError :errors="errorList.name" />
+  <AdminForm
+    :database-table="`users`"
+    :model-name="`User`"
+    :page-name="$t(`pageHeadings.users.users`)"
+    :short-desc="$t(`pageHeadings.users.create user`)"
+    @update-error-list="handleErrorListUpdate"
+  >
+    <form
+      id="createUserForm"
+      class="row gap-3 py-3 text-start needs-validation"
+    >
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="name">{{ $t(`table.users.name`) }}</label>
+          <InputText
+            id="name"
+            v-model="instance.name"
+            :invalid="errorList.name"
+            maxlength="60"
+            pattern="A:[A-ž\s\-]:multiple"
+          />
+          <InputError :errors="errorList.name" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="surname">{{ $t(`table.users.surname`) }}</label>
-        <InputText v-model="instance.surname"
-                   maxlength="60"
-                   v-maska data-maska="A A" data-maska-tokens="A:[A-ž\s\-]:multiple"
-                   :invalid="errorList.surname"
-                   id="surname"/>
-        <InputError :errors="errorList.surname" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="surname">{{ $t(`table.users.surname`) }}</label>
+          <InputText
+            id="surname"
+            v-model="instance.surname"
+            v-maska
+            :invalid="errorList.surname"
+            data-maska="A A"
+            data-maska-tokens="A:[A-ž\s\-]:multiple"
+            maxlength="60"
+          />
+          <InputError :errors="errorList.surname" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="person_code">{{ $t(`table.users.person_code`) }}</label>
-        <InputMask v-model="instance.person_code"
-                   mask="999999-99999"
-                   :invalid="errorList.person_code"
-                   id="person_code"
-                   unmask />
-        <InputError :errors="errorList.person_code" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="person_code">{{ $t(`table.users.person_code`) }}</label>
+          <InputMask
+            id="person_code"
+            v-model="instance.person_code"
+            :invalid="errorList.person_code"
+            mask="999999-99999"
+            unmask
+          />
+          <InputError :errors="errorList.person_code" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="birthdate">{{ $t(`table.users.birthdate`) }}</label>
-        <Calendar v-model="instance.birthdate"
-                  :invalid="errorList.birthdate"
-                  id="birthdate"
-                  dateFormat="dd.mm.yy"
-                  :maxDate="new Date()"
-                  panelClass="min-w-min"/>
-        <InputError :errors="errorList.birthdate" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="birthdate">{{ $t(`table.users.birthdate`) }}</label>
+          <Calendar
+            id="birthdate"
+            v-model="instance.birthdate"
+            :invalid="errorList.birthdate"
+            :maxDate="new Date()"
+            dateFormat="dd.mm.yy"
+            panelClass="min-w-min"
+          />
+          <InputError :errors="errorList.birthdate" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="email">{{ $t(`table.users.email`) }}</label>
-        <InputText v-model="instance.email"
-                  :invalid="errorList.email"
-                  id="email"/>
-        <InputError :errors="errorList.email" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="email">{{ $t(`table.users.email`) }}</label>
+          <InputText
+            id="email"
+            v-model="instance.email"
+            :invalid="errorList.email"
+          />
+          <InputError :errors="errorList.email" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="phone">{{ $t(`table.users.phone`) }}</label>
-        <vue-tel-input v-model="instance.phone"
-                       :auto-format="true"
-                       autocomplete="off"
-                       mode="international">
-          <template #input="{ props, actions, value, update }">
-            <InputText ref="phone" v-on="{ ...actions }" v-bind="props"
-                       :value="value" @input="update($event.target.value)"
-                       :invalid="errorList.phone?.length > 0"/>
-          </template>
-        </vue-tel-input>
-        <InputError :errors="errorList.phone" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="phone">{{ $t(`table.users.phone`) }}</label>
+          <vue-tel-input
+            v-model="instance.phone"
+            :auto-format="true"
+            autocomplete="off"
+            mode="international"
+          >
+            <template #input="{ props, actions, value, update }">
+              <InputText
+                ref="phone"
+                :invalid="errorList.phone?.length > 0"
+                :value="value"
+                v-bind="props"
+                @input="update($event.target.value)"
+                v-on="{ ...actions }"
+              />
+            </template>
+          </vue-tel-input>
+          <InputError :errors="errorList.phone" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="iban_code">{{ $t(`table.users.bank`) }}</label>
-        <InputMask v-model="instance.iban_code"
-                   :invalid="errorList.iban_code?.length > 0"
-                   id="iban_code"
-                   mask="aa*************?******************"
-                   placeholder="Bankas konts" />
-        <InputError :errors="errorList.iban_code" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="iban_code">{{ $t(`fields.user.iban_code`) }}</label>
+          <InputMask
+            id="iban_code"
+            v-model="instance.iban_code"
+            :invalid="errorList.iban_code?.length > 0"
+            mask="aa*************?******************"
+            placeholder="Bankas konts"
+          />
+          <InputError :errors="errorList.iban_code" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="password">Parole</label>
-        <Password v-model="instance.password"
-               :invalid="errorList.password?.length > 0"
-               id="password"
-               inputStyle="width: 100%" toggleMask />
-        <InputError :errors="errorList.password" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="password">Parole</label>
+          <Password
+            id="password"
+            v-model="instance.password"
+            :invalid="errorList.password?.length > 0"
+            inputStyle="width: 100%"
+            toggleMask
+          />
+          <InputError :errors="errorList.password" />
+        </div>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="flex flex-column gap-1">
-        <label for="password_confirmation">Paroles apstiprinājums</label>
-        <Password v-model="instance.password_confirmation"
-                  :invalid="errorList.password_confirmation?.length > 0"
-                  id="password_confirmation"
-                  inputStyle="width: 100%" toggleMask />
-        <InputError :errors="errorList.password_confirmation" />
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <label for="password_confirmation">Paroles apstiprinājums</label>
+          <Password
+            id="password_confirmation"
+            v-model="instance.password_confirmation"
+            :invalid="errorList.password_confirmation?.length > 0"
+            inputStyle="width: 100%"
+            toggleMask
+          />
+          <InputError :errors="errorList.password_confirmation" />
+        </div>
       </div>
-    </div>
-  </form>
-</AdminForm>
+    </form>
+  </AdminForm>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

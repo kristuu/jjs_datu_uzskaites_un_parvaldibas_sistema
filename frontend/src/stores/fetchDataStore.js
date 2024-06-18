@@ -111,7 +111,7 @@ export const useFetchDataStore = defineStore({
           `/api/${databaseTable}/${instanceId}`,
           this.instance
         );
-        console.log(`Server response when updating: ` + response);
+        console.log(`Server response when updating: `, response);
         this.resetInstance();
         await router.push(`/admin/${databaseTable}`);
       } catch (error) {

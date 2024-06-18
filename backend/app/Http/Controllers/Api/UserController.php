@@ -65,6 +65,15 @@ class UserController extends Controller
     public function updateUser(UserRequest $request, string $person_code)
     {
         $user = User::find($person_code);
+
+        $validated = $request->validated();
+
+        if ($user) {
+            $user->update($validated);
+        } else {
+            return response()->json(['message' => 'User was not found', 404]);
+        }
+
         $roles = array_map(function ($role) {
             return $role["userHas"] ? $role["id"] : null;
         }, $request->all_roles);

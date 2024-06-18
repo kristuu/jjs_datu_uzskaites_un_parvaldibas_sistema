@@ -191,5 +191,9 @@ return [
         'regions' => [
             'name' => 'Nosaukums',
         ],
+        'reason' => 'Iemesls',
+        'start_time' => 'Sākuma laiks',
+        'end_time' => 'Beigu laiks',
+        'price' => 'Cena',
     ],
 ];

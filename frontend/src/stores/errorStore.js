@@ -20,7 +20,11 @@ export const useErrorStore = defineStore({
       this.errorMessage = payload;
     },
     setErrorList(payload) {
-      this.errorList = payload.errors;
+      if (payload.errors) {
+        this.errorList = payload.errors;
+      } else {
+        this.errorList = payload;
+      }
     },
     resetMainLoginError() {
       this.mainLoginError = "";
