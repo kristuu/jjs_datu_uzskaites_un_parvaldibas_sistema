@@ -508,7 +508,7 @@ const submitReservation = async () => {
 };
 
 const checkAtleastOneSuccessfulReservation = async () => {
-  await axios.get(`/api/successful_reservations`)
+  await axios.get(`/api/successful_reservations/${instance.value.id}`)
       .then((response) => {
         hasAtleastOneSuccessfulReservation.value = !!response.data.hasSuccessfulReservation;
       })
