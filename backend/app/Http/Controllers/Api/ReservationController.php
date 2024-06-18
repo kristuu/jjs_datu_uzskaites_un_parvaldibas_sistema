@@ -236,6 +236,7 @@ class ReservationController extends Controller
     public function rateInstructor(Request $request, $instructorId)
     {
         $user = auth()->user();
+        
 
         $request->validate([
             'rating' => 'required|min:1|max:5',

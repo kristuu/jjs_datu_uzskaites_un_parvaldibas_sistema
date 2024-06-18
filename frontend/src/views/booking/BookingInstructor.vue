@@ -233,7 +233,7 @@
               />
             </div>
             <Divider/>
-            <div style="max-height: 50vh; overflow: hidden auto;">
+            <div style="max-height: 50vh; overflow: hidden auto">
               {{ instance.description }}
             </div>
           </div>
