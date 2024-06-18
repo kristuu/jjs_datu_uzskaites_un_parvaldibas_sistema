@@ -93,7 +93,7 @@
                         ></div>
                         <div class="fw-bold text-black">PAR MANI</div>
                         <div>
-                          {{ instructor.description }}
+                          {{ instructor.short_description }}
                         </div>
                       </div>
                     </div>
