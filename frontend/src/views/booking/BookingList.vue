@@ -124,6 +124,7 @@
 <script setup>
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
+import axios from "@/services/axios";
 
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import router from "@/router/router";
@@ -152,15 +153,17 @@ const initFilters = () => {
 
 initFilters();
 
-const onRowSelect = async (event) => {
-  await fetchDataStore.fetchInstance("instructors", event.data.id);
-  visible.value = true;
-};
-
 let visible = ref(false);
 
 onBeforeMount(async () => {
-  await fetchDataStore.fetchDatabaseData("instructors");
+  await axios
+    .get(`/api/booking_instructors`)
+    .then((response) => {
+      fetchDataStore.setAllInstances(response.data.instances);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 });
 
 onMounted(() => {

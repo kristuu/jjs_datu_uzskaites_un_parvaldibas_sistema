@@ -77,6 +77,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("/certificates_categories", [CategoryController::class, "getAllCategories"]);
     });
 
+    Route::get('/booking_instructors', [InstructorController::class, 'getAllInstructors']);
+
     Route::get('/notifications', [NotificationController::class, 'getAllNotifications']);
     Route::patch('/read_notification/{notificationId}', [NotificationController::class, 'markAsRead']);
     Route::patch('/unread_notification/{notificationId}', [NotificationController::class, 'markAsUnread']);
