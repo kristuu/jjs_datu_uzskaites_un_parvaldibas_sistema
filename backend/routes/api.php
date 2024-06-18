@@ -97,7 +97,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservations', [ReservationController::class, 'getAllReservations']);
     Route::post('/reservations', [ReservationController::class, 'storeReservation']);
     Route::get('/reservations/{id}', [ReservationController::class, 'findReservationById']);
-    Route::patch('/cancel-reservation/{reservationId}', [ReservationController::class, 'cancelReservation']);
+    Route::patch('/cancel_reservation/{reservationId}', [ReservationController::class, 'cancelReservation']);
+    route::patch('/accept_reservation/{reservationId}', [ReservationController::class, 'acceptReservation']);
+    Route::patch('/deny_reservation/{reservationId}', [ReservationController::class, 'denyReservation']);
 
     Route::get('/getAllUserReservations', [HomeController::class, 'getAllUserReservations']);
     Route::get('/getAllInstructorReservations', [HomeController::class, 'getAllInstructorReservations']);

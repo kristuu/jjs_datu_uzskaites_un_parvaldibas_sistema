@@ -167,7 +167,7 @@
 
   <AllInstructorsReservationsDialog
     :isLoading="isFetchingAllReservations"
-    :reservations="allInstructorsReservations"
+    :reservations="allReservations"
     :visible="allInstructorsReservationsVisible"
     @update:visible="allInstructorsReservationsVisible = $event"
     @close-all-reservations-open-cancel="
@@ -194,7 +194,14 @@
       <div class="grid mt-2">
         <div class="col-12">
           <div class="bg-primary rounded text-center shadow">
-            <h1 class="py-4 m-0">REZERVĀCIJAS PIETEIKUMA ATCELŠANA</h1>
+            <h1 class="py-4 m-0">
+              REZERVĀCIJAS PIETEIKUMA
+              {{
+                chosenCancelReservation.status === "denied"
+                  ? "NORAIDĪŠANA"
+                  : "ATCELŠANA"
+              }}
+            </h1>
           </div>
         </div>
         <div class="col-12">
@@ -206,6 +213,17 @@
                   {{
                     `${chosenCancelReservation.instructor?.user.name} ${chosenCancelReservation.instructor?.user.surname} - ${chosenCancelReservation.instructor?.certificate.category.name}`
                   }}
+                </div>
+                <div
+                  v-if="chosenCancelReservation.status === 'denied'"
+                  class="mt-2"
+                >
+                  <div class="fw-bold">Klients</div>
+                  <div>
+                    {{
+                      `${chosenCancelReservation.user?.name} ${chosenCancelReservation.user?.surname}`
+                    }}
+                  </div>
                 </div>
               </div>
               <div class="text-end">
@@ -233,8 +251,14 @@
             <div style="max-height: 50vh; overflow: hidden auto">
               <div class="mb-3">
                 <p class="m-0 mb-2">
-                  Lai atceltu izvēlēto rezervācijas pieteikumu, nepieciešams
-                  ievadīt tā atcelšanas iemeslu:
+                  Lai
+                  {{
+                    chosenCancelReservation.status === "denied"
+                      ? "noraidītu"
+                      : "atceltu"
+                  }}
+                  izvēlēto rezervācijas pieteikumu, nepieciešams ievadīt
+                  iemeslu:
                 </p>
                 <div class="relative">
                   <Textarea
@@ -253,9 +277,19 @@
             </div>
             <div class="text-end">
               <Button
-                :label="`Apstiprināt atcelšanu`.toLocaleUpperCase()"
+                :label="
+                  `Apstiprināt ${
+                    chosenCancelReservation.status === 'denied'
+                      ? 'noraidīšanu'
+                      : 'atcelšanu'
+                  }`.toLocaleUpperCase()
+                "
                 class="mt-4"
-                @click="submitReservationCancellation"
+                @click="
+                  chosenCancelReservation.status === 'denied'
+                    ? submitReservationDenial()
+                    : submitReservationCancellation()
+                "
               />
             </div>
           </div>
@@ -303,7 +337,7 @@ const allReservations = ref([]);
 const isFetchingAllReservations = ref(false);
 
 let cancelConfirmationVisible = ref(false);
-let chosenCancelReservation = ref({ reason: "" });
+let chosenCancelReservation = ref({ reason: "", status: "cancelled" });
 let cancelReservationCharactersRemaining = computed(() => {
   return `${255 - chosenCancelReservation.value.reason.length}/255`;
 });
@@ -428,24 +462,44 @@ const fetchInstructorReservationData = async () => {
 };
 
 const submitReservationCancellation = async () => {
-  await axios
-    .patch(`/api/cancel-reservation/${chosenCancelReservation.value.id}`, {
-      reason: chosenCancelReservation.value.reason,
-    })
-    .then((response) => {
-      console.log(response);
-      cancelConfirmationVisible.value = false;
-    })
-    .catch((error) => {
-      console.log(error.response);
-      console.log(chosenCancelReservation.value.reason);
-      if (error.response.status === 422) {
-        errorStore.setErrorList(error.response.data);
-        console.log("inside");
-      } else {
-        console.error(error);
+  try {
+    const response = await axios.patch(
+      `/api/cancel_reservation/${chosenCancelReservation.value.id}`,
+      {
+        reason: chosenCancelReservation.value.reason,
       }
-    });
+    );
+    console.log("Reservation cancelled:", response);
+    cancelConfirmationVisible.value = false;
+  } catch (error) {
+    console.log(error.response);
+    console.log(chosenCancelReservation.value.reason);
+    if (error.response.status === 422) {
+      errorStore.setErrorList(error.response.data);
+    } else {
+      console.error(error);
+    }
+  }
+};
+
+const submitReservationDenial = async () => {
+  try {
+    const response = await axios.patch(
+      `/api/deny_reservation/${chosenCancelReservation.value.id}`,
+      {
+        reason: chosenCancelReservation.value.reason,
+      }
+    );
+    console.log("Reservation denied:", response);
+    cancelConfirmationVisible.value = false;
+  } catch (error) {
+    console.error(error.response);
+    if (error.response.status === 422) {
+      errorStore.setErrorList(error.response.data);
+    } else {
+      console.error(error);
+    }
+  }
 };
 
 onMounted(() => {

@@ -6,7 +6,7 @@
       <h2 class="m-0 text-primary text-center md:text-left">
         {{ $t("your_reservations").toLocaleUpperCase() }}
       </h2>
-      <Button
+      <Butcton
         class="mt-2 md:m-0"
         icon="bi bi-plus-lg"
         outlined

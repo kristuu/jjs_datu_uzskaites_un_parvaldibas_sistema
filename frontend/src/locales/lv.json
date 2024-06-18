@@ -102,6 +102,15 @@
       "stables": "Staļļi",
       "competitions": "Sacensības",
       "horse_capacity": "Staļļu ietiplība (zirgu skaits)"
+    },
+    "event": {
+      "name": "Nosaukums",
+      "start": "Sākuma laiks",
+      "end": "Beigu laiks",
+      "type": "Tips",
+      "category": "Kategorija",
+      "location": "Galvenā norises vieta",
+      "comment": "Komentārs"
     }
   },
   "check_email": "Lūdzu, pārliecinieties, ka ievadītā e-pasta adrese ir pareiza.",
@@ -122,11 +131,11 @@
       "total": "Kopā {total} tiesība (-s)"
     },
     "roles": {
-      "roles": "Lomas",
-      "manage roles": "Lomu pārvaldība",
-      "create role": "Lomu pievienošana",
-      "edit role": "Lomu rediģēšana",
-      "total": "Kopā {total} loma (-s)"
+      "roles": "Piekļuves lomas",
+      "manage roles": "Piekļuves lomu pārvaldība",
+      "create role": "Piekļuves lomas pievienošana",
+      "edit role": "Piekļuves lomas rediģēšana",
+      "total": "Kopā {total} piekļuves loma (-s)"
     },
     "countries": {
       "countries": "Valstis",
@@ -162,6 +171,27 @@
       "create category": "Kategorijas pievienošana",
       "edit category": "Kategorijas rediģēšana",
       "total": "Kopā {total} kategorija (-as)"
+    },
+    "locations": {
+      "locations": "Atrašanās vietas",
+      "manage locations": "Atrašanās vietu pārvaldība",
+      "create location": "Atrašanās vietas pievienošana",
+      "edit location": "Atrašanās vietas rediģēšana",
+      "total": "Kopā {total} atrašanās vieta (-as)"
+    },
+    "events": {
+      "events": "Pasākumi",
+      "manage events": "Pasākumu pārvaldība",
+      "create event": "Pasākuma pievienošana",
+      "edit event": "Pasākuma rediģēšana",
+      "total": "Kopā {total} pasākums (-i)"
+    },
+    "eventTypes": {
+      "events": "Pasākumi",
+      "manage events": "Pasākumu pārvaldība",
+      "create event": "Pasākuma pievienošana",
+      "edit event": "Pasākuma rediģēšana",
+      "total": "Kopā {total} pasākums (-i)"
     }
   },
   "table": {
@@ -229,6 +259,13 @@
       "status": "Statuss",
       "time": "Treniņa laiks",
       "user_names": "Vārds, uzvārds"
+    },
+    "events": {
+      "name": "Nosaukums",
+      "start": "Sākums",
+      "end": "Beigas",
+      "category": "Kategorija",
+      "type": "Tips"
     },
     "created_at": "Izveidots",
     "updated_at": "Atjaunināts",

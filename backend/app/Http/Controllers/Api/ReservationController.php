@@ -99,7 +99,7 @@ class ReservationController extends Controller
         $longMessage = view('reservation.reservation_cancelled', [
             'reservation' => $reservation,
             'reason' => $request->reason,
-            'toInstructor' => !($reservation->instructor->user->person_code === $user->person_code) // Pārbaude, vai paziņojums nosūtāms trenerim vai parastam klientam
+            'toInstructor' => true
         ])->render();
 
         Notification::create([
@@ -109,6 +109,67 @@ class ReservationController extends Controller
         ]);
 
         return response()->json(['message' => 'Reservation cancelled and notification sent.']);
+    }
+
+    public function acceptReservation(Request $request, $reservationId)
+    {
+        $user = auth()->user();
+
+        $reservation = Reservation::findOrFail($reservationId);
+        $reservation->load('instructor.user');
+
+        if (!$reservation->instructor->user_person_code === $user->person_code) {
+            return response()->json(['message' => 'Reservation instructors person code does not equal requests users person code'], 403);
+        }
+
+        $reservation->status = 'accepted';
+        $reservation->save();
+
+        $longMessage = view('reservation.reservation_accepted', [
+            'reservation' => $reservation,
+            'toInstructor' => false
+        ])->render();
+
+        Notification::create([
+            'user_person_code' => $reservation->user_person_code,
+            'short_message' => "Apstiprināts rezervācijas pieteikums",
+            'long_message' => $longMessage,
+        ]);
+
+        return response()->json(['message' => 'Reservation accepted and notification sent.']);
+    }
+
+    public function denyReservation(Request $request, $reservationId)
+    {
+        $user = auth()->user();
+
+        $request->validate([
+            'reason' => ['required', 'string', 'max:255', 'min: 5'],
+        ]);
+
+        $reservation = Reservation::findOrFail($reservationId);
+        $reservation->load('instructor.user');
+
+        if (!$reservation->instructor->user_person_code === $user->person_code) {
+            return response()->json(['message' => 'Reservation instructors person code does not equal requests users person code'], 403);
+        }
+
+        $reservation->status = 'denied';
+        $reservation->save();
+
+        $longMessage = view('reservation.reservation_denied', [
+            'reservation' => $reservation,
+            'reason' => $request->reason,
+            'toInstructor' => false
+        ])->render();
+
+        Notification::create([
+            'user_person_code' => $reservation->user_person_code,
+            'short_message' => "Noraidīts rezervācijas pieteikums",
+            'long_message' => $longMessage,
+        ]);
+
+        return response()->json(['message' => 'Reservation denied and notification sent.']);
     }
 
     public function generatePdf(Request $request, $reservationId)

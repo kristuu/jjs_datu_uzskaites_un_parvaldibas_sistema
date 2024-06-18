@@ -128,7 +128,7 @@ import Tag from "primevue/tag";
 import Button from "primevue/button";
 import { useI18n } from "vue-i18n";
 import axios from "@/services/axios";
-import moment from "moment";
+import { format, parseISO } from "date-fns";
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 
 const { t } = useI18n();
@@ -161,15 +161,18 @@ const statusText = computed(() => {
 });
 
 const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("lv-LV");
+  const date = parseISO(dateString);
+  return format(date, "dd.MM.yyyy");
 };
 
 const formatTimeRange = (startTimeString, endTimeString) => {
-  const startTime = moment(startTimeString).format("HH.mm");
-  const endTime = moment(endTimeString).format("HH.mm");
+  const startTime = parseISO(startTimeString);
+  const endTime = parseISO(endTimeString);
 
-  return `${startTime} - ${endTime}`;
+  const formattedStartTime = format(startTime, "HH.mm");
+  const formattedEndTime = format(endTime, "HH.mm");
+
+  return `${formattedStartTime} - ${formattedEndTime}`;
 };
 
 const isEligibleForPDF = (reservation) => {

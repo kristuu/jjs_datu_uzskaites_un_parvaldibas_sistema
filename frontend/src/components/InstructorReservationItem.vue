@@ -70,15 +70,27 @@
             size="small"
             @click="generatePDF(reservation)"
           />
-          <Dropdown
+          <Button
             v-if="
               !['accepted', 'denied', 'cancelled'].includes(reservation.status)
             "
-            :modelValue="reservation.status"
-            :options="statusOptions"
-            optionLabel="label"
-            optionValue="value"
-            @update:modelValue="updateStatus"
+            class="button-auto-width"
+            icon="bi bi-check-lg"
+            severity="success"
+            size="small"
+            @click="acceptReservation"
+          />
+          <Button
+            v-if="
+              !['accepted', 'denied', 'cancelled'].includes(reservation.status)
+            "
+            class="button-auto-width"
+            icon="bi bi-x-lg"
+            outlined
+            severity="danger"
+            size="small"
+            text
+            @click="denyReservation"
           />
         </div>
       </div>
@@ -91,7 +103,6 @@ import { computed } from "vue";
 import Skeleton from "primevue/skeleton";
 import Tag from "primevue/tag";
 import Button from "primevue/button";
-import Dropdown from "primevue/dropdown";
 import { useI18n } from "vue-i18n";
 import axios from "@/services/axios";
 import moment from "moment";
@@ -162,35 +173,22 @@ const generatePDF = async (reservation) => {
   }
 };
 
-const updateStatus = async (newStatus) => {
+const acceptReservation = async () => {
   try {
-    const response = await axios.put(
-      `/api/reservation/${props.reservation.id}/status`,
-      {
-        status: newStatus,
-      }
+    const response = await axios.patch(
+      `/api/accept_reservation/${props.reservation.id}`
     );
-    props.reservation.status = newStatus;
+    props.reservation.status = "accepted";
   } catch (error) {
     console.error("Error updating status:", error);
   }
 };
 
-const statusOptions = [
-  {
-    label: t("reservations.submitted").toLocaleUpperCase(),
-    value: "submitted",
-  },
-  { label: t("reservations.accepted").toLocaleUpperCase(), value: "accepted" },
-  { label: t("reservations.denied").toLocaleUpperCase(), value: "denied" },
-  {
-    label: t("reservations.cancelled").toLocaleUpperCase(),
-    value: "cancelled",
-  },
-];
-
-const emitCancel = async (event, reservation) => {
-  emit("close-all-reservations-open-cancel", reservation);
+const denyReservation = () => {
+  emit("close-all-reservations-open-cancel", {
+    ...props.reservation,
+    status: "denied",
+  });
 };
 </script>
 

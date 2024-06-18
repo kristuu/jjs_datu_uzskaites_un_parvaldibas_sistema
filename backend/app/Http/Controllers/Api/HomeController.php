@@ -81,6 +81,7 @@ class HomeController extends Controller
         $instructorIds = $user->instructor->pluck('id')->toArray();
 
         $reservations = Reservation::with([
+            'user',
             'instructor.user',
             'instructor.certificate.category',
             'instructorAvailability'

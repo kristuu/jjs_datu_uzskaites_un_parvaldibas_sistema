@@ -1,7 +1,407 @@
 {
-  "AdminDashboard": [{"label": "Admin"}, {"label": "Panelis"}],
-  "UserList": [{"label": "Admin", "route": "/admin"}, {"label": "Lietotāji"}, {"label": "Saraksts"}],
-  "CreateUser": [{"label": "Admin", "route": "/admin"}, {"label": "Lietotāji", "route": "/admin/users"}, {"label": "Pievienošana", "route": "/create-user"}],
-  "EditUser": [{"label": "Admin", "route": "/admin"}, {"label": "Lietotāji", "route": "/admin/users"}, {"label": "Rediģēšana"}],
-  "BookingList": [{"label":  "Rezervācijas"}, {"label": "Jauna rezervācija"}]
+  "AdminDashboard": [
+    {
+      "label": "Admin"
+    },
+    {
+      "label": "Panelis"
+    }
+  ],
+  "UserList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Lietotāji"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateUser": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Lietotāji",
+      "route": "/admin/users"
+    },
+    {
+      "label": "Pievienošana",
+      "route": "/create-user"
+    }
+  ],
+  "EditUser": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Lietotāji",
+      "route": "/admin/users"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "PermissionList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Piekļuves tiesības"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreatePermission": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Piekļuves tiesības",
+      "route": "/admin/permissions"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditPermission": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Piekļuves tiesības",
+      "route": "/admin/permissions"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "RoleList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Piekļuves lomas"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateRole": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Piekļuves lomas",
+      "route": "/admin/roles"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditRole": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Piekļuves lomas",
+      "route": "/admin/roles"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "CountryList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Valstis"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateCountry": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Valstis",
+      "route": "/admin/countries"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditCountry": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Valstis",
+      "route": "/admin/countries"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "CityList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Pilsētas"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateCity": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Pilsētas",
+      "route": "/admin/cities"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditCity": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Pilsētas",
+      "route": "/admin/cities"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "InstructorList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Treneri"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateInstructor": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Treneri",
+      "route": "/admin/instructors"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditInstructor": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Treneri",
+      "route": "/admin/instructors"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "CertificateList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Sertifikāti"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateCertificate": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Sertifikāti",
+      "route": "/admin/certificates"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditCertificate": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Sertifikāti",
+      "route": "/admin/certificates"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "CategoryList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Kategorijas"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateCategory": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Kategorijas",
+      "route": "/admin/categories"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditCategory": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Kategorijas",
+      "route": "/admin/categories"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "EventList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Pasākumi"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateEvent": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Pasākumi",
+      "route": "/admin/events"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditEvent": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Pasākumi",
+      "route": "/admin/events"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "LocationList": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Atrašanās vietas"
+    },
+    {
+      "label": "Saraksts"
+    }
+  ],
+  "CreateLocation": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Atrašanās vietas",
+      "route": "/admin/locations"
+    },
+    {
+      "label": "Pievienošana"
+    }
+  ],
+  "EditLocation": [
+    {
+      "label": "Admin",
+      "route": "/admin"
+    },
+    {
+      "label": "Atrašanās vietas",
+      "route": "/admin/locations"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ],
+  "BookingList": [
+    {
+      "label": "Rezervācijas"
+    },
+    {
+      "label": "Jauna rezervācija"
+    }
+  ],
+  "InstructorProfile": [
+    {
+      "label": "Trenera profils"
+    },
+    {
+      "label": "Rediģēšana"
+    }
+  ]
 }
