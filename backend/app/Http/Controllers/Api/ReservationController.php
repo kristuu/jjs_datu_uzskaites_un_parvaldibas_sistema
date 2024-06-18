@@ -200,11 +200,12 @@ class ReservationController extends Controller
         }, $filename);
     }
 
-    public function hasAtleastOneSuccessfulReservation()
+    public function hasAtleastOneSuccessfulReservation($instructorId)
     {
         $user = auth()->user();
 
         $successfulReservationCount = Reservation::where('user_person_code', $user->person_code)
+            ->where('instructor_id', $instructorId)
             ->where('status', 'accepted')
             ->whereHas('instructorAvailability', function ($query) {
                 $query->where('end_time', '<', now());
@@ -236,7 +237,7 @@ class ReservationController extends Controller
     public function rateInstructor(Request $request, $instructorId)
     {
         $user = auth()->user();
-        
+
 
         $request->validate([
             'rating' => 'required|min:1|max:5',

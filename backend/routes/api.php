@@ -100,8 +100,8 @@ Route::middleware('auth:sanctum')->group(function () {
     route::patch('/accept_reservation/{reservationId}', [ReservationController::class, 'acceptReservation']);
     Route::patch('/deny_reservation/{reservationId}', [ReservationController::class, 'denyReservation']);
 
-    Route::get('/successful_reservations', [ReservationController::class, 'hasAtleastOneSuccessfulReservation']);
-    
+    Route::get('/successful_reservations/{instructorId}', [ReservationController::class, 'hasAtleastOneSuccessfulReservation']);
+
     Route::get('/instructors/{instructorId}/rating', [ReservationController::class, 'getRating']);
     Route::post('/instructors/{instructorId}/rate', [ReservationController::class, 'rateInstructor']);
 
