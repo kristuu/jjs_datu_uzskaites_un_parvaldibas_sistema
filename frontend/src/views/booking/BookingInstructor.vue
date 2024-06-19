@@ -301,7 +301,7 @@
     'bg-white text-primary': !time.selected && !time.reserved
   }"
                       :disabled="time.reserved"
-                      :label="`${time.label} (ilgums ${time.duration})`"
+                      :label="`${time.label} (ilgums ${time.duration}) - ${time.price} EUR`"
                       :severity="time.reserved ? 'secondary' : ''"
                       class="w-full"
                       @click="selectTime(time)"
@@ -422,9 +422,10 @@ const fetchReservationsForDate = async (date) => {
       id: availability.id,
       label: moment(availability.start_time).format("HH.mm"),
       duration: formatDuration(availability.start_time, availability.end_time),
+      price: availability.price,
       selected: false,
       reserved: availability.reserved,
-      startDate: availability.start_time // Make sure startDate is included
+      startDate: availability.start_time
     }));
   } catch (error) {
     console.error("Error fetching availabilities:", error);

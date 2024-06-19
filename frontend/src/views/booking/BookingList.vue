@@ -6,10 +6,10 @@
           class="flex flex-column lg:flex-row align-items-baseline text-primary lg:text-white mb-3"
         >
           <h1 class="fw-bold mb-0">Treniņa rezervācija</h1>
-          <span class="ml-2"
-            ><i class="bi bi-caret-right-fill" />Pašlaik pieejami
-            {{ fetchDataStore.totalInstanceCount }} treneri</span
-          >
+          <span class="ml-2">
+            <i class="bi bi-caret-right-fill" />
+            Pašlaik pieejami {{ fetchDataStore.totalInstanceCount }} treneri
+          </span>
         </div>
         <div class="grid">
           <div class="col-12">
@@ -24,10 +24,21 @@
               </p>
             </div>
           </div>
+          <div class="col-12 flex justify-content-end">
+            <Dropdown
+              v-model="sortKey"
+              :options="sortOptions"
+              optionLabel="label"
+              placeholder="Kārtot pēc..."
+              @change="onSortChange"
+            />
+          </div>
           <DataView
-            :layout="'grid'"
-            :value="fetchDataStore.allInstances"
+            :sortField="sortField"
+            :sortOrder="sortOrder"
+            :value="sortedInstances"
             class="col-12 bg-transparent"
+            layout="grid"
           >
             <template v-if="!fetchDataStore.isFetching" #grid="slotProps">
               <div class="grid">
@@ -92,9 +103,7 @@
                           class="flex flex-row justify-content-between align-items-start gap-2"
                         ></div>
                         <div class="fw-bold text-black">PAR MANI</div>
-                        <div>
-                          {{ instructor.short_description }}
-                        </div>
+                        <div>{{ instructor.short_description }}</div>
                       </div>
                     </div>
                     <div class="text-right bottom-0">
@@ -124,8 +133,8 @@
 <script setup>
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
+import Dropdown from "primevue/dropdown";
 import axios from "@/services/axios";
-
 import { useFetchDataStore } from "@/stores/fetchDataStore";
 import router from "@/router/router";
 
@@ -137,6 +146,16 @@ const totalInstances = computed(() => fetchDataStore.totalInstanceCount);
 
 const globalFilterFields = ref(["id", "name"]);
 const filters = ref();
+const sortOptions = ref([
+  { label: "Atiestatīt", value: "" },
+  { label: "Novērtējums (dilstoši)", value: "!rating" },
+  { label: "Novērtējums (augoši)", value: "rating" },
+  { label: "Darba stāžs (augoši)", value: "!job_start_date" },
+  { label: "Darba stāžs (dilstoši)", value: "job_start_date" },
+]);
+const sortKey = ref();
+const sortOrder = ref();
+const sortField = ref();
 
 const initFilters = () => {
   const defaultTextContainsFilter = () => ({
@@ -153,13 +172,12 @@ const initFilters = () => {
 
 initFilters();
 
-let visible = ref(false);
-
 onBeforeMount(async () => {
   await axios
     .get(`/api/booking_instructors`)
     .then((response) => {
       fetchDataStore.setAllInstances(response.data.instances);
+      fetchDataStore.setTotalInstanceCount(response.data.total);
     })
     .catch((error) => {
       console.error(error);
@@ -169,6 +187,40 @@ onBeforeMount(async () => {
 onMounted(() => {
   fetchDataStore.showComponents();
 });
+
+const sortedInstances = computed(() => {
+  if (!sortField.value) return fetchDataStore.allInstances;
+
+  return [...fetchDataStore.allInstances].sort((a, b) => {
+    if (sortField.value === "rating" || sortField.value === "job_start_date") {
+      let compareA = a[sortField.value];
+      let compareB = b[sortField.value];
+
+      if (sortField.value === "job_start_date") {
+        compareA = new Date(compareA);
+        compareB = new Date(compareB);
+      }
+
+      if (sortOrder.value === 1) {
+        return compareA > compareB ? 1 : -1;
+      } else {
+        return compareA < compareB ? 1 : -1;
+      }
+    }
+    return 0;
+  });
+});
+
+const onSortChange = (event) => {
+  const value = event.value.value; // Fix here
+  if (value.indexOf("!") === 0) {
+    sortOrder.value = -1;
+    sortField.value = value.substring(1, value.length);
+  } else {
+    sortOrder.value = 1;
+    sortField.value = value;
+  }
+};
 </script>
 
 <style scoped>
