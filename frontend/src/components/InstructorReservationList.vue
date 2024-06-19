@@ -68,6 +68,7 @@
       </div>
       <InstructorReservationItem
         v-for="(item, index) in reservations"
+        v-if="!fetchDataStore.isFetching"
         :key="index"
         :index="index"
         :isLoading="fetchDataStore.isFetching"

@@ -71,6 +71,7 @@
       </div>
       <ReservationItem
         v-for="(item, index) in reservations"
+        v-if="!fetchDataStore.isFetching"
         :key="index"
         :index="index"
         :reservation="item"

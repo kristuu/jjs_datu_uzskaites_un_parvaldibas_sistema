@@ -4,14 +4,14 @@
     :options="proportionsChartOptions"
     type="pie"
   />
-  <div class="mt-2 flex justify-content-center">
-    <Button
-      :label="$t(`reset_colors`).toLocaleUpperCase()"
-      rounded
-      size="small"
-      @click="resetColors"
-    />
-  </div>
+  <!--  <div class="mt-2 flex justify-content-center">
+      <Button
+        :label="$t(`reset_colors`).toLocaleUpperCase()"
+        rounded
+        size="small"
+        @click="resetColors"
+      />
+    </div>-->
 </template>
 
 <script setup>
@@ -56,10 +56,7 @@ onBeforeMount(async () => {
     response.data.seminars,
   ];
 
-  proportionsChartData.value.datasets[0].backgroundColor = [
-    `rgb(${getRandomRedsOrangesYellows()})`,
-    `rgb(${getRandomRedsOrangesYellows()})`,
-  ];
+  proportionsChartData.value.datasets[0].backgroundColor = [`orange`, `red`];
 });
 
 const setChartOptions = () => {
